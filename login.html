@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Evolvere Invest — Login</title>
+
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/login.css">
+  <link rel="icon" href="./assets/icon/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html"><img src="./assets/icon/logo-investify.png" alt="Investify Logo"></a>
+        <div class="brand-txt">
+          <h1>Evolvere Invest</h1>
+          <small>Decisões de investimento baseadas em dados</small>
+        </div>
+      </div>
+
+      <nav>
+        <ul class="nav-list">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="./cadastro.html" class="btn-link">Cadastro</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="auth-wrapper">
+      <div class="auth-card">
+        <div class="form-col">
+          <h2 style="margin-bottom:10px;">Faça seu login</h2>
+          <p style="color:var(--muted); margin-bottom:14px;">Insira seus dados de acesso e o código de verificação enviado ao seu e-mail.</p>
+
+          <form id="loginForm" novalidate>
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input id="email" type="email" placeholder="seu@exemplo.com" required>
+              <div class="error" id="err-email">Insira um e-mail válido.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="senha">Senha</label>
+              <div style="display:flex;align-items:center;">
+                <input id="senha" type="password" placeholder="Sua senha" required minlength="8">
+                <span class="toggle-pass" id="toggleSenha">mostrar</span>
+              </div>
+              <div class="error" id="err-senha">Senha precisa ter pelo menos 8 caracteres.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="codigo">Código de verificação</label>
+              <input id="codigo" type="text" placeholder="6 dígitos" required pattern="\\d{6}">
+              <div class="error" id="err-codigo">O código deve ter 6 números.</div>
+              <button type="button" id="reenviarCodigo" class="btn-secondary" style="margin-top:6px;cursor:pointer;">Reenviar código</button>
+            </div>
+
+            <div style="margin-top:12px;">
+              <button type="submit" class="btn-primary" style="cursor:pointer;">Entrar</button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="meta-col">
+          <div class="meta-box">
+            <h3 style="margin-bottom:8px;">Ainda não tem conta?</h3>
+            <p>Crie sua conta em poucos minutos e comece a acessar os dashboards exclusivos da Investify.</p>
+            <a class="link-small" href="./cadastro.html">Cadastre-se aqui</a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" style="margin-top:40px;">
+    <div class="container footer-inner">
+      <p>&copy; 2025 Evolvere Invest — Protótipo educativo.</p>
+    </div>
+  </footer>

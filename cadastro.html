@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Evolvere Invest — Cadastro</title>
+
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="stylesheet" href="./css/cadastro.css">
+  <link rel="icon" href="./assets/icon/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html"><img src="./assets/icon/logo-investify.png" alt="Investify Logo"></a>
+        <div class="brand-txt">
+          <h1>Evolvere Invest</h1>
+          <small>Decisões de investimento baseadas em dados</small>
+        </div>
+      </div>
+
+      <nav>
+        <ul class="nav-list">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="./login.html" class="btn-link">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="auth-wrapper">
+      <div class="auth-card">
+
+        <div class="form-col">
+          <h2 style="margin-bottom:10px;">Crie sua conta</h2>
+          <p style="color:var(--muted); margin-bottom:14px;">Preencha os dados abaixo para começar a usar a plataforma.</p>
+
+          <form id="cadForm" novalidate>
+            <div class="form-group">
+              <label for="nome">Nome completo</label>
+              <input id="nome" name="nome" type="text" placeholder="Seu nome completo" required>
+              <div class="error" id="err-nome">Por favor, informe seu nome.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input id="email" name="email" type="email" placeholder="seu@exemplo.com" required>
+              <div class="error" id="err-email">Insira um e-mail válido.</div>
+            </div>
+
+            <div class="row">
+              <div class="form-group half">
+                <label for="senha">Senha</label>
+                <div style="display:flex;align-items:center;">
+                  <input id="senha" name="senha" type="password" placeholder="Mínimo 8 caracteres" required minlength="8">
+                  <span class="toggle-pass" id="toggleSenha">mostrar</span>
+                </div>
+                <div class="error" id="err-senha">Senha precisa ter pelo menos 8 caracteres.</div>
+              </div>
+
+              <div class="form-group half">
+                <label for="confirmSenha">Confirmar senha</label>
+                <div style="display:flex;align-items:center;">
+                  <input id="confirmSenha" name="confirmSenha" type="password" placeholder="Repita a senha" required>
+                  <span class="toggle-pass" id="toggleConfirm">mostrar</span>
+                </div>
+                <div class="error" id="err-confirm">As senhas não conferem.</div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;">
+              <button type="submit" class="btn-primary" style="cursor:pointer;">Cadastrar</button>
+            </div>
+          </form>
+        </div>
+
+        <aside class="meta-col">
+          <div class="meta-box">
+            <h3 style="margin-bottom:8px;">Já tem login?</h3>
+            <p>Se você já tem conta, faz o login pra acessar os dashboards e suas análises personalizadas.</p>
+            <a class="link-small" href="./login.html">Já tem login? Clique aqui</a>
+          </div>
+
+          <div class="meta-box">
+            <h4 style="margin-bottom:8px;">Dicas de segurança</h4>
+            <p style="color:var(--muted);font-size:13px">Use senha única, 8+ caracteres e, se puder, habilite autenticação em duas etapas depois.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" style="margin-top:40px;">
+    <div class="container footer-inner">
+      <p>&copy; 2025 Evolvere Invest — Protótipo educativo.</p>
+      <p style="color:var(--muted)">Contato: equipe@EvolvereInvest.net</p>
+    </div>
+  </footer>
+
+</body>
+</html>

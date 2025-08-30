@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Evolvere Invest — Home</title>
+
+  <script src="./js/sessao.js" defer></script>
+  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="icon" href="./assets/icon/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html">
+          <img src="./assets/icon/logo-investify.png" alt="Investify Logo">
+        </a>
+        <div class="brand-txt">
+          <h1>Evolvere Invest</h1>
+          <small>Decisões de investimento baseadas em dados</small>
+        </div>
+      </div>
+
+      <nav>
+        <ul class="nav-list">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="#pib">O que é PIB</a></li>
+          <li><a href="#impostos">Impostos</a></li>
+          <li class="divider">|</li>
+          <li><a class="btn-link" href="./login.html">Login</a></li>
+          <li><a class="btn-primary" href="./cadastro.html">Cadastrar</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+
+  <section class="banner">
+    <div class="media-bg">
+      <img src="./assets/imgs/banner1.jpg" alt="Banner Investimentos">
+    </div>
+
+    <div class="banner-content container">
+      <img class="banner-logo" src="./assets/imgs/investify-wordmark.png" alt="Investify">
+      <p class="lead">Analise dados macro e regionais — entenda PIB, impostos e como isso impacta seus investimentos.</p>
+      <a class="cta" href="./login.html">Comece Agora</a>
+    </div>
+  </section>
+
+
+  <main class="container main-content">
+    <section id="projeto" class="card info-card">
+      <h2>O que é este projeto?</h2>
+      <p>
+        O <strong>Investify</strong> é um protótipo que agrega bases públicas (como IBGE, Banco Central, IPEA)
+        e privadas para apresentar KPIs e insights acionáveis para investidores e gestores. A ideia é transformar
+        séries temporais e indicadores regionais em decisões práticas.
+      </p>
+    </section>
+
+
+    <section id="pib" class="card split">
+      <div class="split-left">
+        <h2>O que é o PIB?</h2>
+        <p><strong>PIB</strong> — Produto Interno Bruto — representa o valor de mercado de todos os bens e serviços finais produzidos em um país durante um período.</p>
+
+        <h3>Como é calculado</h3>
+        <ul>
+          <li><strong>Ótica da Produção:</strong> soma do valor adicionado por setores (agro, indústria, serviços).</li>
+          <li><strong>Ótica da Renda:</strong> salários + lucros + impostos menos subsídios.</li>
+          <li><strong>Ótica da Despesa:</strong> consumo + investimento + gasto público + (exportações - importações).</li>
+        </ul>
+      </div>
+
+      <div class="split-right">
+        <h3>Tipos importantes</h3>
+        <ul>
+          <li><strong>Nominal:</strong> valores correntes (sem ajuste inflacionário).</li>
+          <li><strong>Real:</strong> corrigido pela inflação — mais útil para comparar períodos.</li>
+          <li><strong>Per capita:</strong> PIB / população — proxy de bem-estar médio.</li>
+        </ul>
+        <p class="note">Investidores observam o PIB para identificar tendências de crescimento, mas sempre considerando inflação, dívida e distribuição de renda.</p>
+      </div>
+    </section>
+
+
+    <section id="impostos" class="card">
+      <h2>Impostos & impacto no PIB</h2>
+      <p>
+        A carga tributária e o destino dos recursos públicos afetam diretamente o crescimento econômico.
+        Impostos altos sem investimento eficiente podem frear atividade; por outro lado, gasto público bem direcionado aumenta produtividade no longo prazo.
+      </p>
+
+      <h3>Tributos que influenciam</h3>
+      <div class="tax-grid">
+        <div class="tax-item">
+          <h4>IR (Imposto de Renda)</h4>
+          <p>Impacta renda disponível (PF) e lucro (PJ) — influencia consumo e reinvestimento.</p>
+        </div>
+        <div class="tax-item">
+          <h4>ICMS</h4>
+          <p>Imposto estadual sobre circulação — importante pra indústria e varejo.</p>
+        </div>
+        <div class="tax-item">
+          <h4>IPI</h4>
+          <p>Incide sobre produtos industriais — pode afetar produção e preços.</p>
+        </div>
+        <div class="tax-item">
+          <h4>ISS</h4>
+          <p>Imposto municipal sobre serviços — relevante para setor de serviços.</p>
+        </div>
+      </div>
+
+      <p class="small">Observação: na versão final vamos mostrar mapas de PIB regional, séries históricas e carga tributária por estado — já pensa nos endpoints que tu vai precisar no back.</p>
+    </section>
+
+    <section class="card cta-card center">
+      <h2>Quer transformar dados em decisão?</h2>
+      <p>Crie uma conta e comece a explorar séries históricas, comparativos regionais e simulações de impacto fiscal.</p>
+      <div style="margin-top:12px;">
+        <a class="btn-primary" href="./cadastro.html">Criar Conta</a>
+        <a class="btn-link" href="./login.html" style="margin-left:12px;">Já tenho conta</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2025 Evolvere Invest — Protótipo educativo. Dados públicos conforme fontes oficiais.</p>
+      <p>Contato: equipe@Evolvere Invest.net</p>
+    </div>
+  </footer>
+
+</body>
+</html>
