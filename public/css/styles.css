@@ -22,7 +22,7 @@ body {
   background-color: var(--bg); 
   color: var(--white);
   min-height: 100vh;
-  padding-top: 120px;
+  padding-top: 10px;
 }
 
 html, body {
@@ -37,9 +37,7 @@ html, body {
 }
 
 header.site-header {
- position: fixed;      
-  top: 0;
-  left: 0;
+ position: relative;      
   width: 100%;
   height: 100px; 
   display: flex;
@@ -98,9 +96,6 @@ header.site-header {
     padding: 8px 6px;
 }
 
-.nav-list a:hover {
-    color: var(--accent-2);
-}
 
 
 .btn-primary {
@@ -123,7 +118,7 @@ header.site-header {
 
 .banner {
     position: relative;
-    height: 700px;
+    height: 520px;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -139,7 +134,7 @@ header.site-header {
     position: absolute;
     top: 0;
     left: 0;
-    height: 700px;
+    height: 500px;
     width: 100%;
     z-index: 0;
     overflow: hidden;
@@ -147,7 +142,7 @@ header.site-header {
 
 .media-bg img,
 .media-bg video {
-    height: 700px;
+    height: 550px;
     width: 100%;
     object-fit: cover;
     object-position: center;
