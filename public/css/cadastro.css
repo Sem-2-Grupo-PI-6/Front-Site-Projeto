@@ -97,3 +97,20 @@
       .auth-card { flex-direction: column; width: 100%; }
       .meta-col { width: 100%; }
     }
+
+@media(max-width: 600px) {
+  .row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .half {
+    flex: 1; 
+  }
+
+  .auth-card {
+    flex-direction: column; 
+    width: 100%;
+    padding: 16px;
+  }
+}
