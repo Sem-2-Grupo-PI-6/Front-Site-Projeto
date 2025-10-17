@@ -6,7 +6,7 @@
   <title>Evolvere Invest — Login</title>
 
   <link rel="stylesheet" href="./css/styles.css">
-  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="./css/login.css">
   <link rel="icon" href="./assets/icon/favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
@@ -36,7 +36,7 @@
       <div class="auth-card">
         <div class="form-col">
           <h2 style="margin-bottom:10px;">Faça seu login</h2>
-          <p style="color:var(--muted); margin-bottom:14px;">Insira seus dados de acesso e o código de verificação enviado ao seu e-mail.</p>
+          <p style="margin-bottom:14px;">Insira seus dados de acesso e o código de verificação enviado ao seu e-mail.</p>
 
           <form id="loginForm" novalidate>
             <div class="form-group">
@@ -58,11 +58,11 @@
               <label for="codigo">Código de verificação</label>
               <input id="codigo" type="text" placeholder="6 dígitos" required pattern="\\d{6}">
               <div class="error" id="err-codigo">O código deve ter 6 números.</div>
-              <button type="button" id="reenviarCodigo" class="btn-secondary" style="margin-top:6px;cursor:pointer;">Reenviar código</button>
             </div>
 
-            <div style="margin-top:12px;">
+            <div class="final" style="margin: 0 auto;">
               <button type="submit" class="btn-primary" style="cursor:pointer;">Entrar</button>
+              <button type="button" id="reenviarCodigo" class="btn-secondary" style="margin-top:6px;cursor:pointer;">Reenviar código</button>
             </div>
           </form>
         </div>
@@ -70,8 +70,8 @@
         <aside class="meta-col">
           <div class="meta-box">
             <h3 style="margin-bottom:8px;">Ainda não tem conta?</h3>
-            <p>Crie sua conta em poucos minutos e comece a acessar os dashboards exclusivos da Investify.</p>
-            <a class="link-small" href="./cadastro.html">Cadastre-se aqui</a>
+            <p style="color: black;">Crie sua conta em poucos minutos e comece a acessar os dashboards exclusivos da Envovere.</p>
+            <a class="link-small btn-primary" href="./cadastro.html">Cadastre-se aqui</a>
           </div>
         </aside>
       </div>
