@@ -2,6 +2,7 @@
   --bg: #ffffff;
   --text: #1a1a1a;
   --accent: #0e6930;
+  --accent-vitor: #e8f5e9;
   --accent-light: #16a34a;
   --muted: #f4f4f4;
   --border: #dcdcdc;
@@ -172,10 +173,6 @@ header.site-header {
 .split-right {
   flex: 1;
   min-width: 280px;
-}
-
-li {
-  list-style-type: none;
 }
 
 .note {
