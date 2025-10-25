@@ -147,6 +147,7 @@
               resposta.json().then((json) => {
                 console.log(json);
                 console.log(JSON.stringify(json));
+                const admin = "@admin.net";
 
                 sessionStorage.EMAIL_USUARIO = json.email;
                 sessionStorage.ID_USUARIO = json.id;
@@ -155,7 +156,14 @@
                 alert("Login realizado com sucesso!");
 
                 setTimeout(() => {
-                  window.location.href = "./index.html";
+                  // se for admin
+                  if (json.email.includes(admin)) {
+                    window.location.href = "./dashboardAdmin.html";
+                    console.log("If deu certo !!!!!");
+                  } else {
+                    // caso contrario window.location.href = "./dashboardCliente.html"
+                    window.location.href = "./dashboardCliente.html";
+                  }
                 }, 500);
               });
             } else {
