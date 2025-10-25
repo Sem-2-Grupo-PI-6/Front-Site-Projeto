@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ConstructOps Dashboard</title>
+    <link rel="stylesheet" href="styleCliente.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main>
+      <aside>
+        <header>
+          <h1>ConstructOps</h1>
+        </header>
+        <section class="session">
+          <figcaption>
+            <h2>Sierra Morales</h2>
+            <span>Site Supervisor</span>
+          </figcaption>
+        </section>
+        <nav aria-label="Primary">
+          <h2>Navigation</h2>
+          <ul>
+            <li><a href="#">Project Hub</a></li>
+            <li><a href="#">Daily Logs</a></li>
+            <li><a href="#">Equipment</a></li>
+            <li><a href="#">Safety Board</a></li>
+            <li><a href="#">Insights</a></li>
+            <li><button type="button">Sign Out</button></li>
+          </ul>
+        </nav>
+      </aside>
+      <section class="workspace">
+        <section class="summary-area">
+          <header>
+            <h2>Operations Pulse</h2>
+            <span>Updated 4 minutes ago • Progress sprint: 78%</span>
+          </header>
+          <section class="kpi-area" aria-label="Key performance indicators">
+            <article class="kpi-card">
+              <header>
+                <span>Concrete Pour</span>
+                <span>Phase 4</span>
+              </header>
+              <strong>92%</strong>
+              <span>Daily target reached</span>
+            </article>
+            <article class="kpi-card">
+              <header>
+                <span>Equipment Uptime</span>
+                <span>24h</span>
+              </header>
+              <strong>97%</strong>
+              <span>Critical machinery running</span>
+            </article>
+            <article class="kpi-card">
+              <header>
+                <span>Safety Briefings</span>
+                <span>Weekly</span>
+              </header>
+              <strong>88%</strong>
+              <span>Crew completed onboarding</span>
+            </article>
+            <article class="kpi-card">
+              <header>
+                <span>Budget Variance</span>
+                <span>Month-to-date</span>
+              </header>
+              <strong>+4.2%</strong>
+              <span>Under projected costs</span>
+            </article>
+          </section>
+        </section>
+        <section class="charts-area" aria-label="Bottom analytics">
+          <article class="chart-card">
+            <header>
+              <h3>Material Throughput</h3>
+              <span>Volume vs schedule cadence</span>
+            </header>
+            <figure>
+              <canvas
+                id="materialChart"
+                aria-label="Line chart for material throughput"
+              ></canvas>
+            </figure>
+          </article>
+          <article class="chart-card">
+            <header>
+              <h3>Inspection Compliance</h3>
+              <span>Completed vs overdue checks</span>
+            </header>
+            <figure>
+              <canvas
+                id="inspectionChart"
+                aria-label="Bar chart for inspection compliance"
+              ></canvas>
+            </figure>
+          </article>
+          <article class="chart-card">
+            <header>
+              <h3>Workforce Allocation</h3>
+              <span>Skilled hours per zone</span>
+            </header>
+            <figure>
+              <canvas
+                id="workforceChart"
+                aria-label="Bar chart for workforce allocation"
+              ></canvas>
+            </figure>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.4/chart.umd.min.js"
+      integrity="sha512-+VgcErFdOwLLo0b/GG7aJpPgv3ublQfmANzIBsBn1/Z4VLOG8QuKynXQq5qwCFIcn+Hn+fa7BVbl8zJBn+XvNg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const defaultOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: "rgba(9, 61, 31, 0.8)",
+              font: { weight: "500" },
+            },
+          },
+          tooltip: {
+            backgroundColor: "rgba(9, 61, 31, 0.92)",
+            borderColor: "rgba(14, 105, 48, 0.4)",
+            borderWidth: 1,
+            titleColor: "#f5f5f5",
+            bodyColor: "#f5f5f5",
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              color: "rgba(14, 105, 48, 0.12)",
+              drawBorder: false,
+            },
+            ticks: {
+              color: "rgba(9, 61, 31, 0.8)",
+            },
+          },
+          y: {
+            grid: {
+              color: "rgba(14, 105, 48, 0.12)",
+              drawBorder: false,
+            },
+            ticks: {
+              color: "rgba(9, 61, 31, 0.8)",
+            },
+          },
+        },
+      };
+
+      new Chart(document.getElementById("materialChart"), {
+        type: "line",
+        data: {
+          labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+          datasets: [
+            {
+              label: "Delivered",
+              data: [180, 220, 210, 260, 240, 280],
+              borderColor: "rgba(14, 105, 48, 0.85)",
+              backgroundColor: "rgba(14, 105, 48, 0.2)",
+              tension: 0.35,
+              fill: true,
+              borderWidth: 2.5,
+            },
+            {
+              label: "Scheduled",
+              data: [200, 210, 230, 250, 260, 270],
+              borderColor: "rgba(9, 61, 31, 0.7)",
+              backgroundColor: "rgba(9, 61, 31, 0.16)",
+              tension: 0.35,
+              fill: true,
+              borderWidth: 2,
+            },
+          ],
+        },
+        options: {
+          ...defaultOptions,
+          scales: {
+            ...defaultOptions.scales,
+            y: {
+              ...defaultOptions.scales.y,
+              suggestedMin: 150,
+              suggestedMax: 320,
+              ticks: {
+                color: "rgba(9, 61, 31, 0.8)",
+                callback: (value) => `${value} m\u00b3`,
+              },
+            },
+          },
+        },
+      });
+
+      new Chart(document.getElementById("inspectionChart"), {
+        type: "bar",
+        data: {
+          labels: ["Zone A", "Zone B", "Zone C", "Zone D"],
+          datasets: [
+            {
+              label: "Completed",
+              data: [34, 28, 42, 37],
+              backgroundColor: "rgba(14, 105, 48, 0.75)",
+              borderRadius: 10,
+              borderSkipped: false,
+            },
+            {
+              label: "Overdue",
+              data: [4, 7, 3, 6],
+              backgroundColor: "rgba(9, 61, 31, 0.55)",
+              borderRadius: 10,
+              borderSkipped: false,
+            },
+          ],
+        },
+        options: {
+          ...defaultOptions,
+          scales: {
+            x: {
+              ...defaultOptions.scales.x,
+              stacked: false,
+            },
+            y: {
+              ...defaultOptions.scales.y,
+              suggestedMax: 50,
+            },
+          },
+        },
+      });
+
+      new Chart(document.getElementById("workforceChart"), {
+        type: "bar",
+        data: {
+          labels: ["Structural", "Electrical", "HVAC", "Finishing", "Safety"],
+          datasets: [
+            {
+              label: "Hours",
+              data: [320, 260, 180, 210, 140],
+              backgroundColor: "rgba(14, 105, 48, 0.7)",
+              borderRadius: 10,
+              borderSkipped: false,
+            },
+          ],
+        },
+        options: {
+          ...defaultOptions,
+          scales: {
+            x: {
+              ...defaultOptions.scales.x,
+              ticks: {
+                color: "rgba(9, 61, 31, 0.8)",
+                maxRotation: 0,
+                minRotation: 0,
+              },
+            },
+            y: {
+              ...defaultOptions.scales.y,
+              suggestedMax: 360,
+              ticks: {
+                color: "rgba(9, 61, 31, 0.8)",
+                callback: (value) => `${value}h`,
+              },
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

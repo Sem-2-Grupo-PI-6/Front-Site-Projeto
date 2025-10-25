@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Executive Insights Dashboard</title>
+    <link rel="stylesheet" href="styleDashboardAdmin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <main>
+      <aside>
+        <header>
+          <h1>Aurora Command</h1>
+        </header>
+        <section class="user-profile">
+          <figcaption>
+            <h2>Rodrigo Martins</h2>
+            <span>Administrador</span>
+          </figcaption>
+        </section>
+        <nav aria-label="Primary">
+          <h2>Navigation</h2>
+          <ul>
+            <li><a href="#">🏠 Home</a></li>
+            <li><a href="#">📊 Performance</a></li>
+            <li><a href="#">⚙️ Settings</a></li>
+            <li><button type="button">🚪 Logout</button></li>
+          </ul>
+        </nav>
+      </aside>
+      <section class="workspace">
+        <header>
+          <h2>Engagement Intelligence</h2>
+          <span>Updated 6 minutes ago • Latency: 112ms</span>
+        </header>
+        <section class="chart-area" aria-label="Analytics overview">
+          <section class="top-charts" aria-label="Primary metrics">
+            <article class="chart-card">
+              <header>
+                <h3>Conversion Velocity</h3>
+                <span>Weekly cohorts • Goals vs Actuals</span>
+              </header>
+              <figure>
+                <canvas
+                  id="conversionTrend"
+                  aria-label="Line chart for conversion velocity"
+                ></canvas>
+              </figure>
+            </article>
+            <article class="chart-card">
+              <header>
+                <h3>Channel Momentum</h3>
+                <span>Engagement velocity by channel</span>
+              </header>
+              <figure>
+                <canvas
+                  id="channelMomentum"
+                  aria-label="Line chart for channel momentum"
+                ></canvas>
+              </figure>
+            </article>
+            <article class="chart-card">
+              <header>
+                <h3>Activation Health</h3>
+                <span>Stage progression • 48h trend</span>
+              </header>
+              <figure>
+                <canvas
+                  id="activationHealth"
+                  aria-label="Line chart for activation health"
+                ></canvas>
+              </figure>
+            </article>
+          </section>
+          <section class="bottom-charts" aria-label="Secondary metrics">
+            <article class="chart-card">
+              <header>
+                <h3>Sentiment Drift</h3>
+                <span>Support pulse • Rolling 30d</span>
+              </header>
+              <figure>
+                <canvas
+                  id="sentimentDrift"
+                  aria-label="Bar chart for sentiment analysis"
+                ></canvas>
+              </figure>
+            </article>
+            <article class="chart-card">
+              <header>
+                <h3>Lifecycle Impact</h3>
+                <span>Feature adoption vs retention lift</span>
+              </header>
+              <figure>
+                <canvas
+                  id="retentionImpact"
+                  aria-label="Bar chart for lifecycle impact"
+                ></canvas>
+              </figure>
+            </article>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const chartTheme = {
+        defaultOptions: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: "rgba(247, 249, 255, 0.72)",
+                font: { weight: "500" },
+              },
+            },
+            tooltip: {
+              backgroundColor: "rgba(9, 12, 24, 0.9)",
+              borderWidth: 1,
+              borderColor: "rgba(93, 209, 255, 0.35)",
+              titleColor: "#ffffff",
+              bodyColor: "#f5f7ff",
+            },
+          },
+          scales: {
+            x: {
+              grid: {
+                color: "rgba(93, 209, 255, 0.08)",
+                drawBorder: false,
+              },
+              ticks: {
+                color: "rgba(247, 249, 255, 0.6)",
+              },
+            },
+            y: {
+              grid: {
+                color: "rgba(93, 209, 255, 0.08)",
+                drawBorder: false,
+              },
+              ticks: {
+                color: "rgba(247, 249, 255, 0.6)",
+              },
+            },
+          },
+        },
+      };
+
+      const charts = [
+        {
+          id: "conversionTrend",
+          config: {
+            type: "line",
+            data: {
+              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
+              datasets: [
+                {
+                  label: "Target",
+                  data: [62, 64, 66, 70, 72, 74, 75, 77],
+                  borderColor: "rgba(93, 209, 255, 0.55)",
+                  backgroundColor: "rgba(93, 209, 255, 0.12)",
+                  fill: true,
+                  tension: 0.35,
+                  borderWidth: 2.5,
+                },
+                {
+                  label: "Actual",
+                  data: [59, 67, 64, 73, 69, 76, 79, 82],
+                  borderColor: "rgba(139, 93, 255, 0.8)",
+                  backgroundColor: "rgba(139, 93, 255, 0.18)",
+                  fill: true,
+                  tension: 0.35,
+                  borderWidth: 3,
+                },
+              ],
+            },
+          },
+        },
+        {
+          id: "channelMomentum",
+          config: {
+            type: "line",
+            data: {
+              labels: [
+                "Week 1",
+                "Week 2",
+                "Week 3",
+                "Week 4",
+                "Week 5",
+                "Week 6",
+              ],
+              datasets: [
+                {
+                  label: "Product",
+                  data: [24, 28, 31, 36, 38, 42],
+                  borderColor: "rgba(93, 209, 255, 0.85)",
+                  backgroundColor: "rgba(93, 209, 255, 0.22)",
+                  fill: true,
+                  tension: 0.4,
+                  borderWidth: 2.5,
+                },
+                {
+                  label: "Lifecycle",
+                  data: [18, 22, 21, 25, 29, 31],
+                  borderColor: "rgba(139, 93, 255, 0.85)",
+                  backgroundColor: "rgba(139, 93, 255, 0.2)",
+                  fill: true,
+                  tension: 0.4,
+                  borderWidth: 2.5,
+                },
+                {
+                  label: "Paid",
+                  data: [15, 16, 19, 22, 24, 26],
+                  borderColor: "rgba(255, 179, 102, 0.9)",
+                  backgroundColor: "rgba(255, 179, 102, 0.25)",
+                  fill: true,
+                  tension: 0.4,
+                  borderWidth: 2.5,
+                },
+              ],
+            },
+            options: {
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: {
+                    color: "rgba(247, 249, 255, 0.76)",
+                    usePointStyle: true,
+                    padding: 16,
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          id: "activationHealth",
+          config: {
+            type: "line",
+            data: {
+              labels: ["Discover", "Engage", "Trial", "Onboard", "Expand"],
+              datasets: [
+                {
+                  label: "Current",
+                  data: [92, 78, 62, 55, 38],
+                  borderColor: "rgba(93, 209, 255, 0.75)",
+                  backgroundColor: "rgba(93, 209, 255, 0.18)",
+                  fill: true,
+                  tension: 0.45,
+                  borderWidth: 2.5,
+                },
+                {
+                  label: "Last Week",
+                  data: [88, 71, 58, 50, 34],
+                  borderColor: "rgba(139, 93, 255, 0.75)",
+                  backgroundColor: "rgba(139, 93, 255, 0.16)",
+                  fill: true,
+                  tension: 0.45,
+                  borderWidth: 2.5,
+                },
+              ],
+            },
+          },
+        },
+        {
+          id: "sentimentDrift",
+          config: {
+            type: "bar",
+            data: {
+              labels: [
+                "Billing",
+                "Support",
+                "Onboarding",
+                "Adoption",
+                "Advocacy",
+              ],
+              datasets: [
+                {
+                  label: "Positive",
+                  data: [68, 74, 82, 85, 71],
+                  backgroundColor: "rgba(93, 209, 255, 0.65)",
+                  borderRadius: 8,
+                  borderSkipped: false,
+                },
+                {
+                  label: "Negative",
+                  data: [22, 28, 18, 15, 24],
+                  backgroundColor: "rgba(139, 93, 255, 0.55)",
+                  borderRadius: 8,
+                  borderSkipped: false,
+                },
+              ],
+            },
+          },
+        },
+        {
+          id: "retentionImpact",
+          config: {
+            type: "bar",
+            data: {
+              labels: [
+                "Guided Tours",
+                "Automation",
+                "AI Copilot",
+                "Feedback Loops",
+                "Workflow Apps",
+              ],
+              datasets: [
+                {
+                  label: "Adoption",
+                  data: [12, 18, 24, 17, 21],
+                  backgroundColor: "rgba(93, 209, 255, 0.7)",
+                  borderRadius: 8,
+                  borderSkipped: false,
+                },
+                {
+                  label: "Retention Lift",
+                  data: [6, 9, 14, 11, 13],
+                  backgroundColor: "rgba(139, 93, 255, 0.6)",
+                  borderRadius: 8,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: {
+              ...chartTheme.defaultOptions,
+              scales: {
+                x: {
+                  ...chartTheme.defaultOptions.scales.x,
+                  ticks: {
+                    color: "rgba(247, 249, 255, 0.65)",
+                    maxRotation: 0,
+                    minRotation: 0,
+                  },
+                },
+                y: {
+                  ...chartTheme.defaultOptions.scales.y,
+                  suggestedMax: 30,
+                  ticks: {
+                    color: "rgba(247, 249, 255, 0.6)",
+                    callback: (value) => `${value}%`,
+                  },
+                },
+              },
+            },
+          },
+        },
+      ];
+      charts.forEach(({ id, config }) => {
+        const context = document.getElementById(id);
+        new Chart(context, config);
+      });
+    </script>
+  </body>
+</html>

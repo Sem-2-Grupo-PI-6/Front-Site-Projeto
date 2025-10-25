@@ -1,0 +1,345 @@
+:root {
+  --brand-primary: #0e6930;
+  --brand-light: #f5f5f5;
+  --brand-dark: #093d1f;
+  --text-main: #0b2f1a;
+  --text-soft: rgba(11, 47, 26, 0.7);
+  --card-radius: 18px;
+  --kpi-gap: 1rem;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(14, 105, 48, 0.12),
+    rgba(245, 245, 245, 0.95)
+  );
+  color: var(--text-main);
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+}
+
+main {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+aside {
+  flex: 0 0 12.5vw;
+  max-width: 12.5vw;
+  min-width: 10rem;
+  padding: 2.4rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: linear-gradient(
+    180deg,
+    rgba(9, 61, 31, 0.9) 0%,
+    rgba(14, 105, 48, 0.78) 100%
+  );
+  color: var(--brand-light);
+}
+
+aside header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+aside header h1 {
+  margin: 0;
+  font-size: calc(1rem + 0.35vw);
+  text-transform: uppercase;
+  align-self: anchor-center;
+}
+
+aside header p {
+  margin: 0;
+  font-size: calc(0.6rem + 0.2vw);
+  line-height: 1.5;
+  color: rgba(245, 245, 245, 0.88);
+}
+
+section.session {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.6rem 1.2rem;
+  border-radius: var(--card-radius);
+  background: rgba(245, 245, 245, 0.12);
+  border: 1px solid rgba(245, 245, 245, 0.28);
+}
+
+section.session figure {
+  margin: 0;
+  width: calc(2.5rem + 0.35vw);
+  height: calc(2.5rem + 0.35vw);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--brand-light);
+  color: var(--brand-primary);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+section.session figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+section.session h2 {
+  margin: 0;
+  font-size: calc(0.78rem + 0.22vw);
+  color: var(--brand-light);
+}
+
+section.session span {
+  color: rgba(245, 245, 245, 0.75);
+  font-size: calc(0.58rem + 0.15vw);
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 58px;
+  white-space: nowrap;
+}
+
+nav h2 {
+  margin: 0 0 0.3rem;
+  font-size: calc(0.58rem + 0.18vw);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(245, 245, 245, 0.78);
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+nav li {
+  border-radius: 0.9rem;
+  border: 1px solid transparent;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+nav a,
+nav button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  font-size: calc(0.6rem + 0.18vw);
+}
+
+nav li:hover,
+nav li:focus-within {
+  border-color: rgba(245, 245, 245, 0.45);
+  background: rgba(245, 245, 245, 0.14);
+}
+
+section.briefing {
+  padding: 1.1rem 1rem;
+  border-radius: var(--card-radius);
+  background: rgba(245, 245, 245, 0.14);
+  border: 1px solid rgba(245, 245, 245, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+section.briefing h2 {
+  margin: 0;
+  font-size: calc(0.54rem + 0.18vw);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.78);
+}
+
+section.briefing p {
+  margin: 0;
+  font-size: calc(0.6rem + 0.18vw);
+  line-height: 1.45;
+  color: rgba(245, 245, 245, 0.86);
+}
+
+section.workspace {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 25% 75%;
+  padding: 2rem 2.4rem;
+  gap: 1.4rem;
+}
+
+section.summary-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+section.summary-area header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+section.summary-area header h2 {
+  margin: 0;
+  font-size: calc(0.95rem + 0.4vw);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--brand-dark);
+}
+
+section.summary-area header span {
+  font-size: calc(0.6rem + 0.18vw);
+  color: var(--text-soft);
+}
+
+section.kpi-area {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  gap: var(--kpi-gap);
+}
+
+article.kpi-card {
+  flex: 1 1 calc((100% - 3 * var(--kpi-gap)) / 4);
+  padding: 0.9rem 0.8rem;
+  border-radius: var(--card-radius);
+  background: var(--brand-light);
+  border: 1px solid rgba(14, 105, 48, 0.18);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  box-shadow: 0 12px 24px rgba(14, 105, 48, 0.1);
+}
+
+article.kpi-card header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-soft);
+}
+
+article.kpi-card strong {
+  font-size: calc(1rem + 0.15vw);
+  color: var(--brand-primary);
+}
+
+article.kpi-card span {
+  font-size: 0.72rem;
+  color: var(--text-soft);
+}
+
+section.charts-area {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+article.chart-card {
+  padding: 1.1rem 1.2rem;
+  border-radius: var(--card-radius);
+  background: rgba(245, 245, 245, 0.88);
+  border: 1px solid rgba(14, 105, 48, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  box-shadow: 0 12px 28px rgba(9, 61, 31, 0.12);
+}
+
+article.chart-card header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+article.chart-card h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: var(--brand-dark);
+}
+
+article.chart-card span {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+article.chart-card figure {
+  flex: 1;
+  margin: 0;
+  position: relative;
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+nav a:focus,
+nav button:focus {
+  outline: 2px solid rgba(245, 245, 245, 0.6);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1200px) {
+  section.summary-area {
+    gap: 0.8rem;
+  }
+
+  section.kpi-area {
+    flex-wrap: wrap;
+  }
+
+  article.kpi-card {
+    flex: 0 0 calc(50% - 0.75rem);
+  }
+
+  section.charts-area {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  body {
+    min-height: 100vh;
+    overflow: auto;
+  }
+}

@@ -1,0 +1,339 @@
+:root {
+  color-scheme: dark;
+  --base-bg: #0c0f1d;
+  --panel-bg: rgba(22, 27, 45, 0.85);
+  --accent: #5dd1ff;
+  --accent-strong: #8b5dff;
+  --text-primary: #f7f9ff;
+  --text-secondary: rgba(247, 249, 255, 0.7);
+  --divider: rgba(140, 150, 175, 0.35);
+  --card-radius: 18px;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--base-bg);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+}
+
+main {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  backdrop-filter: blur(24px);
+}
+
+aside {
+  flex: 0 0 12.5vw;
+  max-width: 12.5vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2.5rem 1.75rem;
+  background: linear-gradient(
+    180deg,
+    rgba(31, 40, 71, 0.95) 0%,
+    rgba(19, 26, 46, 0.85) 100%
+  );
+  border-right: 1px solid var(--divider) rgba(140, 150, 175, 0.35);
+}
+
+aside header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+aside header h1 {
+  font-size: calc(0.85rem + 0.7vw);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+aside header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: calc(0.6rem + 0.3vw);
+  line-height: 1.4;
+}
+
+section.user-profile {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.5rem 1.2rem;
+  border-radius: var(--card-radius);
+  background: radial-gradient(
+    circle at top left,
+    rgba(93, 209, 255, 0.18),
+    rgba(31, 44, 72, 0.6)
+  );
+  border: 1px solid rgba(93, 209, 255, 0.24);
+}
+
+section.user-profile figure {
+  margin: 0;
+  width: calc(2.5rem + 0.5vw);
+  height: calc(2.5rem + 0.5vw);
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgba(93, 209, 255, 0.55),
+    rgba(139, 93, 255, 0.55)
+  );
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+section.user-profile figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+section.user-profile h2 {
+  margin: 0;
+  font-size: calc(0.7rem + 0.35vw);
+}
+
+section.user-profile span {
+  color: var(--text-secondary);
+  font-size: calc(0.55rem + 0.25vw);
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0px;
+  align-items: center;
+  padding: 58px;
+  white-space: nowrap;
+}
+
+nav h2 {
+  margin: 0 0 0.25rem;
+  font-size: calc(0.55rem + 0.22vw);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+nav li {
+  border-radius: 14px;
+  border: 1px solid transparent;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+nav a,
+nav button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.85rem;
+  text-decoration: none;
+  color: inherit;
+  background: transparent;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  letter-spacing: 0.02em;
+  font-size: calc(0.6rem + 0.25vw);
+  border-radius: inherit;
+}
+
+nav li:focus-within,
+nav li:hover {
+  border-color: rgba(93, 209, 255, 0.35);
+  background: rgba(93, 209, 255, 0.12);
+}
+
+section.product-updates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.25rem 1rem;
+  border-radius: var(--card-radius);
+  border: 1px solid rgba(139, 93, 255, 0.32);
+  background: linear-gradient(
+    135deg,
+    rgba(139, 93, 255, 0.18),
+    rgba(21, 26, 43, 0.6)
+  );
+}
+
+section.product-updates h2 {
+  margin: 0;
+  font-size: calc(0.55rem + 0.24vw);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+section.product-updates p {
+  margin: 0;
+  line-height: 1.45;
+  font-size: calc(0.6rem + 0.28vw);
+  color: rgba(247, 249, 255, 0.8);
+}
+
+section.workspace {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 2rem;
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(93, 209, 255, 0.15),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 80% 15%,
+      rgba(139, 93, 255, 0.18),
+      transparent 62%
+    );
+  gap: 1.5rem;
+}
+
+section.workspace header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+section.workspace header h2 {
+  margin: 0;
+  font-size: calc(0.95rem + 0.45vw);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+section.workspace header span {
+  color: var(--text-secondary);
+  font-size: calc(0.6rem + 0.28vw);
+}
+
+section.chart-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+section.top-charts,
+section.bottom-charts {
+  flex: 1;
+  display: grid;
+  gap: 1.1rem;
+}
+
+section.top-charts {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+section.bottom-charts {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+article.chart-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  border-radius: var(--card-radius);
+  background: var(--panel-bg);
+  border: 1px solid rgba(93, 209, 255, 0.12);
+  box-shadow: 0 12px 32px rgba(9, 11, 23, 0.5);
+}
+
+article.chart-card header {
+  margin-bottom: 0.75rem;
+}
+
+article.chart-card h3 {
+  margin: 0;
+  font-size: calc(0.78rem + 0.32vw);
+  letter-spacing: 0.05em;
+}
+
+article.chart-card span {
+  font-size: calc(0.58rem + 0.2vw);
+  color: var(--text-secondary);
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+article.chart-card figure {
+  flex: 1;
+  margin: 0;
+  position: relative;
+}
+
+nav a:focus,
+nav button:focus {
+  outline: 2px solid rgba(93, 209, 255, 0.6);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1200px) {
+  section.top-charts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  section.bottom-charts {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  body {
+    min-height: 100vh;
+  }
+
+  main {
+    flex-direction: column;
+    height: auto;
+  }
+
+  aside {
+    flex: none;
+    max-width: none;
+    width: 100%;
+    padding: 2rem 1.75rem;
+    border-right: none;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  section.workspace {
+    min-height: calc(100vh - 320px);
+  }
+}
