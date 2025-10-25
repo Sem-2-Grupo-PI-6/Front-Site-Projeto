@@ -39,6 +39,7 @@ body {
   padding: 0 20px;
 }
 
+/* ===== HEADER MELHORADO ===== */
 header.site-header {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
   color: white;
@@ -165,6 +166,7 @@ header.site-header {
   box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
 }
 
+/* ===== BANNER COM VÍDEO VISÍVEL ===== */
 .banner {
   position: relative;
   height: 550px;
@@ -176,6 +178,7 @@ header.site-header {
   background: #1a1a1a;
 }
 
+/* Efeito de onda SUTIL na parte inferior do banner */
 .banner::after {
   content: '';
   position: absolute;
@@ -188,6 +191,7 @@ header.site-header {
   pointer-events: none;
 }
 
+/* Overlay LEVE para dar contraste ao texto sem esconder o vídeo */
 .banner::before {
   content: '';
   position: absolute;
@@ -271,12 +275,14 @@ header.site-header {
   background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent-lighter) 100%);
 }
 
+/* ===== MAIN CONTENT COM FUNDO CONECTADO ===== */
 .main-content {
   padding: 40px 20px 60px;
   position: relative;
   background: transparent;
 }
 
+/* Elementos decorativos de fundo */
 .main-content::before {
   content: '';
   position: absolute;
@@ -289,30 +295,32 @@ header.site-header {
   z-index: 0;
 }
 
+/* ===== CARDS CONECTADOS ===== */
 .card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(14, 105, 48, 0.1);
+  border: 0.05px solid rgba(14, 105, 48, 0.1);
   border-radius: 20px;
   padding: 40px;
   margin: 40px 0;
   box-shadow: 0 8px 30px rgba(14, 105, 48, 0.08);
   transition: var(--transition);
   position: relative;
-  overflow: visible;
+  overflow: hidden;  
   z-index: 1;
 }
-
+/* Linha conectora entre cards */
 .card:not(:last-child):not(.cta-card)::after {
   content: '';
   position: absolute;
   bottom: -40px;
   left: 50%;
   transform: translateX(-50%);
-  width: 2px;
+  width: 4px;
   height: 40px;
   background: linear-gradient(180deg, var(--accent-light) 0%, transparent 100%);
   opacity: 0.3;
+  z-index: -1;
 }
 
 .card::before {
@@ -320,10 +328,11 @@ header.site-header {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+  width: 105%;
   height: 4px;
   background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 50%, var(--accent-lighter) 100%);
-  border-radius: 20px 20px 0 0;
+  border-radius: 0;
 }
 
 .card:hover {
@@ -386,6 +395,7 @@ header.site-header {
   font-weight: 700;
 }
 
+/* Info Card Especial com destaque */
 .info-card {
   background: linear-gradient(135deg, rgba(232, 245, 233, 0.95) 0%, rgba(255, 255, 255, 0.95) 100%);
   border-left: 6px solid var(--accent);
@@ -396,6 +406,7 @@ header.site-header {
   background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
 }
 
+/* ===== SPLIT LAYOUT ===== */
 .split {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -425,6 +436,7 @@ header.site-header {
   margin-top: 16px;
 }
 
+/* ===== TAX GRID ===== */
 .tax-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -479,6 +491,7 @@ header.site-header {
   line-height: 1.6;
 }
 
+/* ===== CTA CARD CORRIGIDO - SEM FICAR BRANCO ===== */
 .cta-card {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
   color: white;
@@ -489,6 +502,7 @@ header.site-header {
   margin-top: 60px;
 }
 
+/* Remover o ::before que causa o efeito branco */
 .cta-card::before {
   content: '';
   position: absolute;
@@ -502,7 +516,7 @@ header.site-header {
   z-index: 1;
 }
 
-
+/* Garantir que o card não mude de cor no hover */
 .cta-card:hover {
   transform: none !important;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%) !important;
@@ -565,10 +579,12 @@ header.site-header {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
+/* ===== CENTER CLASS ===== */
 .center {
   text-align: center;
 }
 
+/* ===== FOOTER COM TRANSIÇÃO ===== */
 footer.site-footer {
   background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
   color: white;
@@ -580,6 +596,7 @@ footer.site-footer {
   position: relative;
 }
 
+/* Transição suave para o footer */
 footer.site-footer::before {
   content: '';
   position: absolute;
@@ -601,7 +618,7 @@ footer.site-footer p {
   color: rgba(255, 255, 255, 0.9);
 }
 
-
+/* ===== SEÇÃO DE TRANSIÇÃO (OPCIONAL - ADICIONAR NO HTML) ===== */
 .section-divider {
   height: 2px;
   margin: 60px auto;
@@ -683,6 +700,7 @@ footer.site-footer p {
   }
 }
 
+/* ===== ANIMAÇÕES EXTRAS ===== */
 .card, .tax-item, .logo {
   animation: fadeIn 0.6s ease-out;
 }
@@ -698,6 +716,7 @@ footer.site-footer p {
   }
 }
 
+/* ===== SCROLLBAR PERSONALIZADA ===== */
 ::-webkit-scrollbar {
   width: 10px;
 }
