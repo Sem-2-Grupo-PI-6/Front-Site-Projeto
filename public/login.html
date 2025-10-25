@@ -71,13 +71,13 @@
 
             <div class="form-group">
               <label for="codigo">Código de verificação</label>
-              <input id="codigo" type="text" placeholder="6 dígitos" required pattern="\\d{6}">
+              <input id="input_codigo" type="text" placeholder="6 dígitos" required pattern="\\d{6}">
               <div class="error" id="err-codigo">O código deve ter 6 números.</div>
               <button type="button" id="reenviarCodigo" class="btn-secondary" style="margin-top:6px;cursor:pointer;">Reenviar código</button>
             </div>
 
             <div style="margin-top:12px;">
-              <button type="submit" class="btn-primary" style="cursor:pointer;">Entrar</button>
+              <button class="btn-primary" style="cursor:pointer;" onclick="entrar()">Entrar</button>
             </div>
           </form>
         </div>
