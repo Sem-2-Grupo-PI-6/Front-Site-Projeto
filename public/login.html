@@ -5,186 +5,213 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Evolvere Invest — Login</title>
 
-  <link rel="stylesheet" href="./css/styles.css">
-  <link rel="stylesheet" href="./css/login.css">
-  <link rel="icon" href="./assets/icon/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="logo">
-        <a href="index.html"
-          ><img src="./imgs/Logo-projeto.png" alt="Investify Logo"
-        /></a>
-        <div class="brand-txt">
-          <h1>Evolvere Invest</h1>
-          <small>Decisões de investimento baseadas em dados</small>
-        </div>
-      </div>
-
-      <nav>
-        <ul class="nav-list">
-          <li><a href="index.html">Início</a></li>
-          <li><a href="./cadastro.html" class="btn-link">Cadastro</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
-    <div class="auth-wrapper">
-      <div class="auth-card">
-        <div class="form-col">
-          <h2 style="margin-bottom:10px;">Faça seu login</h2>
-          <p style="color:var(--text-secondary); margin-bottom:14px;">Insira seus dados de acesso para entrar na plataforma.</p>
-
-          <form id="loginForm" onsubmit="return entrar(event)" novalidate>
-            <div class="form-group">
-              <label for="email">E-mail</label>
-              <input
-                id="input_email"
-                type="email"
-                placeholder="seu@exemplo.com"
-                required
-              />
-              <div class="error" id="err-email">Insira um e-mail válido.</div>
-            </div>
-
-            <div class="form-group">
-              <label for="senha">Senha</label>
-              <div style="display: flex; align-items: center">
-                <input
-                  id="input_senha"
-                  type="password"
-                  placeholder="Sua senha"
-                  required
-                  minlength="8"
-                />
-                <span class="toggle-pass" id="toggleSenha" onclick="togglePassword()">👁️</span>
-              </div>
-              <div class="error" id="err-senha">
-                Senha precisa ter pelo menos 8 caracteres.
-              </div>
-            </div>
-
-            <div style="margin-top:12px;">
-              <button type="submit" class="btn-primary" style="cursor:pointer;">Entrar</button>
-            </div>
-          </form>
-        </div>
-
-        <aside class="meta-col">
-          <div class="meta-box">
-            <h3 style="margin-bottom:8px;">Ainda não tem conta?</h3>
-            <p style="color:var(--text-secondary);"> Crie sua conta em poucos minutos e comece a acessar os dashboards exclusivos da Evolvere Invest.</p>
-            <a class="link-small" href="./cadastro.html">Cadastre-se aqui</a>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+    <link rel="icon" href="./assets/icon/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="logo">
+          <a href="index.html"
+            ><img src="./imgs/Logo-projeto.png" alt="Investify Logo"
+          /></a>
+          <div class="brand-txt">
+            <h1>Evolvere Invest</h1>
+            <small>Decisões de investimento baseadas em dados</small>
           </div>
-        </aside>
+        </div>
+
+        <nav>
+          <ul class="nav-list">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="./cadastro.html" class="btn-link">Cadastro</a></li>
+          </ul>
+        </nav>
       </div>
-    </div>
-  </main>
+    </header>
 
-  <footer class="site-footer" style="margin-top: 40px">
-    <div class="container footer-inner">
-      <p>&copy; 2025 Evolvere Invest — Protótipo educativo.</p>
-      <p style="color: rgba(255, 255, 255, 0.9);">Contato: equipe@evolvereinvest.net</p>
-    </div>
-  </footer>
+    <main class="container">
+      <div class="auth-wrapper">
+        <div class="auth-card">
+          <div class="form-col">
+            <h2 style="margin-bottom: 10px">Faça seu login</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 14px">
+              Insira seus dados de acesso para entrar na plataforma.
+            </p>
 
-<script>
-  function entrar(event) {
-    // Previne o comportamento padrão do formulário
-    event.preventDefault();
-    
-    const emailVar = input_email.value;
-    const senhaVar = input_senha.value;
+            <form id="loginForm" onsubmit="return entrar(event)" novalidate>
+              <div class="form-group">
+                <label for="email">E-mail</label>
+                <input
+                  id="input_email"
+                  type="email"
+                  placeholder="seu@exemplo.com"
+                  required
+                />
+                <div class="error" id="err-email">Insira um e-mail válido.</div>
+              </div>
 
-    // Validações básicas
-    if (emailVar == "" || senhaVar == "") {
-      alert("Por favor, preencha todos os campos!");
-      return false;
-    }
+              <div class="form-group">
+                <label for="senha">Senha</label>
+                <div style="display: flex; align-items: center">
+                  <input
+                    id="input_senha"
+                    type="password"
+                    placeholder="Sua senha"
+                    required
+                    minlength="8"
+                  />
+                  <span
+                    class="toggle-pass"
+                    id="toggleSenha"
+                    onclick="togglePassword()"
+                    >👁️</span
+                  >
+                </div>
+                <div class="error" id="err-senha">
+                  Senha precisa ter pelo menos 8 caracteres.
+                </div>
+              </div>
 
+              <div style="margin-top: 12px">
+                <button
+                  type="submit"
+                  class="btn-primary"
+                  style="cursor: pointer"
+                >
+                  Entrar
+                </button>
+              </div>
+            </form>
+          </div>
 
-    console.log("FORM LOGIN: ", emailVar);
-    console.log("FORM SENHA: ", senhaVar);
+          <aside class="meta-col">
+            <div class="meta-box">
+              <h3 style="margin-bottom: 8px">Ainda não tem conta?</h3>
+              <p style="color: var(--text-secondary)">
+                Crie sua conta em poucos minutos e comece a acessar os
+                dashboards exclusivos da Evolvere Invest.
+              </p>
+              <a class="link-small" href="./cadastro.html">Cadastre-se aqui</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
 
-    fetch("/usuarios/autenticar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        emailServer: emailVar,
-        senhaServer: senhaVar
-      }),
-    })
-      .then(function (resposta) {
-        console.log("ESTOU NO THEN DO entrar()!");
-        if (resposta.ok) {
-          console.log("Login realizado com sucesso!");
-          resposta.json().then((json) => {
-            console.log(json);
-            console.log(JSON.stringify(json));
-            
-           
-            sessionStorage.EMAIL_USUARIO = json.email;
-            sessionStorage.ID_USUARIO = json.id;
-            sessionStorage.NOME_USUARIO = json.nome;
+    <footer class="site-footer" style="margin-top: 40px">
+      <div class="container footer-inner">
+        <p>&copy; 2025 Evolvere Invest — Protótipo educativo.</p>
+        <p style="color: rgba(255, 255, 255, 0.9)">
+          Contato: equipe@evolvereinvest.net
+        </p>
+      </div>
+    </footer>
 
-            alert("Login realizado com sucesso!");
-            
-            setTimeout(() => {
-              window.location.href = "./index.html";
-            }, 500);
-          });
-        } else {
-          resposta.json().then((json) => {
-            console.log("Erro no login:", json);
-            alert(json.message || "Houve um erro ao tentar realizar o login!");
-          }).catch(() => {
-            alert("E-mail ou senha incorretos!");
-          });
+    <script>
+      function entrar(event) {
+        // Previne o comportamento padrão do formulário
+        event.preventDefault();
+
+        const emailVar = input_email.value;
+        const senhaVar = input_senha.value;
+
+        // Validações básicas
+        if (emailVar == "" || senhaVar == "") {
+          alert("Por favor, preencha todos os campos!");
+          return false;
         }
-      })
-      .catch(function (erro) {
-        console.log("Erro:", erro);
-        alert("Erro ao conectar com o servidor!");
-      });
 
-    return false;
-  }
+        console.log("FORM LOGIN: ", emailVar);
+        console.log("FORM SENHA: ", senhaVar);
 
+        fetch("/usuarios/autenticar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            emailServer: emailVar,
+            senhaServer: senhaVar,
+          }),
+        })
+          .then(function (resposta) {
+            console.log("ESTOU NO THEN DO entrar()!");
+            if (resposta.ok) {
+              console.log("Login realizado com sucesso!");
+              resposta.json().then((json) => {
+                console.log(json);
+                console.log(JSON.stringify(json));
 
-  function togglePassword() {
-    const senhaInput = document.getElementById('input_senha');
-    const toggleIcon = document.getElementById('toggleSenha');
-    
-    if (senhaInput.type === 'password') {
-      senhaInput.type = 'text';
-      toggleIcon.textContent = '🙈';
-    } else {
-      senhaInput.type = 'password';
-      toggleIcon.textContent = '👁️';
-    }
-  }
+                sessionStorage.EMAIL_USUARIO = json.email;
+                sessionStorage.ID_USUARIO = json.id;
+                sessionStorage.NOME_USUARIO = json.nome;
 
-  document.getElementById('input_email').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      document.getElementById('input_senha').focus();
-    }
-  });
+                alert("Login realizado com sucesso!");
 
-  document.getElementById('input_senha').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      document.getElementById('loginForm').dispatchEvent(new Event('submit'));
-    }
-  });
-</script>
-</body>
+                setTimeout(() => {
+                  window.location.href = "./index.html";
+                }, 500);
+              });
+            } else {
+              resposta
+                .json()
+                .then((json) => {
+                  console.log("Erro no login:", json);
+                  alert(
+                    json.message || "Houve um erro ao tentar realizar o login!"
+                  );
+                })
+                .catch(() => {
+                  alert("E-mail ou senha incorretos!");
+                });
+            }
+          })
+          .catch(function (erro) {
+            console.log("Erro:", erro);
+            alert("Erro ao conectar com o servidor!");
+          });
+
+        return false;
+      }
+
+      function togglePassword() {
+        const senhaInput = document.getElementById("input_senha");
+        const toggleIcon = document.getElementById("toggleSenha");
+
+        if (senhaInput.type === "password") {
+          senhaInput.type = "text";
+          toggleIcon.textContent = "🙈";
+        } else {
+          senhaInput.type = "password";
+          toggleIcon.textContent = "👁️";
+        }
+      }
+
+      document
+        .getElementById("input_email")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            document.getElementById("input_senha").focus();
+          }
+        });
+
+      document
+        .getElementById("input_senha")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            document
+              .getElementById("loginForm")
+              .dispatchEvent(new Event("submit"));
+          }
+        });
+    </script>
+  </body>
 </html>
-
