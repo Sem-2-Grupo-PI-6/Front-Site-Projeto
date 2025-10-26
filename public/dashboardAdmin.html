@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Executive Insights Dashboard</title>
+    <title>Evolvere Invest - Painel Administrativo</title>
     <link rel="stylesheet" href="./css/styleDashboardAdmin.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
@@ -11,344 +11,436 @@
     <main>
       <aside>
         <header>
-          <h1>Aurora Command</h1>
+          <h1>Evolvere Admin</h1>
+          <p>Painel de Controle</p>
         </header>
         <section class="user-profile">
+          <figure>RM</figure>
           <figcaption>
             <h2>Rodrigo Martins</h2>
-            <span>Administrador</span>
+            <span>Administrador Master</span>
           </figcaption>
         </section>
         <nav aria-label="Primary">
-          <h2>Navigation</h2>
+          <h2>Gestão</h2>
           <ul>
-            <li><a href="#">🏠 Home</a></li>
-            <li><a href="#">📊 Performance</a></li>
-            <li><a href="#">⚙️ Settings</a></li>
-            <li><button type="button">🚪 Logout</button></li>
+            <li><a href="#" class="active">📊 Dashboard</a></li>
+            <li><a href="#">👥 Usuários</a></li>
+            <li><a href="#">🏢 Empresas</a></li>
+            <li><a href="#">📈 Configurar KPIs</a></li>
+            <li><a href="#">🗺️ Fontes de Dados</a></li>
+          </ul>
+          <h2>Sistema</h2>
+          <ul>
+            <li><a href="./configADM.html">⚙️ Configurações</a></li>
+            <li><a href="#">📝 Logs de Auditoria</a></li>
+            <li><a href="#">🔔 Notificações</a></li>
           </ul>
         </nav>
+
+        <!-- AÇÕES RÁPIDAS NA SIDEBAR -->
+        <section class="quick-actions-sidebar">
+          <h2>⚡ Ações Rápidas</h2>
+          <div class="quick-actions-list">
+            <button class="quick-action-item">
+              <span class="action-icon">👤</span>
+              <span class="action-text">Novo Usuário</span>
+            </button>
+            <button class="quick-action-item">
+              <span class="action-icon">🏢</span>
+              <span class="action-text">Nova Empresa</span>
+            </button>
+            <button class="quick-action-item">
+              <span class="action-icon">📊</span>
+              <span class="action-text">Config. KPI</span>
+            </button>
+            <button class="quick-action-item">
+              <span class="action-icon">🔄</span>
+              <span class="action-text">Sync Dados</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="system-status">
+          <h2>⚡ Status do Sistema</h2>
+          <div class="status-item">
+            <span class="status-dot online"></span>
+            <span>API IBGE</span>
+            <span class="status-badge success">OK</span>
+          </div>
+          <div class="status-item">
+            <span class="status-dot online"></span>
+            <span>API Bacen</span>
+            <span class="status-badge success">OK</span>
+          </div>
+          <div class="status-item">
+            <span class="status-dot warning"></span>
+            <span>API IPEA</span>
+            <span class="status-badge warning">Lento</span>
+          </div>
+          <div class="status-item">
+            <span class="status-dot online"></span>
+            <span>Database</span>
+            <span class="status-badge success">99%</span>
+          </div>
+        </section>
+
+        <button class="btn-logout">🚪 Sair</button>
       </aside>
+      
       <section class="workspace">
-        <header>
-          <h2>Engagement Intelligence</h2>
-          <span>Updated 6 minutes ago • Latency: 112ms</span>
-        </header>
-        <section class="chart-area" aria-label="Analytics overview">
-          <section class="top-charts" aria-label="Primary metrics">
-            <article class="chart-card">
-              <header>
-                <h3>Conversion Velocity</h3>
-                <span>Weekly cohorts • Goals vs Actuals</span>
+        <section class="workspace-header">
+          <div>
+            <h2>Visão Geral da Plataforma</h2>
+            <span>Última atualização: Hoje, 21:48 • Período: Últimos 30 dias</span>
+          </div>
+          <div class="header-actions">
+            <button class="btn-secondary">📅 Período</button>
+            <button class="btn-primary">📥 Relatório Executivo</button>
+          </div>
+        </section>
+
+        <section class="metrics-grid" aria-label="Métricas principais da plataforma">
+          <article class="metric-card metric-primary">
+            <div class="metric-header">
+              <div class="metric-icon">👥</div>
+              <div class="metric-info">
+                <span class="metric-label">Usuários Ativos</span>
+                <span class="metric-badge">Total</span>
+              </div>
+            </div>
+            <div class="metric-value">
+              <span class="value">127</span>
+              <span class="trend positive">
+                <span class="trend-arrow">↑</span>
+                <span class="trend-text">+18</span>
+              </span>
+            </div>
+            <div class="metric-footer">
+              <span class="metric-detail">92 empresas</span>
+              <a href="#" class="metric-link">Ver →</a>
+            </div>
+          </article>
+
+          <article class="metric-card metric-success">
+            <div class="metric-header">
+              <div class="metric-icon">📊</div>
+              <div class="metric-info">
+                <span class="metric-label">Consultas</span>
+                <span class="metric-badge">Mês</span>
+              </div>
+            </div>
+            <div class="metric-value">
+              <span class="value">8,429</span>
+              <span class="trend positive">
+                <span class="trend-arrow">↑</span>
+                <span class="trend-text">+24%</span>
+              </span>
+            </div>
+            <div class="metric-footer">
+              <span class="metric-detail">281/dia</span>
+              <a href="#" class="metric-link">Detalhes →</a>
+            </div>
+          </article>
+
+          <article class="metric-card metric-info">
+            <div class="metric-header">
+              <div class="metric-icon">🗄️</div>
+              <div class="metric-info">
+                <span class="metric-label">Sync Dados</span>
+                <span class="metric-badge">Hoje</span>
+              </div>
+            </div>
+            <div class="metric-value">
+              <span class="value">98.5<span class="unit">%</span></span>
+              <span class="trend positive">
+                <span class="trend-arrow">↑</span>
+                <span class="trend-text">+1.2%</span>
+              </span>
+            </div>
+            <div class="metric-footer">
+              <span class="metric-detail">Sync: 14:32</span>
+              <a href="#" class="metric-link">Logs →</a>
+            </div>
+          </article>
+
+          <article class="metric-card metric-warning">
+            <div class="metric-header">
+              <div class="metric-icon">⚠️</div>
+              <div class="metric-info">
+                <span class="metric-label">Taxa de Erro</span>
+                <span class="metric-badge">24h</span>
+              </div>
+            </div>
+            <div class="metric-value">
+              <span class="value">0.8<span class="unit">%</span></span>
+              <span class="trend neutral">
+                <span class="trend-arrow">→</span>
+                <span class="trend-text">OK</span>
+              </span>
+            </div>
+            <div class="metric-footer">
+              <span class="metric-detail">12 erros</span>
+              <a href="#" class="metric-link">Ver →</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="dashboard-content">
+          <div class="content-left">
+            <article class="chart-card full-height">
+              <header class="chart-header">
+                <div>
+                  <h3>📈 Crescimento de Usuários</h3>
+                  <span>Novos cadastros vs Total acumulado</span>
+                </div>
+                <div class="chart-legend">
+                  <span class="legend-item"><span class="dot primary"></span> Novos</span>
+                  <span class="legend-item"><span class="dot secondary"></span> Acumulado</span>
+                </div>
               </header>
               <figure>
-                <canvas
-                  id="conversionTrend"
-                  aria-label="Line chart for conversion velocity"
-                ></canvas>
+                <canvas id="usuariosChart" aria-label="Gráfico de crescimento de usuários"></canvas>
               </figure>
             </article>
+
             <article class="chart-card">
-              <header>
-                <h3>Channel Momentum</h3>
-                <span>Engagement velocity by channel</span>
+              <header class="chart-header">
+                <div>
+                  <h3>🏢 Top 5 Empresas por Uso</h3>
+                  <span>Consultas realizadas (últimos 30 dias)</span>
+                </div>
               </header>
               <figure>
-                <canvas
-                  id="channelMomentum"
-                  aria-label="Line chart for channel momentum"
-                ></canvas>
+                <canvas id="empresasChart" aria-label="Gráfico de uso por empresa"></canvas>
               </figure>
             </article>
-            <article class="chart-card">
-              <header>
-                <h3>Activation Health</h3>
-                <span>Stage progression • 48h trend</span>
+          </div>
+
+          <div class="content-right">
+            <article class="activity-card">
+              <header class="activity-header">
+                <h3>🔔 Atividade Recente</h3>
+                <button class="btn-text">Ver todas</button>
               </header>
-              <figure>
-                <canvas
-                  id="activationHealth"
-                  aria-label="Line chart for activation health"
-                ></canvas>
-              </figure>
+              <div class="activity-list">
+                <div class="activity-item">
+                  <div class="activity-icon success">✓</div>
+                  <div class="activity-content">
+                    <p class="activity-title">Novo usuário cadastrado</p>
+                    <p class="activity-meta">Julia Santos • Construtora ABC</p>
+                    <p class="activity-time">Há 5 minutos</p>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon info">ℹ</div>
+                  <div class="activity-content">
+                    <p class="activity-title">Sincronização concluída</p>
+                    <p class="activity-meta">API IBGE • 2.3GB processados</p>
+                    <p class="activity-time">Há 14 minutos</p>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon warning">!</div>
+                  <div class="activity-content">
+                    <p class="activity-title">API IPEA com latência alta</p>
+                    <p class="activity-meta">Tempo: 2.8s (limite: 2s)</p>
+                    <p class="activity-time">Há 32 minutos</p>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon success">✓</div>
+                  <div class="activity-content">
+                    <p class="activity-title">Relatório gerado</p>
+                    <p class="activity-meta">Carlos Mendes • SP Interior</p>
+                    <p class="activity-time">Há 1 hora</p>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="activity-icon primary">👤</div>
+                  <div class="activity-content">
+                    <p class="activity-title">Empresa verificada</p>
+                    <p class="activity-meta">Investimentos Delta LTDA</p>
+                    <p class="activity-time">Há 2 horas</p>
+                  </div>
+                </div>
+              </div>
             </article>
-          </section>
-          <section class="bottom-charts" aria-label="Secondary metrics">
-            <article class="chart-card">
-              <header>
-                <h3>Sentiment Drift</h3>
-                <span>Support pulse • Rolling 30d</span>
-              </header>
-              <figure>
-                <canvas
-                  id="sentimentDrift"
-                  aria-label="Bar chart for sentiment analysis"
-                ></canvas>
-              </figure>
-            </article>
-            <article class="chart-card">
-              <header>
-                <h3>Lifecycle Impact</h3>
-                <span>Feature adoption vs retention lift</span>
-              </header>
-              <figure>
-                <canvas
-                  id="retentionImpact"
-                  aria-label="Bar chart for lifecycle impact"
-                ></canvas>
-              </figure>
-            </article>
-          </section>
+          </div>
         </section>
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      const chartTheme = {
-        defaultOptions: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: {
-                color: "rgba(247, 249, 255, 0.72)",
-                font: { weight: "500" },
-              },
+      const defaultOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "rgba(12, 15, 29, 0.95)",
+            borderColor: "rgba(93, 209, 255, 0.5)",
+            borderWidth: 1,
+            titleColor: "#f7f9ff",
+            bodyColor: "#f7f9ff",
+            padding: 10,
+            cornerRadius: 8,
+            displayColors: true,
+          },
+        },
+        scales: {
+          x: {
+            grid: {
+              color: "rgba(93, 209, 255, 0.08)",
+              drawBorder: false,
             },
-            tooltip: {
-              backgroundColor: "rgba(9, 12, 24, 0.9)",
-              borderWidth: 1,
-              borderColor: "rgba(93, 209, 255, 0.35)",
-              titleColor: "#ffffff",
-              bodyColor: "#f5f7ff",
+            ticks: {
+              color: "rgba(247, 249, 255, 0.6)",
+              font: { size: 9, weight: '500' },
+              maxRotation: 0,
+              minRotation: 0,
             },
           },
-          scales: {
-            x: {
-              grid: {
-                color: "rgba(93, 209, 255, 0.08)",
-                drawBorder: false,
-              },
-              ticks: {
-                color: "rgba(247, 249, 255, 0.6)",
-              },
+          y: {
+            grid: {
+              color: "rgba(93, 209, 255, 0.08)",
+              drawBorder: false,
             },
-            y: {
-              grid: {
-                color: "rgba(93, 209, 255, 0.08)",
-                drawBorder: false,
-              },
-              ticks: {
-                color: "rgba(247, 249, 255, 0.6)",
-              },
+            ticks: {
+              color: "rgba(247, 249, 255, 0.6)",
+              font: { size: 9, weight: '500' }
             },
           },
         },
       };
 
-      const charts = [
-        {
-          id: "conversionTrend",
-          config: {
-            type: "line",
-            data: {
-              labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
-              datasets: [
-                {
-                  label: "Target",
-                  data: [62, 64, 66, 70, 72, 74, 75, 77],
-                  borderColor: "rgba(93, 209, 255, 0.55)",
-                  backgroundColor: "rgba(93, 209, 255, 0.12)",
-                  fill: true,
-                  tension: 0.35,
-                  borderWidth: 2.5,
-                },
-                {
-                  label: "Actual",
-                  data: [59, 67, 64, 73, 69, 76, 79, 82],
-                  borderColor: "rgba(139, 93, 255, 0.8)",
-                  backgroundColor: "rgba(139, 93, 255, 0.18)",
-                  fill: true,
-                  tension: 0.35,
-                  borderWidth: 3,
-                },
-              ],
+      // Gráfico 1: Crescimento de Usuários
+      new Chart(document.getElementById("usuariosChart"), {
+        type: "line",
+        data: {
+          labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+          datasets: [
+            {
+              label: "Novos Usuários",
+              data: [5, 8, 12, 9, 15, 18, 14, 22, 19, 25, 21, 18],
+              borderColor: "#5dd1ff",
+              backgroundColor: "rgba(93, 209, 255, 0.15)",
+              tension: 0.4,
+              fill: true,
+              borderWidth: 3,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              pointBackgroundColor: "#5dd1ff",
             },
-          },
+            {
+              label: "Total Acumulado",
+              data: [45, 53, 65, 74, 89, 107, 121, 143, 162, 187, 208, 226],
+              borderColor: "#8b5dff",
+              backgroundColor: "rgba(139, 93, 255, 0.1)",
+              tension: 0.4,
+              fill: true,
+              borderWidth: 2.5,
+              pointRadius: 3,
+              pointHoverRadius: 5,
+              pointBackgroundColor: "#8b5dff",
+              yAxisID: 'y1',
+            },
+          ],
         },
-        {
-          id: "channelMomentum",
-          config: {
-            type: "line",
-            data: {
-              labels: [
-                "Week 1",
-                "Week 2",
-                "Week 3",
-                "Week 4",
-                "Week 5",
-                "Week 6",
-              ],
-              datasets: [
-                {
-                  label: "Product",
-                  data: [24, 28, 31, 36, 38, 42],
-                  borderColor: "rgba(93, 209, 255, 0.85)",
-                  backgroundColor: "rgba(93, 209, 255, 0.22)",
-                  fill: true,
-                  tension: 0.4,
-                  borderWidth: 2.5,
-                },
-                {
-                  label: "Lifecycle",
-                  data: [18, 22, 21, 25, 29, 31],
-                  borderColor: "rgba(139, 93, 255, 0.85)",
-                  backgroundColor: "rgba(139, 93, 255, 0.2)",
-                  fill: true,
-                  tension: 0.4,
-                  borderWidth: 2.5,
-                },
-                {
-                  label: "Paid",
-                  data: [15, 16, 19, 22, 24, 26],
-                  borderColor: "rgba(255, 179, 102, 0.9)",
-                  backgroundColor: "rgba(255, 179, 102, 0.25)",
-                  fill: true,
-                  tension: 0.4,
-                  borderWidth: 2.5,
-                },
-              ],
+        options: {
+          ...defaultOptions,
+          layout: {
+            padding: {
+              top: 10,
+              right: 10,
+              bottom: 5,
+              left: 5
+            }
+          },
+          scales: {
+            x: {
+              ...defaultOptions.scales.x,
             },
-            options: {
-              plugins: {
-                legend: {
-                  position: "bottom",
-                  labels: {
-                    color: "rgba(247, 249, 255, 0.76)",
-                    usePointStyle: true,
-                    padding: 16,
-                  },
-                },
+            y: {
+              ...defaultOptions.scales.y,
+              type: 'linear',
+              display: true,
+              position: 'left',
+              title: {
+                display: true,
+                text: 'Novos',
+                color: 'rgba(247, 249, 255, 0.6)',
+                font: { size: 9, weight: '600' },
+              },
+            },
+            y1: {
+              ...defaultOptions.scales.y,
+              type: 'linear',
+              display: true,
+              position: 'right',
+              title: {
+                display: true,
+                text: 'Total',
+                color: 'rgba(247, 249, 255, 0.6)',
+                font: { size: 9, weight: '600' },
+              },
+              grid: {
+                drawOnChartArea: false,
               },
             },
           },
         },
-        {
-          id: "activationHealth",
-          config: {
-            type: "line",
-            data: {
-              labels: ["Discover", "Engage", "Trial", "Onboard", "Expand"],
-              datasets: [
-                {
-                  label: "Current",
-                  data: [92, 78, 62, 55, 38],
-                  borderColor: "rgba(93, 209, 255, 0.75)",
-                  backgroundColor: "rgba(93, 209, 255, 0.18)",
-                  fill: true,
-                  tension: 0.45,
-                  borderWidth: 2.5,
-                },
-                {
-                  label: "Last Week",
-                  data: [88, 71, 58, 50, 34],
-                  borderColor: "rgba(139, 93, 255, 0.75)",
-                  backgroundColor: "rgba(139, 93, 255, 0.16)",
-                  fill: true,
-                  tension: 0.45,
-                  borderWidth: 2.5,
-                },
+      });
+
+      // Gráfico 2: Top Empresas
+      new Chart(document.getElementById("empresasChart"), {
+        type: "bar",
+        data: {
+          labels: ["Construtora XYZ", "Investimentos ABC", "Fundo Delta", "Imobiliária Sigma", "Capital Omega"],
+          datasets: [
+            {
+              label: "Consultas",
+              data: [1420, 1180, 980, 860, 740],
+              backgroundColor: [
+                "#5dd1ff",
+                "#8b5dff",
+                "#60a5fa",
+                "#7dd3fc",
+                "#c084fc",
               ],
+              borderRadius: 8,
+              borderSkipped: false,
             },
-          },
+          ],
         },
-        {
-          id: "sentimentDrift",
-          config: {
-            type: "bar",
-            data: {
-              labels: [
-                "Billing",
-                "Support",
-                "Onboarding",
-                "Adoption",
-                "Advocacy",
-              ],
-              datasets: [
-                {
-                  label: "Positive",
-                  data: [68, 74, 82, 85, 71],
-                  backgroundColor: "rgba(93, 209, 255, 0.65)",
-                  borderRadius: 8,
-                  borderSkipped: false,
-                },
-                {
-                  label: "Negative",
-                  data: [22, 28, 18, 15, 24],
-                  backgroundColor: "rgba(139, 93, 255, 0.55)",
-                  borderRadius: 8,
-                  borderSkipped: false,
-                },
-              ],
-            },
+        options: {
+          ...defaultOptions,
+          indexAxis: 'y',
+          layout: {
+            padding: {
+              top: 5,
+              right: 10,
+              bottom: 5,
+              left: 5
+            }
           },
-        },
-        {
-          id: "retentionImpact",
-          config: {
-            type: "bar",
-            data: {
-              labels: [
-                "Guided Tours",
-                "Automation",
-                "AI Copilot",
-                "Feedback Loops",
-                "Workflow Apps",
-              ],
-              datasets: [
-                {
-                  label: "Adoption",
-                  data: [12, 18, 24, 17, 21],
-                  backgroundColor: "rgba(93, 209, 255, 0.7)",
-                  borderRadius: 8,
-                  borderSkipped: false,
-                },
-                {
-                  label: "Retention Lift",
-                  data: [6, 9, 14, 11, 13],
-                  backgroundColor: "rgba(139, 93, 255, 0.6)",
-                  borderRadius: 8,
-                  borderSkipped: false,
-                },
-              ],
+          scales: {
+            x: {
+              ...defaultOptions.scales.x,
             },
-            options: {
-              ...chartTheme.defaultOptions,
-              scales: {
-                x: {
-                  ...chartTheme.defaultOptions.scales.x,
-                  ticks: {
-                    color: "rgba(247, 249, 255, 0.65)",
-                    maxRotation: 0,
-                    minRotation: 0,
-                  },
-                },
-                y: {
-                  ...chartTheme.defaultOptions.scales.y,
-                  suggestedMax: 30,
-                  ticks: {
-                    color: "rgba(247, 249, 255, 0.6)",
-                    callback: (value) => `${value}%`,
-                  },
-                },
+            y: {
+              ...defaultOptions.scales.y,
+              grid: {
+                display: false,
+              },
+              ticks: {
+                color: "rgba(247, 249, 255, 0.7)",
+                font: { size: 9, weight: '500' },
               },
             },
           },
         },
-      ];
-      charts.forEach(({ id, config }) => {
-        const context = document.getElementById(id);
-        new Chart(context, config);
       });
     </script>
   </body>

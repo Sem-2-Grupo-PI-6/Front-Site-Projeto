@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evolvere Invest - Minha Conta</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/configUsuario.css" />
+    <link rel="icon" href="./assets/icon/favicon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="logo">
+          <a href="index.html">
+            <img src="./imgs/Logo-projeto.png" alt="Evolvere Logo" />
+          </a>
+          <div class="brand-txt">
+            <h1>Evolvere Invest</h1>
+            <small>Decisões de investimento baseadas em dados</small>
+          </div>
+        </div>
+
+        <nav>
+          <ul class="nav-list">
+            <li><a href="dashboardCliente.html">📊 Dashboard</a></li>
+            <li><a href="configUsuario.html" class="active">👤 Minha Conta</a></li>
+            <li class="divider">|</li>
+            <li><a href="#" class="btn-link">Sair</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container main-content">
+      <!-- CABEÇALHO DO PERFIL -->
+      <section class="profile-hero">
+        <div class="profile-hero-content">
+          <div class="profile-avatar-hero">SC</div>
+          <div class="profile-hero-info">
+            <h1>Sierra Capital</h1>
+            <p class="profile-email">sierra@fundoinvest.com</p>
+            <span class="badge-user">Fundo de Investimento</span>
+          </div>
+        </div>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-value">23</span>
+            <span class="stat-label">Consultas Hoje</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">342</span>
+            <span class="stat-label">Total no Mês</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">42</span>
+            <span class="stat-label">Dias de Uso</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABS DE CONFIGURAÇÃO -->
+      <section class="config-tabs">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="profile">
+            <span class="tab-icon">👤</span>
+            <span>Meu Perfil</span>
+          </button>
+          <button class="tab-btn" data-tab="security">
+            <span class="tab-icon">🔒</span>
+            <span>Segurança</span>
+          </button>
+          <button class="tab-btn" data-tab="preferences">
+            <span class="tab-icon">⚙️</span>
+            <span>Preferências</span>
+          </button>
+          <button class="tab-btn" data-tab="activity">
+            <span class="tab-icon">📋</span>
+            <span>Atividade</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: MEU PERFIL -->
+        <div class="tab-content active" id="tab-profile">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>👤 Informações Pessoais</h2>
+                <p>Gerencie seus dados cadastrais</p>
+              </div>
+            </div>
+
+            <form class="config-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-name">Nome Completo *</label>
+                  <input type="text" id="profile-name" value="Sierra Capital" required />
+                </div>
+                <div class="form-group">
+                  <label for="profile-email">Email *</label>
+                  <input type="email" id="profile-email" value="sierra@fundoinvest.com" disabled />
+                  <small class="form-hint">📧 Email não pode ser alterado. Entre em contato com o suporte.</small>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-company">Empresa *</label>
+                  <input type="text" id="profile-company" value="Fundo de Investimento Sierra" required />
+                </div>
+                <div class="form-group">
+                  <label for="profile-cnpj">CNPJ</label>
+                  <input type="text" id="profile-cnpj" value="12.345.678/0001-90" placeholder="00.000.000/0000-00" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-phone">Telefone</label>
+                  <input type="tel" id="profile-phone" placeholder="(11) 99999-9999" />
+                </div>
+                <div class="form-group">
+                  <label for="profile-sector">Setor de Atuação</label>
+                  <select id="profile-sector">
+                    <option value="">Selecione...</option>
+                    <option value="construcao" selected>Construção Civil</option>
+                    <option value="investimento">Fundo de Investimento</option>
+                    <option value="imobiliaria">Imobiliária</option>
+                    <option value="consultoria">Consultoria</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="alert alert-info">
+                <strong>ℹ️ Importante:</strong> Mantenha seus dados atualizados para receber relatórios e análises personalizadas.
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn-secondary">Cancelar</button>
+                <button type="submit" class="btn-primary">💾 Salvar Alterações</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 2: SEGURANÇA -->
+        <div class="tab-content" id="tab-security">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>🔒 Segurança da Conta</h2>
+                <p>Proteja sua conta com senha forte</p>
+              </div>
+            </div>
+
+            <form class="config-form">
+              <h3 class="section-title">🔑 Alterar Senha</h3>
+
+              <div class="security-info">
+                <div class="security-item">
+                  <span class="security-icon">✓</span>
+                  <div class="security-content">
+                    <strong>Última alteração:</strong>
+                    <p>15 de Outubro de 2024 às 14:32</p>
+                  </div>
+                </div>
+                <div class="security-item">
+                  <span class="security-icon">🛡️</span>
+                  <div class="security-content">
+                    <strong>Força da senha atual:</strong>
+                    <div class="password-strength">
+                      <div class="strength-bar strong"></div>
+                      <span class="strength-label">Forte</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="security-current-password">Senha Atual *</label>
+                <div class="password-input-wrapper">
+                  <input type="password" id="security-current-password" placeholder="Digite sua senha atual" required />
+                  <button type="button" class="btn-toggle-password" onclick="togglePassword('security-current-password')">👁️</button>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="security-new-password">Nova Senha *</label>
+                  <div class="password-input-wrapper">
+                    <input type="password" id="security-new-password" placeholder="Mínimo 8 caracteres" required />
+                    <button type="button" class="btn-toggle-password" onclick="togglePassword('security-new-password')">👁️</button>
+                  </div>
+                  <small class="form-hint">Use letras, números e símbolos</small>
+                </div>
+                <div class="form-group">
+                  <label for="security-confirm-password">Confirmar Nova Senha *</label>
+                  <div class="password-input-wrapper">
+                    <input type="password" id="security-confirm-password" placeholder="Repita a nova senha" required />
+                    <button type="button" class="btn-toggle-password" onclick="togglePassword('security-confirm-password')">👁️</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="password-requirements">
+                <h4>📋 Requisitos de Senha:</h4>
+                <ul>
+                  <li class="requirement" id="req-length">Mínimo de 8 caracteres</li>
+                  <li class="requirement" id="req-uppercase">Pelo menos 1 letra maiúscula</li>
+                  <li class="requirement" id="req-lowercase">Pelo menos 1 letra minúscula</li>
+                  <li class="requirement" id="req-number">Pelo menos 1 número</li>
+                  <li class="requirement" id="req-special">Pelo menos 1 caractere especial (!@#$%)</li>
+                </ul>
+              </div>
+
+              <div class="alert alert-warning">
+                <strong>⚠️ Atenção:</strong> Após alterar sua senha, você será desconectado e precisará fazer login novamente.
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn-secondary">Cancelar</button>
+                <button type="submit" class="btn-primary">🔒 Alterar Senha</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>🔐 Sessões Ativas</h2>
+                <p>Dispositivos conectados à sua conta</p>
+              </div>
+            </div>
+
+            <div class="sessions-list">
+              <div class="session-item current">
+                <div class="session-icon">💻</div>
+                <div class="session-info">
+                  <strong>Windows 11 - Chrome</strong>
+                  <p>São Paulo, SP • IP: 192.168.1.100</p>
+                  <span class="session-time">Sessão atual • Ativo agora</span>
+                </div>
+                <span class="badge-current">Atual</span>
+              </div>
+
+              <div class="session-item">
+                <div class="session-icon">📱</div>
+                <div class="session-info">
+                  <strong>iPhone 13 - Safari</strong>
+                  <p>São Paulo, SP • IP: 192.168.1.105</p>
+                  <span class="session-time">Último acesso: Há 2 horas</span>
+                </div>
+                <button class="btn-revoke">Desconectar</button>
+              </div>
+            </div>
+
+            <button class="btn-danger-outline">🚪 Desconectar Todos os Dispositivos</button>
+          </div>
+        </div>
+
+        <!-- TAB 3: PREFERÊNCIAS -->
+        <div class="tab-content" id="tab-preferences">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>⚙️ Preferências</h2>
+                <p>Personalize sua experiência na plataforma</p>
+              </div>
+            </div>
+
+            <form class="config-form">
+              <h3 class="section-title">🔔 Notificações</h3>
+
+              <div class="toggle-group">
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <strong>Notificações por Email</strong>
+                    <p>Receba atualizações importantes via email</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <strong>Relatórios Semanais</strong>
+                    <p>Resumo semanal de dados macroeconômicos</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <strong>Alertas de Oportunidade</strong>
+                    <p>Notifique-me sobre regiões com alto potencial</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <strong>Novidades da Plataforma</strong>
+                    <p>Receba informações sobre novos recursos</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <h3 class="section-title">🎨 Interface</h3>
+
+              <div class="form-group">
+                <label for="pref-theme">Tema da Interface</label>
+                <select id="pref-theme">
+                  <option value="light" selected>Claro</option>
+                  <option value="dark">Escuro</option>
+                  <option value="auto">Automático (Sistema)</option>
+                </select>
+                <small class="form-hint">O tema escuro será aplicado em breve</small>
+              </div>
+
+              <h3 class="section-title">📊 Dashboard</h3>
+
+              <div class="form-group">
+                <label for="pref-region">Região de Interesse Principal</label>
+                <select id="pref-region">
+                  <option value="">Todas as regiões</option>
+                  <option value="capital" selected>São Paulo - Capital</option>
+                  <option value="abc">ABC Paulista</option>
+                  <option value="campinas">Campinas</option>
+                  <option value="santos">Baixada Santista</option>
+                  <option value="vale">Vale do Paraíba</option>
+                  <option value="interior">Interior</option>
+                </select>
+              </div>
+
+              <div class="toggle-group">
+                <div class="toggle-item">
+                  <div class="toggle-info">
+                    <strong>Atualização Automática</strong>
+                    <p>Atualizar gráficos automaticamente a cada 5 minutos</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" checked />
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn-secondary">Restaurar Padrões</button>
+                <button type="submit" class="btn-primary">💾 Salvar Preferências</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 4: ATIVIDADE -->
+        <div class="tab-content" id="tab-activity">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>📋 Histórico de Atividades</h2>
+                <p>Suas últimas ações na plataforma</p>
+              </div>
+              <select class="filter-select">
+                <option value="all">Todas as atividades</option>
+                <option value="login">Logins</option>
+                <option value="query">Consultas</option>
+                <option value="config">Configurações</option>
+              </select>
+            </div>
+
+            <div class="activity-timeline">
+              <div class="activity-item">
+                <div class="activity-icon success">✓</div>
+                <div class="activity-content">
+                  <strong>Login realizado</strong>
+                  <p>Acesso via Windows 11 - Chrome</p>
+                  <span class="activity-time">Há 5 minutos • São Paulo, SP</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon info">📊</div>
+                <div class="activity-content">
+                  <strong>Consulta realizada</strong>
+                  <p>Análise de PIB Regional - Grande SP</p>
+                  <span class="activity-time">Há 32 minutos</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon info">📊</div>
+                <div class="activity-content">
+                  <strong>Relatório exportado</strong>
+                  <p>Valor Adicionado - Construção Civil Q3 2024</p>
+                  <span class="activity-time">Há 1 hora</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon warning">⚙️</div>
+                <div class="activity-content">
+                  <strong>Configurações alteradas</strong>
+                  <p>Notificações por email ativadas</p>
+                  <span class="activity-time">Há 2 horas</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon success">✓</div>
+                <div class="activity-content">
+                  <strong>Login realizado</strong>
+                  <p>Acesso via iPhone 13 - Safari</p>
+                  <span class="activity-time">Há 3 horas • São Paulo, SP</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon info">📊</div>
+                <div class="activity-content">
+                  <strong>Dashboard visualizado</strong>
+                  <p>Cenário Macroeconômico - São Paulo</p>
+                  <span class="activity-time">Ontem às 16:45</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon info">📊</div>
+                <div class="activity-content">
+                  <strong>Consulta realizada</strong>
+                  <p>Taxa Selic e Impactos no Crédito</p>
+                  <span class="activity-time">Ontem às 15:22</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pagination">
+              <button class="btn-pagination">← Anterior</button>
+              <span class="pagination-info">Mostrando 7 de 42 atividades</span>
+              <button class="btn-pagination">Próximo →</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>📈 Estatísticas de Uso</h2>
+                <p>Seu engajamento na plataforma</p>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon">🔍</div>
+                <div class="stat-value">342</div>
+                <div class="stat-label">Consultas Realizadas</div>
+                <div class="stat-trend positive">↑ 24% vs mês anterior</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">📥</div>
+                <div class="stat-value">18</div>
+                <div class="stat-label">Relatórios Exportados</div>
+                <div class="stat-trend positive">↑ 12% vs mês anterior</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value">12h</div>
+                <div class="stat-label">Tempo na Plataforma</div>
+                <div class="stat-trend neutral">→ Média mensal</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">8</div>
+                <div class="stat-label">Regiões Analisadas</div>
+                <div class="stat-trend positive">↑ 2 novas regiões</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUPORTE E AJUDA -->
+      <section class="help-section">
+        <div class="help-card">
+          <div class="help-icon">❓</div>
+          <div class="help-content">
+            <h3>Precisa de Ajuda?</h3>
+            <p>Nossa equipe de suporte está pronta para te auxiliar</p>
+            <a href="mailto:suporte@evolvereinvest.net" class="btn-help">📧 Contatar Suporte</a>
+          </div>
+        </div>
+
+        <div class="help-card">
+          <div class="help-icon">📚</div>
+          <div class="help-content">
+            <h3>Central de Ajuda</h3>
+            <p>Tutoriais, guias e perguntas frequentes</p>
+            <a href="#" class="btn-help">📖 Acessar Documentação</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>&copy; 2025 Evolvere Invest — Protótipo educativo</p>
+        <p>Contato: equipe@evolvereinvest.net</p>
+      </div>
+    </footer>
+
+    <script src="./js/configUsuario.js"></script>
+  </body>
+</html>
