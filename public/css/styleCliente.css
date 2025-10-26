@@ -523,6 +523,243 @@ section.briefing p {
   }
 }
 
+.modal-mini {
+  background: white;
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(14, 105, 48, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.modal-header-mini {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 2px solid rgba(14, 105, 48, 0.1);
+  background: linear-gradient(135deg, rgba(14, 105, 48, 0.05), transparent);
+}
+
+.modal-header-mini h2 {
+  color: var(--brand-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.modal-body-mini {
+  padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.filtros-salvos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filtro-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  background: var(--brand-light);
+  border: 2px solid rgba(14, 105, 48, 0.1);
+  border-radius: 12px;
+  transition: var(--transition);
+}
+
+.filtro-item:hover {
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 12px rgba(14, 105, 48, 0.15);
+}
+
+.filtro-item.ativo {
+  border-color: var(--brand-primary);
+  background: rgba(14, 105, 48, 0.05);
+  box-shadow: 0 4px 16px rgba(14, 105, 48, 0.2);
+}
+
+.filtro-info {
+  flex: 1;
+}
+
+.filtro-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.filtro-nome {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
+
+.badge-ativo {
+  padding: 0.25rem 0.65rem;
+  background: var(--brand-success);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.filtro-detalhes {
+  color: var(--text-soft);
+  font-size: 0.85rem;
+}
+
+.filtro-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+}
+
+.btn-ativar {
+  background: rgba(22, 163, 74, 0.15);
+  color: var(--brand-success);
+}
+
+.btn-ativar:hover {
+  background: var(--brand-success);
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-editar {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.btn-editar:hover {
+  background: #3b82f6;
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-deletar {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.btn-deletar:hover {
+  background: #ef4444;
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-novo-filtro {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  box-shadow: 0 4px 12px rgba(14, 105, 48, 0.3);
+}
+
+.btn-novo-filtro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(14, 105, 48, 0.4);
+}
+
+.btn-novo-filtro span:first-child {
+  font-size: 1.25rem;
+}
+
+/* ===== INPUT NOME DO FILTRO ===== */
+.input-filtro-nome {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 2px solid rgba(14, 105, 48, 0.2);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--brand-primary);
+  margin-top: 0.75rem;
+  transition: var(--transition);
+}
+
+.input-filtro-nome:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(14, 105, 48, 0.1);
+}
+
+.input-filtro-nome::placeholder {
+  color: rgba(14, 105, 48, 0.4);
+  font-weight: 500;
+}
+
+/* ===== TOAST NOTIFICATION ===== */
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 1rem 1.5rem;
+  background: var(--brand-primary);
+  color: white;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(14, 105, 48, 0.4);
+  animation: toastSlideIn 0.3s ease-out;
+  z-index: 10000;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== RESPONSIVE MODAL MINI ===== */
+@media (max-width: 768px) {
+  .modal-mini {
+    max-width: 95%;
+  }
+
+  .filtro-item {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .filtro-actions {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* ===== WORKSPACE SEM SCROLL ===== */
 section.workspace {
   flex: 1;

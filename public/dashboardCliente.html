@@ -25,7 +25,7 @@
           <h2>Menu Principal</h2>
           <ul>
             <li><a href="#">📊 Dashboard</a></li>
-<li><a href="#" onclick="abrirModal(); return false;">🗺️ Meus Filtros</a></li>
+            <li><a href="#" onclick="abrirGerenciarFiltros(); return false;">🗺️ Meus Filtros</a></li>
             <li><a href="./configUsuario.html">📈 Configuraçôes</a></li>
             <li><button type="button">🚪 Sair</button></li>
           </ul>
@@ -165,15 +165,35 @@
 
       
     </main>
+<div class="modal-overlay" id="gerenciarFiltrosModal">
+  <div class="modal-mini">
+    <div class="modal-header-mini">
+      <h2>🗂️ Meus Filtros Salvos</h2>
+      <button class="btn-close-modal" onclick="fecharGerenciarFiltros()">✕</button>
+    </div>
 
-    <div class="modal-overlay" id="filtrosModal">
+    <div class="modal-body-mini">
+      <div class="filtros-salvos-list" id="filtrosSalvosList">
+        <!-- Filtros serão inseridos aqui via JavaScript -->
+      </div>
+
+      <button class="btn-novo-filtro" onclick="criarNovoFiltro()">
+        <span>➕</span>
+        <span>Criar Novo Filtro</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE EDIÇÃO DE FILTROS (SEPARADO) -->
+<div class="modal-overlay" id="editarFiltrosModal">
   <div class="modal-container">
     <div class="modal-header">
       <div>
-        <h2>🗺️ Meus Filtros Personalizados</h2>
-        <p>Configure quais indicadores e gráficos deseja visualizar</p>
+        <h2 id="modalTitle">🗺️ Configurar Filtro</h2>
+        <input type="text" id="filtroNome" class="input-filtro-nome" placeholder="Nome do filtro (ex: Zona Leste Foco)" maxlength="30" />
       </div>
-      <button class="btn-close-modal" onclick="fecharModal()">✕</button>
+      <button class="btn-close-modal" onclick="fecharEditarFiltros()">✕</button>
     </div>
 
     <div class="modal-body">
@@ -186,7 +206,7 @@
           <!-- KPI 1: PIB -->
           <div class="filter-item">
             <label class="filter-label">
-              <input type="checkbox" checked />
+              <input type="checkbox" id="kpi-economico-enable" checked />
               <span class="checkbox-custom"></span>
               <strong>Indicador Econômico</strong>
             </label>
@@ -204,7 +224,7 @@
           <!-- KPI 2: Setor -->
           <div class="filter-item">
             <label class="filter-label">
-              <input type="checkbox" checked />
+              <input type="checkbox" id="kpi-setor-enable" checked />
               <span class="checkbox-custom"></span>
               <strong>Setor de Atuação</strong>
             </label>
@@ -218,7 +238,7 @@
           <!-- KPI 3: Taxa -->
           <div class="filter-item">
             <label class="filter-label">
-              <input type="checkbox" checked />
+              <input type="checkbox" id="kpi-financeiro-enable" checked />
               <span class="checkbox-custom"></span>
               <strong>Indicador Financeiro</strong>
             </label>
@@ -231,7 +251,7 @@
           <!-- KPI 4: Demografia -->
           <div class="filter-item">
             <label class="filter-label">
-              <input type="checkbox" checked />
+              <input type="checkbox" id="kpi-demo-enable" checked />
               <span class="checkbox-custom"></span>
               <strong>Dados Demográficos</strong>
             </label>
@@ -254,7 +274,7 @@
           <div class="graph-item">
             <div class="graph-header">
               <label class="filter-label">
-                <input type="checkbox" checked />
+                <input type="checkbox" id="grafico-pib-enable" checked />
                 <span class="checkbox-custom"></span>
                 <strong>Evolução do PIB Regional</strong>
               </label>
@@ -310,7 +330,7 @@
           <div class="graph-item">
             <div class="graph-header">
               <label class="filter-label">
-                <input type="checkbox" checked />
+                <input type="checkbox" id="grafico-setor-enable" checked />
                 <span class="checkbox-custom"></span>
                 <strong>Valor Adicionado por Setor</strong>
               </label>
@@ -338,7 +358,7 @@
           <div class="graph-item">
             <div class="graph-header">
               <label class="filter-label">
-                <input type="checkbox" checked />
+                <input type="checkbox" id="grafico-atratividade-enable" checked />
                 <span class="checkbox-custom"></span>
                 <strong>Índice de Atratividade</strong>
               </label>
@@ -396,285 +416,498 @@
     <div class="modal-footer">
       <button class="btn-secondary" onclick="restaurarPadroes()">🔄 Restaurar Padrões</button>
       <div class="modal-footer-actions">
-        <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
-        <button class="btn-primary" onclick="aplicarFiltros()">✓ Aplicar Filtros</button>
+        <button class="btn-cancel" onclick="fecharEditarFiltros()">Cancelar</button>
+        <button class="btn-primary" onclick="salvarFiltro()">💾 Salvar Filtro</button>
       </div>
     </div>
   </div>
 </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+<script>
 
-      function abrirModal() {
-    document.getElementById('filtrosModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
+let filtroAtualId = null;
+
+function carregarFiltros() {
+  const filtros = localStorage.getItem('filtrosDashboard');
+  if (!filtros) {
+    const filtroPadrao = {
+      id: 'default',
+      nome: '📌 Filtro Padrão',
+      ativo: true,
+      config: getConfigPadrao()
+    };
+    localStorage.setItem('filtrosDashboard', JSON.stringify([filtroPadrao]));
+    return [filtroPadrao];
   }
+  return JSON.parse(filtros);
+}
 
-  function fecharModal() {
-    document.getElementById('filtrosModal').classList.remove('active');
-    document.body.style.overflow = '';
-  }
+function salvarFiltrosLocal(filtros) {
+  localStorage.setItem('filtrosDashboard', JSON.stringify(filtros));
+}
 
-  function aplicarFiltros() {
-    // Aqui você implementa a lógica de aplicar os filtros
-    alert('✅ Filtros aplicados com sucesso!\n\nDashboard será atualizada com suas preferências.');
-    fecharModal();
-    // Aqui você faria a atualização real dos gráficos e KPIs
-  }
-
-  function restaurarPadroes() {
-    if (confirm('⚠️ Tem certeza que deseja restaurar as configurações padrão?')) {
-      // Restaurar checkboxes e selects para valores padrão
-      document.querySelectorAll('.filter-item input[type="checkbox"]').forEach(cb => cb.checked = true);
-      document.getElementById('kpi-economico').value = 'pib-sp';
-      document.getElementById('kpi-setor').value = 'construcao';
-      document.getElementById('kpi-financeiro').value = 'selic';
-      document.getElementById('kpi-demo').value = 'faixa-etaria';
-      
-      // Restaurar regiões do PIB
-      document.querySelectorAll('input[name="pib-region"]').forEach(cb => {
-        cb.checked = ['grande-sp', 'interior', 'litoral'].includes(cb.value);
-      });
-      
-      // Restaurar setores
-      document.querySelectorAll('input[name="setor"]').forEach(cb => cb.checked = true);
-      
-      // Restaurar atratividade
-      document.querySelectorAll('input[name="atratividade-region"]').forEach(cb => {
-        cb.checked = ['zona-sul', 'zona-leste', 'abc', 'campinas', 'santos', 'ribeirao'].includes(cb.value);
-      });
-      
-      alert('✅ Configurações restauradas para o padrão!');
+function getConfigPadrao() {
+  return {
+    kpis: {
+      economico: { enabled: true, value: 'pib-sp' },
+      setor: { enabled: true, value: 'construcao' },
+      financeiro: { enabled: true, value: 'selic' },
+      demo: { enabled: true, value: 'faixa-etaria' }
+    },
+    graficos: {
+      pib: { enabled: true, regioes: ['grande-sp', 'interior', 'litoral'] },
+      setor: { enabled: true, setores: ['construcao', 'imobiliario', 'servicos'] },
+      atratividade: { enabled: true, regioes: ['zona-sul', 'zona-leste', 'abc', 'campinas', 'santos', 'ribeirao'] }
     }
+  };
+}
+
+// ===== MODAL DE GERENCIAMENTO =====
+function abrirGerenciarFiltros() {
+  renderizarFiltrosSalvos();
+  document.getElementById('gerenciarFiltrosModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharGerenciarFiltros() {
+  document.getElementById('gerenciarFiltrosModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function renderizarFiltrosSalvos() {
+  const filtros = carregarFiltros();
+  const container = document.getElementById('filtrosSalvosList');
+  
+  container.innerHTML = filtros.map(filtro => `
+    <div class="filtro-item ${filtro.ativo ? 'ativo' : ''}">
+      <div class="filtro-info">
+        <div class="filtro-header">
+          <span class="filtro-nome">${filtro.nome}</span>
+          ${filtro.ativo ? '<span class="badge-ativo">✓ Ativo</span>' : ''}
+        </div>
+        <span class="filtro-detalhes">${getResumoFiltro(filtro.config)}</span>
+      </div>
+      <div class="filtro-actions">
+        ${!filtro.ativo ? `<button class="btn-action btn-ativar" onclick="ativarFiltro('${filtro.id}')" title="Ativar">✓</button>` : ''}
+        <button class="btn-action btn-editar" onclick="editarFiltro('${filtro.id}')" title="Editar">✏️</button>
+        ${filtro.id !== 'default' ? `<button class="btn-action btn-deletar" onclick="deletarFiltro('${filtro.id}')" title="Excluir">🗑️</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function getResumoFiltro(config) {
+  const kpisAtivos = Object.values(config.kpis).filter(k => k.enabled).length;
+  const graficosAtivos = Object.values(config.graficos).filter(g => g.enabled).length;
+  return `${kpisAtivos} KPIs • ${graficosAtivos} Gráficos`;
+}
+
+// ===== AÇÕES DOS FILTROS =====
+function criarNovoFiltro() {
+  filtroAtualId = null;
+  document.getElementById('filtroNome').value = '';
+  document.getElementById('modalTitle').textContent = '➕ Criar Novo Filtro';
+  carregarConfigNoModal(getConfigPadrao());
+  fecharGerenciarFiltros();
+  document.getElementById('editarFiltrosModal').classList.add('active');
+}
+
+function editarFiltro(id) {
+  const filtros = carregarFiltros();
+  const filtro = filtros.find(f => f.id === id);
+  if (!filtro) return;
+  
+  filtroAtualId = id;
+  document.getElementById('filtroNome').value = filtro.nome.replace(/[📌✏️➕]/g, '').trim();
+  document.getElementById('modalTitle').textContent = '✏️ Editar Filtro';
+  carregarConfigNoModal(filtro.config);
+  fecharGerenciarFiltros();
+  document.getElementById('editarFiltrosModal').classList.add('active');
+}
+
+function ativarFiltro(id) {
+  const filtros = carregarFiltros();
+  filtros.forEach(f => f.ativo = false);
+  
+  const filtro = filtros.find(f => f.id === id);
+  if (filtro) {
+    filtro.ativo = true;
+    salvarFiltrosLocal(filtros);
+    aplicarFiltroAtivo();
+    renderizarFiltrosSalvos();
+    
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.textContent = `✓ Filtro "${filtro.nome}" ativado!`;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
   }
+}
 
-  // Limitar seleção de regiões
-  document.addEventListener('DOMContentLoaded', function() {
-    // Limitar PIB a 3 regiões
-    const pibCheckboxes = document.querySelectorAll('input[name="pib-region"]');
-    pibCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', function() {
-        const checked = document.querySelectorAll('input[name="pib-region"]:checked');
-        if (checked.length > 3) {
-          this.checked = false;
-          alert('⚠️ Você pode selecionar no máximo 3 regiões para o gráfico de PIB Regional.');
-        }
-      });
-    });
+function deletarFiltro(id) {
+  const filtros = carregarFiltros();
+  const filtro = filtros.find(f => f.id === id);
+  
+  if (!filtro || filtro.id === 'default') return;
+  
+  if (confirm(`⚠️ Tem certeza que deseja excluir o filtro "${filtro.nome}"?\n\nEsta ação não pode ser desfeita.`)) {
+    const novosFiltros = filtros.filter(f => f.id !== id);
+    
+    if (filtro.ativo) {
+      const padrao = novosFiltros.find(f => f.id === 'default');
+      if (padrao) padrao.ativo = true;
+    }
+    
+    salvarFiltrosLocal(novosFiltros);
+    renderizarFiltrosSalvos();
+    aplicarFiltroAtivo();
+    alert('✅ Filtro excluído com sucesso!');
+  }
+}
 
-    // Limitar Atratividade a 6 regiões
-    const atratividadeCheckboxes = document.querySelectorAll('input[name="atratividade-region"]');
-    atratividadeCheckboxes.forEach(checkbox => {
-      checkbox.addEventListener('change', function() {
-        const checked = document.querySelectorAll('input[name="atratividade-region"]:checked');
-        if (checked.length > 6) {
-          this.checked = false;
-          alert('⚠️ Você pode selecionar no máximo 6 regiões para o Índice de Atratividade.');
-        }
-      });
-    });
+function salvarFiltro() {
+  const nome = document.getElementById('filtroNome').value.trim();
+  
+  if (!nome) {
+    alert('⚠️ Por favor, digite um nome para o filtro!');
+    document.getElementById('filtroNome').focus();
+    return;
+  }
+  
+  const config = getConfigDoModal();
+  const filtros = carregarFiltros();
+  
+  if (filtroAtualId) {
+    const index = filtros.findIndex(f => f.id === filtroAtualId);
+    if (index !== -1) {
+      filtros[index].nome = filtroAtualId === 'default' ? '📌 ' + nome : nome;
+      filtros[index].config = config;
+    }
+  } else {
+    const novoFiltro = {
+      id: 'filtro_' + Date.now(),
+      nome: nome,
+      ativo: false,
+      config: config
+    };
+    filtros.push(novoFiltro);
+  }
+  
+  salvarFiltrosLocal(filtros);
+  fecharEditarFiltros();
+  abrirGerenciarFiltros();
+  
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.textContent = filtroAtualId ? '✅ Filtro atualizado!' : '✅ Novo filtro criado!';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
 
-    // Fechar modal ao clicar fora
-    document.getElementById('filtrosModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        fecharModal();
+// ===== MODAL DE EDIÇÃO =====
+function fecharEditarFiltros() {
+  document.getElementById('editarFiltrosModal').classList.remove('active');
+  document.body.style.overflow = '';
+  filtroAtualId = null;
+}
+
+function carregarConfigNoModal(config) {
+  document.getElementById('kpi-economico-enable').checked = config.kpis.economico.enabled;
+  document.getElementById('kpi-economico').value = config.kpis.economico.value;
+  
+  document.getElementById('kpi-setor-enable').checked = config.kpis.setor.enabled;
+  document.getElementById('kpi-setor').value = config.kpis.setor.value;
+  
+  document.getElementById('kpi-financeiro-enable').checked = config.kpis.financeiro.enabled;
+  document.getElementById('kpi-financeiro').value = config.kpis.financeiro.value;
+  
+  document.getElementById('kpi-demo-enable').checked = config.kpis.demo.enabled;
+  document.getElementById('kpi-demo').value = config.kpis.demo.value;
+  
+  document.getElementById('grafico-pib-enable').checked = config.graficos.pib.enabled;
+  document.querySelectorAll('input[name="pib-region"]').forEach(cb => {
+    cb.checked = config.graficos.pib.regioes.includes(cb.value);
+  });
+  
+  document.getElementById('grafico-setor-enable').checked = config.graficos.setor.enabled;
+  document.querySelectorAll('input[name="setor"]').forEach(cb => {
+    cb.checked = config.graficos.setor.setores.includes(cb.value);
+  });
+  
+  document.getElementById('grafico-atratividade-enable').checked = config.graficos.atratividade.enabled;
+  document.querySelectorAll('input[name="atratividade-region"]').forEach(cb => {
+    cb.checked = config.graficos.atratividade.regioes.includes(cb.value);
+  });
+}
+
+function getConfigDoModal() {
+  return {
+    kpis: {
+      economico: {
+        enabled: document.getElementById('kpi-economico-enable').checked,
+        value: document.getElementById('kpi-economico').value
+      },
+      setor: {
+        enabled: document.getElementById('kpi-setor-enable').checked,
+        value: document.getElementById('kpi-setor').value
+      },
+      financeiro: {
+        enabled: document.getElementById('kpi-financeiro-enable').checked,
+        value: document.getElementById('kpi-financeiro').value
+      },
+      demo: {
+        enabled: document.getElementById('kpi-demo-enable').checked,
+        value: document.getElementById('kpi-demo').value
       }
-    });
+    },
+    graficos: {
+      pib: {
+        enabled: document.getElementById('grafico-pib-enable').checked,
+        regioes: Array.from(document.querySelectorAll('input[name="pib-region"]:checked')).map(cb => cb.value)
+      },
+      setor: {
+        enabled: document.getElementById('grafico-setor-enable').checked,
+        setores: Array.from(document.querySelectorAll('input[name="setor"]:checked')).map(cb => cb.value)
+      },
+      atratividade: {
+        enabled: document.getElementById('grafico-atratividade-enable').checked,
+        regioes: Array.from(document.querySelectorAll('input[name="atratividade-region"]:checked')).map(cb => cb.value)
+      }
+    }
+  };
+}
 
-    // Fechar modal com ESC
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && document.getElementById('filtrosModal').classList.contains('active')) {
-        fecharModal();
+function restaurarPadroes() {
+  if (confirm('⚠️ Tem certeza que deseja restaurar as configurações padrão?')) {
+    carregarConfigNoModal(getConfigPadrao());
+    alert('✅ Configurações restauradas para o padrão!');
+  }
+}
+
+function aplicarFiltroAtivo() {
+  const filtros = carregarFiltros();
+  const filtroAtivo = filtros.find(f => f.ativo);
+  if (!filtroAtivo) return;
+  
+  console.log('🗺️ Aplicando filtro:', filtroAtivo.nome);
+  console.log('Configuração:', filtroAtivo.config);
+}
+
+// ===== INICIALIZAÇÃO =====
+document.addEventListener('DOMContentLoaded', function() {
+  aplicarFiltroAtivo();
+  
+  // Limitar PIB a 3 regiões
+  document.querySelectorAll('input[name="pib-region"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const checked = document.querySelectorAll('input[name="pib-region"]:checked');
+      if (checked.length > 3) {
+        this.checked = false;
+        alert('⚠️ Você pode selecionar no máximo 3 regiões para o gráfico de PIB Regional.');
       }
     });
   });
-      const defaultOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: "rgba(9, 61, 31, 0.95)",
-            borderColor: "rgba(14, 105, 48, 0.5)",
-            borderWidth: 1,
-            titleColor: "#f5f5f5",
-            bodyColor: "#f5f5f5",
-            padding: 12,
-            cornerRadius: 8,
-            displayColors: true,
-          },
-        },
-        scales: {
-          x: {
-            grid: {
-              color: "rgba(14, 105, 48, 0.08)",
-              drawBorder: false,
-            },
-            ticks: {
-              color: "rgba(9, 61, 31, 0.7)",
-              font: { size: 11, weight: '500' }
-            },
-          },
-          y: {
-            grid: {
-              color: "rgba(14, 105, 48, 0.08)",
-              drawBorder: false,
-            },
-            ticks: {
-              color: "rgba(9, 61, 31, 0.7)",
-              font: { size: 11, weight: '500' }
-            },
-          },
-        },
-      };
 
-      new Chart(document.getElementById("pibRegionalChart"), {
-        type: "line",
-        data: {
-          labels: ["Q1 2023", "Q2 2023", "Q3 2023", "Q4 2023", "Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024"],
-          datasets: [
-            {
-              label: "Grande SP",
-              data: [3.2, 3.5, 3.7, 4.1, 3.9, 4.3, 4.5, 4.7],
-              borderColor: "#0e6930",
-              backgroundColor: "rgba(14, 105, 48, 0.15)",
-              tension: 0.4,
-              fill: true,
-              borderWidth: 3,
-              pointRadius: 4,
-              pointHoverRadius: 6,
-              pointBackgroundColor: "#0e6930",
-            },
-            {
-              label: "Interior",
-              data: [2.8, 3.1, 3.3, 3.6, 3.4, 3.8, 4.0, 4.2],
-              borderColor: "rgba(9, 61, 31, 0.7)",
-              backgroundColor: "rgba(9, 61, 31, 0.1)",
-              tension: 0.4,
-              fill: true,
-              borderWidth: 2.5,
-              pointRadius: 3,
-              pointHoverRadius: 5,
-              pointBackgroundColor: "rgba(9, 61, 31, 0.7)",
-            },
-            {
-              label: "Litoral",
-              data: [2.5, 2.7, 2.9, 3.2, 3.0, 3.4, 3.6, 3.8],
-              borderColor: "#16a34a",
-              backgroundColor: "rgba(22, 163, 74, 0.1)",
-              tension: 0.4,
-              fill: true,
-              borderWidth: 2,
-              borderDash: [5, 3],
-              pointRadius: 3,
-              pointHoverRadius: 5,
-              pointBackgroundColor: "#16a34a",
-            },
-          ],
-        },
-        options: {
-          ...defaultOptions,
-          scales: {
-            ...defaultOptions.scales,
-            y: {
-              ...defaultOptions.scales.y,
-              ticks: {
-                ...defaultOptions.scales.y.ticks,
-                callback: (value) => `${value}%`,
-              },
-            },
-          },
-        },
-      });
+  // Limitar Atratividade a 6 regiões
+  document.querySelectorAll('input[name="atratividade-region"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const checked = document.querySelectorAll('input[name="atratividade-region"]:checked');
+      if (checked.length > 6) {
+        this.checked = false;
+        alert('⚠️ Você pode selecionar no máximo 6 regiões para o Índice de Atratividade.');
+      }
+    });
+  });
 
-      new Chart(document.getElementById("valorAdicionadoChart"), {
-        type: "bar",
-        data: {
-          labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-          datasets: [
-            {
-              label: "Construção Civil",
-              data: [4.2, 4.5, 4.8, 5.1, 5.3, 5.5, 5.7, 5.4, 5.6, 5.8, 6.0, 6.2],
-              backgroundColor: "#0e6930",
-              borderRadius: 6,
-              borderSkipped: false,
-            },
-            {
-              label: "Imobiliario",
-              data: [2.8, 3.0, 3.2, 3.4, 3.3, 3.5, 3.6, 3.4, 3.7, 3.8, 3.9, 4.0],
-              backgroundColor: "#f59e0b",
-              borderRadius: 6,
-              borderSkipped: false,
-            },
-            {
-              label: "Serviços",
-              data: [3.5, 3.7, 3.9, 4.0, 4.1, 4.3, 4.4, 4.2, 4.5, 4.6, 4.7, 4.8],
-              backgroundColor: "#16a34a",
-              borderRadius: 6,
-              borderSkipped: false,
-            },
-          ],
-        },
-        options: {
-          ...defaultOptions,
-          scales: {
-            ...defaultOptions.scales,
-            x: { ...defaultOptions.scales.x, stacked: false },
-            y: { 
-              ...defaultOptions.scales.y, 
-              suggestedMax: 7,
-              ticks: {
-                ...defaultOptions.scales.y.ticks,
-                callback: (value) => `${value}%`,
-              },
-            },
-          },
-        },
-      });
+  // Fechar modais ao clicar fora
+  document.getElementById('gerenciarFiltrosModal')?.addEventListener('click', function(e) {
+    if (e.target === this) fecharGerenciarFiltros();
+  });
 
-      new Chart(document.getElementById("atratividadeChart"), {
-        type: "bar",
-        data: {
-          labels: ["Zona Sul", "Zona Leste", "ABC Paulista", "Campinas", "Santos", "Ribeirão Preto"],
-          datasets: [
-            {
-              label: "Score de Atratividade",
-              data: [82, 75, 88, 79, 71, 76],
-              backgroundColor: [
-                "#0e6930",
-                "#16a34a",
-                "#0e6930",
-                "#22c55e",
-                "#f59e0b",
-                "#16a34a",
-              ],
-              borderRadius: 8,
-              borderSkipped: false,
-            },
-          ],
+  document.getElementById('editarFiltrosModal')?.addEventListener('click', function(e) {
+    if (e.target === this) fecharEditarFiltros();
+  });
+
+  // Fechar com ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      if (document.getElementById('editarFiltrosModal')?.classList.contains('active')) {
+        fecharEditarFiltros();
+      } else if (document.getElementById('gerenciarFiltrosModal')?.classList.contains('active')) {
+        fecharGerenciarFiltros();
+      }
+    }
+  });
+});
+
+// ===== GRÁFICOS CHART.JS =====
+const defaultOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: "rgba(9, 61, 31, 0.95)",
+      borderColor: "rgba(14, 105, 48, 0.5)",
+      borderWidth: 1,
+      titleColor: "#f5f5f5",
+      bodyColor: "#f5f5f5",
+      padding: 12,
+      cornerRadius: 8,
+      displayColors: true,
+    },
+  },
+  scales: {
+    x: {
+      grid: { color: "rgba(14, 105, 48, 0.08)", drawBorder: false },
+      ticks: { color: "rgba(9, 61, 31, 0.7)", font: { size: 11, weight: '500' } },
+    },
+    y: {
+      grid: { color: "rgba(14, 105, 48, 0.08)", drawBorder: false },
+      ticks: { color: "rgba(9, 61, 31, 0.7)", font: { size: 11, weight: '500' } },
+    },
+  },
+};
+
+new Chart(document.getElementById("pibRegionalChart"), {
+  type: "line",
+  data: {
+    labels: ["Q1 2023", "Q2 2023", "Q3 2023", "Q4 2023", "Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024"],
+    datasets: [
+      {
+        label: "Grande SP",
+        data: [3.2, 3.5, 3.7, 4.1, 3.9, 4.3, 4.5, 4.7],
+        borderColor: "#0e6930",
+        backgroundColor: "rgba(14, 105, 48, 0.15)",
+        tension: 0.4,
+        fill: true,
+        borderWidth: 3,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        pointBackgroundColor: "#0e6930",
+      },
+      {
+        label: "Interior",
+        data: [2.8, 3.1, 3.3, 3.6, 3.4, 3.8, 4.0, 4.2],
+        borderColor: "rgba(9, 61, 31, 0.7)",
+        backgroundColor: "rgba(9, 61, 31, 0.1)",
+        tension: 0.4,
+        fill: true,
+        borderWidth: 2.5,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: "rgba(9, 61, 31, 0.7)",
+      },
+      {
+        label: "Litoral",
+        data: [2.5, 2.7, 2.9, 3.2, 3.0, 3.4, 3.6, 3.8],
+        borderColor: "#16a34a",
+        backgroundColor: "rgba(22, 163, 74, 0.1)",
+        tension: 0.4,
+        fill: true,
+        borderWidth: 2,
+        borderDash: [5, 3],
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        pointBackgroundColor: "#16a34a",
+      },
+    ],
+  },
+  options: {
+    ...defaultOptions,
+    scales: {
+      ...defaultOptions.scales,
+      y: {
+        ...defaultOptions.scales.y,
+        ticks: {
+          ...defaultOptions.scales.y.ticks,
+          callback: (value) => `${value}%`,
         },
-        options: {
-          ...defaultOptions,
-          indexAxis: 'y',
-          scales: {
-            x: {
-              ...defaultOptions.scales.x,
-              max: 100,
-              ticks: {
-                ...defaultOptions.scales.x.ticks,
-                callback: (value) => `${value}`,
-              },
-            },
-            y: {
-              ...defaultOptions.scales.y,
-              grid: {
-                display: false,
-              },
-            },
-          },
+      },
+    },
+  },
+});
+
+new Chart(document.getElementById("valorAdicionadoChart"), {
+  type: "bar",
+  data: {
+    labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    datasets: [
+      {
+        label: "Construção Civil",
+        data: [4.2, 4.5, 4.8, 5.1, 5.3, 5.5, 5.7, 5.4, 5.6, 5.8, 6.0, 6.2],
+        backgroundColor: "#0e6930",
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: "Imobiliario",
+        data: [2.8, 3.0, 3.2, 3.4, 3.3, 3.5, 3.6, 3.4, 3.7, 3.8, 3.9, 4.0],
+        backgroundColor: "#f59e0b",
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+      {
+        label: "Serviços",
+        data: [3.5, 3.7, 3.9, 4.0, 4.1, 4.3, 4.4, 4.2, 4.5, 4.6, 4.7, 4.8],
+        backgroundColor: "#16a34a",
+        borderRadius: 6,
+        borderSkipped: false,
+      },
+    ],
+  },
+  options: {
+    ...defaultOptions,
+    scales: {
+      ...defaultOptions.scales,
+      x: { ...defaultOptions.scales.x, stacked: false },
+      y: { 
+        ...defaultOptions.scales.y, 
+        suggestedMax: 7,
+        ticks: {
+          ...defaultOptions.scales.y.ticks,
+          callback: (value) => `${value}%`,
         },
-      });
-    </script>
+      },
+    },
+  },
+});
+
+new Chart(document.getElementById("atratividadeChart"), {
+  type: "bar",
+  data: {
+    labels: ["Zona Sul", "Zona Leste", "ABC Paulista", "Campinas", "Santos", "Ribeirão Preto"],
+    datasets: [
+      {
+        label: "Score de Atratividade",
+        data: [82, 75, 88, 79, 71, 76],
+        backgroundColor: ["#0e6930", "#16a34a", "#0e6930", "#22c55e", "#f59e0b", "#16a34a"],
+        borderRadius: 8,
+        borderSkipped: false,
+      },
+    ],
+  },
+  options: {
+    ...defaultOptions,
+    indexAxis: 'y',
+    scales: {
+      x: {
+        ...defaultOptions.scales.x,
+        max: 100,
+        ticks: {
+          ...defaultOptions.scales.x.ticks,
+          callback: (value) => `${value}`,
+        },
+      },
+      y: {
+        ...defaultOptions.scales.y,
+        grid: { display: false },
+      },
+    },
+  },
+});
+</script>
   </body>
 </html>
