@@ -25,7 +25,7 @@
           <h2>Menu Principal</h2>
           <ul>
             <li><a href="#">📊 Dashboard</a></li>
-            <li><a href="#">🗺️ Meus FIltros</a></li>
+<li><a href="#" onclick="abrirModal(); return false;">🗺️ Meus Filtros</a></li>
             <li><a href="./configUsuario.html">📈 Configuraçôes</a></li>
             <li><button type="button">🚪 Sair</button></li>
           </ul>
@@ -162,10 +162,333 @@
           </article>
         </section>
       </section>
+
+      
     </main>
+
+    <div class="modal-overlay" id="filtrosModal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <div>
+        <h2>🗺️ Meus Filtros Personalizados</h2>
+        <p>Configure quais indicadores e gráficos deseja visualizar</p>
+      </div>
+      <button class="btn-close-modal" onclick="fecharModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- SEÇÃO: PERSONALIZAR KPIs -->
+      <section class="modal-section">
+        <h3 class="section-title">📊 Indicadores (KPIs)</h3>
+        <p class="section-description">Escolha quais métricas você quer acompanhar</p>
+
+        <div class="filter-grid">
+          <!-- KPI 1: PIB -->
+          <div class="filter-item">
+            <label class="filter-label">
+              <input type="checkbox" checked />
+              <span class="checkbox-custom"></span>
+              <strong>Indicador Econômico</strong>
+            </label>
+            <select class="filter-select" id="kpi-economico">
+              <option value="pib-sp">PIB Estado de SP</option>
+              <option value="pib-itaquera">PIB - Itaquera</option>
+              <option value="pib-zonasul">PIB - Zona Sul</option>
+              <option value="pib-zonaleste">PIB - Zona Leste</option>
+              <option value="pib-zonaoeste">PIB - Zona Oeste</option>
+              <option value="pib-zonanorte">PIB - Zona Norte</option>
+              <option value="pib-abc">PIB - ABC Paulista</option>
+            </select>
+          </div>
+
+          <!-- KPI 2: Setor -->
+          <div class="filter-item">
+            <label class="filter-label">
+              <input type="checkbox" checked />
+              <span class="checkbox-custom"></span>
+              <strong>Setor de Atuação</strong>
+            </label>
+            <select class="filter-select" id="kpi-setor">
+              <option value="construcao">Valor Adicionado - Construção</option>
+              <option value="imobiliario">Valor Adicionado - Imobiliário</option>
+              <option value="servicos">Valor Adicionado - Serviços</option>
+            </select>
+          </div>
+
+          <!-- KPI 3: Taxa -->
+          <div class="filter-item">
+            <label class="filter-label">
+              <input type="checkbox" checked />
+              <span class="checkbox-custom"></span>
+              <strong>Indicador Financeiro</strong>
+            </label>
+            <select class="filter-select" id="kpi-financeiro">
+              <option value="selic">Taxa Selic</option>
+              <option value="inflacao">Taxa de Inflação (IPCA)</option>
+            </select>
+          </div>
+
+          <!-- KPI 4: Demografia -->
+          <div class="filter-item">
+            <label class="filter-label">
+              <input type="checkbox" checked />
+              <span class="checkbox-custom"></span>
+              <strong>Dados Demográficos</strong>
+            </label>
+            <select class="filter-select" id="kpi-demo">
+              <option value="faixa-etaria">Faixa Etária Predominante</option>
+              <option value="densidade">Densidade Demográfica</option>
+              <option value="renda-media">Renda Média</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEÇÃO: PERSONALIZAR GRÁFICOS -->
+      <section class="modal-section">
+        <h3 class="section-title">📈 Gráficos e Análises</h3>
+        <p class="section-description">Defina quais regiões e dados você quer comparar</p>
+
+        <div class="graph-config">
+          <!-- GRÁFICO 1: PIB Regional -->
+          <div class="graph-item">
+            <div class="graph-header">
+              <label class="filter-label">
+                <input type="checkbox" checked />
+                <span class="checkbox-custom"></span>
+                <strong>Evolução do PIB Regional</strong>
+              </label>
+            </div>
+            <div class="graph-regions">
+              <p class="graph-description">Selecione até 3 regiões para comparar:</p>
+              <div class="region-chips">
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="grande-sp" checked />
+                  <span class="chip">Grande SP</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="interior" checked />
+                  <span class="chip">Interior</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="litoral" checked />
+                  <span class="chip">Litoral</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="itaquera" />
+                  <span class="chip">Itaquera</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="zona-sul" />
+                  <span class="chip">Zona Sul</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="zona-leste" />
+                  <span class="chip">Zona Leste</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="zona-oeste" />
+                  <span class="chip">Zona Oeste</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="zona-norte" />
+                  <span class="chip">Zona Norte</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="abc" />
+                  <span class="chip">ABC Paulista</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="pib-region" value="campinas" />
+                  <span class="chip">Campinas</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRÁFICO 2: Valor Adicionado -->
+          <div class="graph-item">
+            <div class="graph-header">
+              <label class="filter-label">
+                <input type="checkbox" checked />
+                <span class="checkbox-custom"></span>
+                <strong>Valor Adicionado por Setor</strong>
+              </label>
+            </div>
+            <div class="graph-regions">
+              <p class="graph-description">Selecione os setores para análise:</p>
+              <div class="region-chips">
+                <label class="chip-label">
+                  <input type="checkbox" name="setor" value="construcao" checked />
+                  <span class="chip">Construção Civil</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="setor" value="imobiliario" checked />
+                  <span class="chip">Imobiliário</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="setor" value="servicos" checked />
+                  <span class="chip">Serviços</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRÁFICO 3: Índice de Atratividade -->
+          <div class="graph-item">
+            <div class="graph-header">
+              <label class="filter-label">
+                <input type="checkbox" checked />
+                <span class="checkbox-custom"></span>
+                <strong>Índice de Atratividade</strong>
+              </label>
+            </div>
+            <div class="graph-regions">
+              <p class="graph-description">Selecione até 6 regiões para comparar:</p>
+              <div class="region-chips">
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="zona-sul" checked />
+                  <span class="chip">Zona Sul</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="zona-leste" checked />
+                  <span class="chip">Zona Leste</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="abc" checked />
+                  <span class="chip">ABC Paulista</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="campinas" checked />
+                  <span class="chip">Campinas</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="santos" checked />
+                  <span class="chip">Santos</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="ribeirao" checked />
+                  <span class="chip">Ribeirão Preto</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="itaquera" />
+                  <span class="chip">Itaquera</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="zona-oeste" />
+                  <span class="chip">Zona Oeste</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="zona-norte" />
+                  <span class="chip">Zona Norte</span>
+                </label>
+                <label class="chip-label">
+                  <input type="checkbox" name="atratividade-region" value="centro" />
+                  <span class="chip">Centro</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="restaurarPadroes()">🔄 Restaurar Padrões</button>
+      <div class="modal-footer-actions">
+        <button class="btn-cancel" onclick="fecharModal()">Cancelar</button>
+        <button class="btn-primary" onclick="aplicarFiltros()">✓ Aplicar Filtros</button>
+      </div>
+    </div>
+  </div>
+</div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+
+      function abrirModal() {
+    document.getElementById('filtrosModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharModal() {
+    document.getElementById('filtrosModal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function aplicarFiltros() {
+    // Aqui você implementa a lógica de aplicar os filtros
+    alert('✅ Filtros aplicados com sucesso!\n\nDashboard será atualizada com suas preferências.');
+    fecharModal();
+    // Aqui você faria a atualização real dos gráficos e KPIs
+  }
+
+  function restaurarPadroes() {
+    if (confirm('⚠️ Tem certeza que deseja restaurar as configurações padrão?')) {
+      // Restaurar checkboxes e selects para valores padrão
+      document.querySelectorAll('.filter-item input[type="checkbox"]').forEach(cb => cb.checked = true);
+      document.getElementById('kpi-economico').value = 'pib-sp';
+      document.getElementById('kpi-setor').value = 'construcao';
+      document.getElementById('kpi-financeiro').value = 'selic';
+      document.getElementById('kpi-demo').value = 'faixa-etaria';
+      
+      // Restaurar regiões do PIB
+      document.querySelectorAll('input[name="pib-region"]').forEach(cb => {
+        cb.checked = ['grande-sp', 'interior', 'litoral'].includes(cb.value);
+      });
+      
+      // Restaurar setores
+      document.querySelectorAll('input[name="setor"]').forEach(cb => cb.checked = true);
+      
+      // Restaurar atratividade
+      document.querySelectorAll('input[name="atratividade-region"]').forEach(cb => {
+        cb.checked = ['zona-sul', 'zona-leste', 'abc', 'campinas', 'santos', 'ribeirao'].includes(cb.value);
+      });
+      
+      alert('✅ Configurações restauradas para o padrão!');
+    }
+  }
+
+  // Limitar seleção de regiões
+  document.addEventListener('DOMContentLoaded', function() {
+    // Limitar PIB a 3 regiões
+    const pibCheckboxes = document.querySelectorAll('input[name="pib-region"]');
+    pibCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const checked = document.querySelectorAll('input[name="pib-region"]:checked');
+        if (checked.length > 3) {
+          this.checked = false;
+          alert('⚠️ Você pode selecionar no máximo 3 regiões para o gráfico de PIB Regional.');
+        }
+      });
+    });
+
+    // Limitar Atratividade a 6 regiões
+    const atratividadeCheckboxes = document.querySelectorAll('input[name="atratividade-region"]');
+    atratividadeCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const checked = document.querySelectorAll('input[name="atratividade-region"]:checked');
+        if (checked.length > 6) {
+          this.checked = false;
+          alert('⚠️ Você pode selecionar no máximo 6 regiões para o Índice de Atratividade.');
+        }
+      });
+    });
+
+    // Fechar modal ao clicar fora
+    document.getElementById('filtrosModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        fecharModal();
+      }
+    });
+
+    // Fechar modal com ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && document.getElementById('filtrosModal').classList.contains('active')) {
+        fecharModal();
+      }
+    });
+  });
       const defaultOptions = {
         responsive: true,
         maintainAspectRatio: false,
