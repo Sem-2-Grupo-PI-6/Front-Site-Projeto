@@ -25,15 +25,11 @@
           <h2>Gestão</h2>
           <ul>
             <li><a href="#" class="active">📊 Dashboard</a></li>
-            <li><a href="#">👥 Usuários</a></li>
-            <li><a href="#">🏢 Empresas</a></li>
             <li><a href="#">📈 Configurar KPIs</a></li>
-            <li><a href="#">🗺️ Fontes de Dados</a></li>
           </ul>
           <h2>Sistema</h2>
           <ul>
             <li><a href="./configADM.html">⚙️ Configurações</a></li>
-            <li><a href="#">📝 Logs de Auditoria</a></li>
             <li><a href="#">🔔 Notificações</a></li>
           </ul>
         </nav>
@@ -53,10 +49,6 @@
             <button class="quick-action-item">
               <span class="action-icon">📊</span>
               <span class="action-text">Config. KPI</span>
-            </button>
-            <button class="quick-action-item">
-              <span class="action-icon">🔄</span>
-              <span class="action-text">Sync Dados</span>
             </button>
           </div>
         </section>
@@ -110,14 +102,14 @@
               </div>
             </div>
             <div class="metric-value">
-              <span class="value">127</span>
+              <span class="value">1627</span>
               <span class="trend positive">
                 <span class="trend-arrow">↑</span>
                 <span class="trend-text">+18</span>
               </span>
             </div>
             <div class="metric-footer">
-              <span class="metric-detail">92 empresas</span>
+              <span class="metric-detail">232 empresas</span>
               <a href="#" class="metric-link">Ver →</a>
             </div>
           </article>
@@ -195,8 +187,8 @@
                   <span>Novos cadastros vs Total acumulado</span>
                 </div>
                 <div class="chart-legend">
-                  <span class="legend-item"><span class="dot primary"></span> Novos</span>
-                  <span class="legend-item"><span class="dot secondary"></span> Acumulado</span>
+                  <span class="legend-item"><span class="dot primary"></span> 2025</span>
+                  <span class="legend-item"><span class="dot secondary"></span> 2024</span>
                 </div>
               </header>
               <figure>
@@ -322,8 +314,8 @@
           labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
           datasets: [
             {
-              label: "Novos Usuários",
-              data: [5, 8, 12, 9, 15, 18, 14, 22, 19, 25, 21, 18],
+              label: "Usuários",
+              data: [5, 8, 12, 9, 15, 18, 14, 22, 19, 25],
               borderColor: "#5dd1ff",
               backgroundColor: "rgba(93, 209, 255, 0.15)",
               tension: 0.4,
@@ -334,7 +326,7 @@
               pointBackgroundColor: "#5dd1ff",
             },
             {
-              label: "Total Acumulado",
+              label: "Usuários",
               data: [45, 53, 65, 74, 89, 107, 121, 143, 162, 187, 208, 226],
               borderColor: "#8b5dff",
               backgroundColor: "rgba(139, 93, 255, 0.1)",

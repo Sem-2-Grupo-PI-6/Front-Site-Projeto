@@ -25,10 +25,8 @@
           <h2>Menu Principal</h2>
           <ul>
             <li><a href="#">📊 Dashboard</a></li>
-            <li><a href="#">🗺️ Mapa de Oportunidades</a></li>
-            <li><a href="#">📈 Análise Setorial</a></li>
-            <li><a href="#">🏙️ Regiões (SP)</a></li>
-            <li><a href="#">📋 Relatórios</a></li>
+            <li><a href="#">🗺️ Meus FIltros</a></li>
+            <li><a href="./configUsuario.html">📈 Configuraçôes</a></li>
             <li><button type="button">🚪 Sair</button></li>
           </ul>
         </nav>
@@ -100,13 +98,13 @@
             <div class="kpi-icon">👥</div>
             <div class="kpi-content">
               <div class="kpi-header">
-                <span class="kpi-label">Densidade Demográfica</span>
+                <span class="kpi-label">Faixa Etária - Predominante</span>
                 <span class="kpi-badge">Regiões-Alvo</span>
               </div>
-              <div class="kpi-value">2.8<span class="kpi-unit">k/km²</span></div>
+              <div class="kpi-value">21~30<span class="kpi-unit">Anos</span></div>
               <div class="kpi-meta">
-                <span class="kpi-trend positive">↑ 320 hab</span>
-                <span class="kpi-description">Média ponderada SP Capital</span>
+                <span class="kpi-trend positive">49.30%</span>
+                <span class="kpi-description"> SP Capital</span>
               </div>
             </div>
           </article>
@@ -137,8 +135,8 @@
                 <span>Contribuição setorial para o PIB (últimos 12 meses)</span>
               </div>
               <div class="chart-legend">
-                <span class="legend-item"><span class="dot primary"></span> Construção</span>
-                <span class="legend-item"><span class="dot warning"></span> Indústria</span>
+                <span class="legend-item"><span class="dot primary"></span> Construção Civil</span>
+                <span class="legend-item"><span class="dot warning"></span> Imobiliario</span>
                 <span class="legend-item"><span class="dot success"></span> Serviços</span>
               </div>
             </header>
@@ -280,7 +278,7 @@
               borderSkipped: false,
             },
             {
-              label: "Indústria",
+              label: "Imobiliario",
               data: [2.8, 3.0, 3.2, 3.4, 3.3, 3.5, 3.6, 3.4, 3.7, 3.8, 3.9, 4.0],
               backgroundColor: "#f59e0b",
               borderRadius: 6,
