@@ -424,15 +424,34 @@
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// ===== VARIÁVEIS GLOBAIS =====
+
+
 let filtroAtualId = null;
 let usuarioLogado = null;
 let pibRegionalChartInstance = null;
 let valorAdicionadoChartInstance = null;
 let atratividadeChartInstance = null;
+let zonasDisponiveis = [];
 
-// ===== MAPEAMENTO DE LABELS =====
+
+const zonasMapeamento = {
+  'grande-sp': 1,
+  'interior': 2,
+  'litoral': 3,
+  'itaquera': 4,
+  'zona-sul': 5,
+  'zona-leste': 6,
+  'zona-oeste': 7,
+  'zona-norte': 8,
+  'abc': 9,
+  'campinas': 10,
+  'santos': 3,
+  'ribeirao': 2,
+  'centro': 1
+};
+
 const labelsKPIs = {
   'pib-sp': 'PIB Estado de SP',
   'pib-itaquera': 'PIB - Itaquera',
@@ -473,46 +492,7 @@ const labelsSetores = {
   'servicos': 'Serviços'
 };
 
-// ===== DADOS MOCKADOS POR REGIÃO (simulação) =====
-const dadosPorRegiao = {
-  'grande-sp': [3.2, 3.5, 3.7, 4.1, 3.9, 4.3, 4.5, 4.7],
-  'interior': [2.8, 3.1, 3.3, 3.6, 3.4, 3.8, 4.0, 4.2],
-  'litoral': [2.5, 2.7, 2.9, 3.2, 3.0, 3.4, 3.6, 3.8],
-  'itaquera': [3.0, 3.3, 3.5, 3.8, 3.6, 4.0, 4.2, 4.4],
-  'zona-sul': [3.4, 3.7, 3.9, 4.2, 4.0, 4.4, 4.6, 4.8],
-  'zona-leste': [2.9, 3.2, 3.4, 3.7, 3.5, 3.9, 4.1, 4.3],
-  'zona-oeste': [3.1, 3.4, 3.6, 3.9, 3.7, 4.1, 4.3, 4.5],
-  'zona-norte': [2.7, 3.0, 3.2, 3.5, 3.3, 3.7, 3.9, 4.1],
-  'abc': [3.3, 3.6, 3.8, 4.1, 3.9, 4.3, 4.5, 4.7],
-  'campinas': [3.2, 3.5, 3.7, 4.0, 3.8, 4.2, 4.4, 4.6],
-  'santos': [2.6, 2.9, 3.1, 3.4, 3.2, 3.6, 3.8, 4.0],
-  'ribeirao': [2.8, 3.1, 3.3, 3.6, 3.4, 3.8, 4.0, 4.2],
-  'centro': [3.5, 3.8, 4.0, 4.3, 4.1, 4.5, 4.7, 4.9]
-};
 
-const scoresAtratividade = {
-  'zona-sul': 82,
-  'zona-leste': 75,
-  'abc': 88,
-  'campinas': 79,
-  'santos': 71,
-  'ribeirao': 76,
-  'itaquera': 73,
-  'zona-oeste': 80,
-  'zona-norte': 72,
-  'centro': 85,
-  'grande-sp': 84,
-  'interior': 78,
-  'litoral': 70
-};
-
-const dadosSetores = {
-  'construcao': [4.2, 4.5, 4.8, 5.1, 5.3, 5.5, 5.7, 5.4, 5.6, 5.8, 6.0, 6.2],
-  'imobiliario': [2.8, 3.0, 3.2, 3.4, 3.3, 3.5, 3.6, 3.4, 3.7, 3.8, 3.9, 4.0],
-  'servicos': [3.5, 3.7, 3.9, 4.0, 4.1, 4.3, 4.4, 4.2, 4.5, 4.6, 4.7, 4.8]
-};
-
-// ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', function() {
   usuarioLogado = JSON.parse(sessionStorage.getItem('USUARIO_LOGADO') || '{}');
   
@@ -528,17 +508,18 @@ document.addEventListener('DOMContentLoaded', function() {
   
   console.log('👤 Usuário logado:', usuarioLogado);
   
-  // Criar gráficos iniciais
+
   inicializarGraficos();
   
-  // Carregar e aplicar filtro ativo
-  aplicarFiltroAtivo();
+
+  carregarZonasDisponiveis().then(() => {
+    aplicarFiltroAtivo();
+  });
   
   configurarLimitesRegioes();
   configurarEventosModais();
 });
 
-// ===== LOGOUT =====
 function logout() {
   if (confirm('⚠️ Tem certeza que deseja sair?')) {
     sessionStorage.removeItem('USUARIO_LOGADO');
@@ -546,7 +527,77 @@ function logout() {
   }
 }
 
-// ===== INICIALIZAR GRÁFICOS =====
+async function carregarZonasDisponiveis() {
+  try {
+    const response = await fetch('http://localhost:3333/dados/zonas');
+    
+    if (response.ok) {
+      zonasDisponiveis = await response.json();
+      console.log('📍 Zonas carregadas:', zonasDisponiveis);
+    } else {
+      console.warn('Zonas não encontradas, usando valores padrão');
+    }
+  } catch (erro) {
+    console.error('Erro ao carregar zonas:', erro);
+  }
+}
+
+async function buscarDadosDashboard(idsZonas) {
+  try {
+    const zonesParam = idsZonas.join(',');
+    const response = await fetch(`http://localhost:3333/dados/dashboard?zonas=${zonesParam}`);
+    
+    if (!response.ok) {
+      throw new Error('Erro ao buscar dados da dashboard');
+    }
+    
+    const dados = await response.json();
+    console.log('📊 Dados recebidos do banco:', dados);
+    return dados;
+    
+  } catch (erro) {
+    console.error('Erro ao buscar dados:', erro);
+    return null;
+  }
+}
+
+async function buscarAtratividade(idsZonas) {
+  try {
+    const zonesParam = idsZonas.join(',');
+    const response = await fetch(`http://localhost:3333/dados/atratividade?zonas=${zonesParam}`);
+    
+    if (!response.ok) {
+      throw new Error('Erro ao buscar atratividade');
+    }
+    
+    const dados = await response.json();
+    console.log('🎯 Dados de atratividade:', dados);
+    return dados;
+    
+  } catch (erro) {
+    console.error('Erro ao buscar atratividade:', erro);
+    return [];
+  }
+}
+
+async function buscarDemografia(idZona) {
+  try {
+    const response = await fetch(`http://localhost:3333/dados/demografia/${idZona}`);
+    
+    if (!response.ok) {
+      throw new Error('Erro ao buscar demografia');
+    }
+    
+    const dados = await response.json();
+    console.log('👥 Dados demográficos:', dados);
+    return dados;
+    
+  } catch (erro) {
+    console.error('Erro ao buscar demografia:', erro);
+    return null;
+  }
+}
+
 function inicializarGraficos() {
   const defaultOptions = {
     responsive: true,
@@ -576,7 +627,6 @@ function inicializarGraficos() {
     },
   };
 
-  // Gráfico PIB Regional
   pibRegionalChartInstance = new Chart(document.getElementById("pibRegionalChart"), {
     type: "line",
     data: {
@@ -598,7 +648,6 @@ function inicializarGraficos() {
     },
   });
 
-  // Gráfico Valor Adicionado
   valorAdicionadoChartInstance = new Chart(document.getElementById("valorAdicionadoChart"), {
     type: "bar",
     data: {
@@ -622,7 +671,6 @@ function inicializarGraficos() {
     },
   });
 
-  // Gráfico Atratividade
   atratividadeChartInstance = new Chart(document.getElementById("atratividadeChart"), {
     type: "bar",
     data: {
@@ -656,105 +704,151 @@ function inicializarGraficos() {
   });
 }
 
-// ===== ATUALIZAR DASHBOARD COM FILTRO =====
-function atualizarDashboardComFiltro(config) {
+async function atualizarDashboardComFiltro(config) {
   console.log('🔄 Atualizando dashboard com:', config);
+ 
+  const idsZonas = config.graficos.pib.regioes.map(regiao => zonasMapeamento[regiao]).filter(id => id);
+ 
+  const dadosBanco = await buscarDadosDashboard(idsZonas.length > 0 ? idsZonas : [1, 2, 3]);
   
-  // Atualizar KPIs
-  const kpiCards = document.querySelectorAll('.kpi-card');
-  
-  // KPI 1: Indicador Econômico
-  if (config.kpis.economico.enabled) {
-    kpiCards[0].style.display = 'flex';
-    kpiCards[0].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.economico.value];
-  } else {
-    kpiCards[0].style.display = 'none';
-  }
-  
-  // KPI 2: Setor
-  if (config.kpis.setor.enabled) {
-    kpiCards[1].style.display = 'flex';
-    kpiCards[1].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.setor.value];
-  } else {
-    kpiCards[1].style.display = 'none';
-  }
-  
-  // KPI 3: Financeiro
-  if (config.kpis.financeiro.enabled) {
-    kpiCards[2].style.display = 'flex';
-    kpiCards[2].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.financeiro.value];
+  if (dadosBanco) {
     
-    if (config.kpis.financeiro.value === 'inflacao') {
-      kpiCards[2].querySelector('.kpi-value').innerHTML = '5.8<span class="kpi-unit">%</span>';
-      kpiCards[2].querySelector('.kpi-description').textContent = 'Dentro da meta do BC';
-    }
-  } else {
-    kpiCards[2].style.display = 'none';
-  }
-  
-  // KPI 4: Demografia
-  if (config.kpis.demo.enabled) {
-    kpiCards[3].style.display = 'flex';
-    kpiCards[3].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.demo.value];
+    await atualizarKPIs(config, dadosBanco);
     
-    if (config.kpis.demo.value === 'renda-media') {
-      kpiCards[3].querySelector('.kpi-value').innerHTML = 'R$ 4,2<span class="kpi-unit">mil</span>';
-      kpiCards[3].querySelector('.kpi-description').textContent = 'Renda média mensal';
-    } else if (config.kpis.demo.value === 'densidade') {
-      kpiCards[3].querySelector('.kpi-value').innerHTML = '2.8<span class="kpi-unit">k/km²</span>';
-      kpiCards[3].querySelector('.kpi-description').textContent = 'Habitantes por km²';
+    
+    if (config.graficos.pib.enabled && config.graficos.pib.regioes.length > 0) {
+      await atualizarGraficoPIBComBanco(config.graficos.pib.regioes, dadosBanco);
+      document.querySelector('.chart-card:nth-child(1)').style.display = 'flex';
+    } else {
+      document.querySelector('.chart-card:nth-child(1)').style.display = 'none';
     }
-  } else {
-    kpiCards[3].style.display = 'none';
-  }
-  
-  // Atualizar Gráfico PIB Regional
-  if (config.graficos.pib.enabled && config.graficos.pib.regioes.length > 0) {
-    atualizarGraficoPIB(config.graficos.pib.regioes);
-    document.querySelector('.chart-card:nth-child(1)').style.display = 'flex';
-  } else {
-    document.querySelector('.chart-card:nth-child(1)').style.display = 'none';
-  }
-  
-  // Atualizar Gráfico Valor Adicionado
-  if (config.graficos.setor.enabled && config.graficos.setor.setores.length > 0) {
-    atualizarGraficoSetores(config.graficos.setor.setores);
-    document.querySelector('.chart-card:nth-child(2)').style.display = 'flex';
-  } else {
-    document.querySelector('.chart-card:nth-child(2)').style.display = 'none';
-  }
-  
-  // Atualizar Gráfico Atratividade
-  if (config.graficos.atratividade.enabled && config.graficos.atratividade.regioes.length > 0) {
-    atualizarGraficoAtratividade(config.graficos.atratividade.regioes);
-    document.querySelector('.chart-card:nth-child(3)').style.display = 'flex';
-  } else {
-    document.querySelector('.chart-card:nth-child(3)').style.display = 'none';
+    
+    if (config.graficos.setor.enabled && config.graficos.setor.setores.length > 0) {
+      await atualizarGraficoSetoresComBanco(config.graficos.setor.setores, dadosBanco);
+      document.querySelector('.chart-card:nth-child(2)').style.display = 'flex';
+    } else {
+      document.querySelector('.chart-card:nth-child(2)').style.display = 'none';
+    }
+    
+    if (config.graficos.atratividade.enabled && config.graficos.atratividade.regioes.length > 0) {
+      await atualizarGraficoAtraividadeComBanco(config.graficos.atratividade.regioes);
+      document.querySelector('.chart-card:nth-child(3)').style.display = 'flex';
+    } else {
+      document.querySelector('.chart-card:nth-child(3)').style.display = 'none';
+    }
   }
   
   console.log('✅ Dashboard atualizada com sucesso!');
 }
 
-// ===== ATUALIZAR GRÁFICO PIB =====
-function atualizarGraficoPIB(regioes) {
-  const cores = ["#0e6930", "#16a34a", "#22c55e", "#f59e0b", "#10b981", "#14b8a6"];
+async function atualizarKPIs(config, dadosBanco) {
+  const kpiCards = document.querySelectorAll('.kpi-card');
   
-  const datasets = regioes.map((regiao, index) => ({
-    label: labelsRegioes[regiao],
-    data: dadosPorRegiao[regiao],
-    borderColor: cores[index % cores.length],
-    backgroundColor: cores[index % cores.length] + '22',
-    tension: 0.4,
-    fill: true,
-    borderWidth: 3 - index * 0.3,
-    pointRadius: 4 - index,
-    pointHoverRadius: 6 - index,
-    pointBackgroundColor: cores[index % cores.length],
-  }));
+  if (config.kpis.economico.enabled) {
+    kpiCards[0].style.display = 'flex';
+    kpiCards[0].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.economico.value];
+   
+    if (dadosBanco.pib && dadosBanco.pib.length > 0) {
+      const pibMedio = dadosBanco.pib.reduce((acc, item) => acc + parseFloat(item.valor), 0) / dadosBanco.pib.length;
+      kpiCards[0].querySelector('.kpi-value').innerHTML = `+${pibMedio.toFixed(1)}<span class="kpi-unit">%</span>`;
+    }
+  } else {
+    kpiCards[0].style.display = 'none';
+  }
+  
+  
+  if (config.kpis.setor.enabled) {
+    kpiCards[1].style.display = 'flex';
+    kpiCards[1].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.setor.value];
+    
+    if (config.kpis.setor.value === 'construcao' && dadosBanco.pibConstrucao && dadosBanco.pibConstrucao.length > 0) {
+      const ultimoPib = dadosBanco.pibConstrucao[0];
+      kpiCards[1].querySelector('.kpi-value').innerHTML = `+${parseFloat(ultimoPib.valorPib).toFixed(1)}<span class="kpi-unit">%</span>`;
+    }
+  } else {
+    kpiCards[1].style.display = 'none';
+  }
+  
+  
+  if (config.kpis.financeiro.enabled) {
+    kpiCards[2].style.display = 'flex';
+    kpiCards[2].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.financeiro.value];
+    
+    if (config.kpis.financeiro.value === 'selic' && dadosBanco.selic) {
+      kpiCards[2].querySelector('.kpi-value').innerHTML = `${parseFloat(dadosBanco.selic.taxaSelic).toFixed(2)}<span class="kpi-unit">%</span>`;
+      kpiCards[2].querySelector('.kpi-description').textContent = 'Taxa básica de juros';
+    } else if (config.kpis.financeiro.value === 'inflacao' && dadosBanco.inflacao) {
+      kpiCards[2].querySelector('.kpi-value').innerHTML = `${parseFloat(dadosBanco.inflacao.taxaInflacao).toFixed(1)}<span class="kpi-unit">%</span>`;
+      kpiCards[2].querySelector('.kpi-description').textContent = 'Dentro da meta do BC';
+    }
+  } else {
+    kpiCards[2].style.display = 'none';
+  }
+ 
+  if (config.kpis.demo.enabled) {
+    kpiCards[3].style.display = 'flex';
+    kpiCards[3].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.demo.value];
+    
+    
+    const primeiraZona = config.graficos.pib.regioes[0];
+    const idZona = zonasMapeamento[primeiraZona];
+    
+    if (idZona) {
+      const demografia = await buscarDemografia(idZona);
+      
+      if (demografia) {
+        if (config.kpis.demo.value === 'faixa-etaria') {
+          kpiCards[3].querySelector('.kpi-value').innerHTML = `${Math.round(demografia.idadeMedia)}<span class="kpi-unit">Anos</span>`;
+          kpiCards[3].querySelector('.kpi-description').textContent = 'Idade média';
+        } else if (config.kpis.demo.value === 'densidade') {
+          kpiCards[3].querySelector('.kpi-value').innerHTML = `${parseFloat(demografia.densidadeDemografico).toFixed(1)}<span class="kpi-unit">k/km²</span>`;
+          kpiCards[3].querySelector('.kpi-description').textContent = 'Habitantes por km²';
+        } else if (config.kpis.demo.value === 'renda-media') {
+          kpiCards[3].querySelector('.kpi-value').innerHTML = `R$ 4,2<span class="kpi-unit">mil</span>`;
+          kpiCards[3].querySelector('.kpi-description').textContent = 'Renda média mensal';
+        }
+      }
+    }
+  } else {
+    kpiCards[3].style.display = 'none';
+  }
+}
+
+async function atualizarGraficoPIBComBanco(regioes, dadosBanco) {
+  const cores = ['#0e6930', 'rgba(9, 61, 31, 0.7)', '#16a34a', '#22c55e', '#10b981', '#14b8a6'];
+ 
+  const dadosPorZona = {};
+  dadosBanco.pib.forEach(item => {
+    if (!dadosPorZona[item.zona_nome]) {
+      dadosPorZona[item.zona_nome] = [];
+    }
+    dadosPorZona[item.zona_nome].push(parseFloat(item.valor));
+  });
+  
+  const datasets = regioes.map((regiao, index) => {
+    const nomeZona = labelsRegioes[regiao];
+    const dados = dadosPorZona[nomeZona] || [3.2, 3.5, 3.7, 4.1, 3.9, 4.3, 4.5, 4.7];
+   
+    while (dados.length < 8) {
+      dados.push(dados[dados.length - 1]);
+    }
+    
+    return {
+      label: nomeZona,
+      data: dados.slice(0, 8),
+      borderColor: cores[index % cores.length],
+      backgroundColor: cores[index % cores.length] + '22',
+      tension: 0.4,
+      fill: true,
+      borderWidth: 3 - index * 0.3,
+      pointRadius: 4 - index,
+      pointHoverRadius: 6 - index,
+      pointBackgroundColor: cores[index % cores.length],
+    };
+  });
   
   pibRegionalChartInstance.data.datasets = datasets;
   
-  // Atualizar legenda
   const legendContainer = document.querySelector('.chart-card:nth-child(1) .chart-legend');
   legendContainer.innerHTML = regioes.map((regiao, index) => `
     <span class="legend-item">
@@ -766,25 +860,37 @@ function atualizarGraficoPIB(regioes) {
   pibRegionalChartInstance.update();
 }
 
-// ===== ATUALIZAR GRÁFICO SETORES =====
-function atualizarGraficoSetores(setores) {
+async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
   const coresSetores = {
     'construcao': '#0e6930',
     'imobiliario': '#f59e0b',
     'servicos': '#16a34a'
   };
   
-  const datasets = setores.map(setor => ({
-    label: labelsSetores[setor],
-    data: dadosSetores[setor],
-    backgroundColor: coresSetores[setor],
-    borderRadius: 6,
-    borderSkipped: false,
-  }));
+  const datasets = setores.map(setor => {
+    let dados = [4.2, 4.5, 4.8, 5.1, 5.3, 5.5, 5.7, 5.4, 5.6, 5.8, 6.0, 6.2];
+   
+    if (setor === 'construcao' && dadosBanco.pibConstrucao && dadosBanco.pibConstrucao.length > 0) {
+      dados = dadosBanco.pibConstrucao.reverse().map(item => parseFloat(item.valorPib));
+   
+      while (dados.length < 12) {
+        dados.unshift(dados[0]);
+      }
+      dados = dados.slice(0, 12);
+    }
+    
+    return {
+      label: labelsSetores[setor],
+      data: dados,
+      backgroundColor: coresSetores[setor],
+      borderRadius: 6,
+      borderSkipped: false,
+    };
+  });
   
   valorAdicionadoChartInstance.data.datasets = datasets;
   
-  // Atualizar legenda
+  
   const legendContainer = document.querySelector('.chart-card:nth-child(2) .chart-legend');
   legendContainer.innerHTML = setores.map(setor => `
     <span class="legend-item">
@@ -796,12 +902,27 @@ function atualizarGraficoSetores(setores) {
   valorAdicionadoChartInstance.update();
 }
 
-// ===== ATUALIZAR GRÁFICO ATRATIVIDADE =====
-function atualizarGraficoAtratividade(regioes) {
+
+async function atualizarGraficoAtraividadeComBanco(regioes) {
   const cores = ["#0e6930", "#16a34a", "#22c55e", "#f59e0b", "#10b981", "#14b8a6"];
   
-  const labels = regioes.map(regiao => labelsRegioes[regiao]);
-  const data = regioes.map(regiao => scoresAtratividade[regiao]);
+ 
+  const idsZonas = regioes.map(regiao => zonasMapeamento[regiao]).filter(id => id);
+  
+  
+  const dadosAtratividade = await buscarAtratividade(idsZonas);
+  
+  let labels = [];
+  let data = [];
+  
+  if (dadosAtratividade && dadosAtratividade.length > 0) {
+    labels = dadosAtratividade.map(item => item.nome);
+    data = dadosAtratividade.map(item => Math.min(100, Math.round(parseFloat(item.score))));
+  } else {
+    labels = regioes.map(regiao => labelsRegioes[regiao]);
+    data = [82, 75, 88, 79, 71, 76].slice(0, regioes.length);
+  }
+  
   const backgroundColor = regioes.map((_, index) => cores[index % cores.length]);
   
   atratividadeChartInstance.data.labels = labels;
@@ -811,7 +932,6 @@ function atualizarGraficoAtratividade(regioes) {
   atratividadeChartInstance.update();
 }
 
-// ===== CARREGAR FILTROS DO BANCO =====
 async function carregarFiltros() {
   try {
     const response = await fetch(`http://localhost:3333/filtros/listar/${usuarioLogado.id}`, {
@@ -839,7 +959,6 @@ async function carregarFiltros() {
   }
 }
 
-// ===== CRIAR FILTRO PADRÃO =====
 async function criarFiltroPadrao() {
   try {
     const configPadrao = getConfigPadrao();
@@ -880,7 +999,6 @@ async function criarFiltroPadrao() {
   }
 }
 
-// ===== BUSCAR FILTRO ATIVO =====
 async function buscarFiltroAtivo() {
   try {
     const response = await fetch(`http://localhost:3333/filtros/ativo/${usuarioLogado.id}`, {
@@ -908,28 +1026,26 @@ async function buscarFiltroAtivo() {
   }
 }
 
-// ===== APLICAR FILTRO ATIVO =====
 async function aplicarFiltroAtivo() {
   const filtroAtivo = await buscarFiltroAtivo();
   
   if (!filtroAtivo) {
     console.log('⚠️ Nenhum filtro ativo, aplicando padrão');
-    atualizarDashboardComFiltro(getConfigPadrao());
+    await atualizarDashboardComFiltro(getConfigPadrao());
     return;
   }
   
   console.log('🗺️ Aplicando filtro:', filtroAtivo.nome);
   
-  // Parsear config se for string
   let config = filtroAtivo.config;
   if (typeof config === 'string') {
     config = JSON.parse(config);
   }
   
-  atualizarDashboardComFiltro(config);
+  await atualizarDashboardComFiltro(config);
 }
 
-// ===== RESTO DAS FUNÇÕES (modal, salvar, etc) =====
+
 async function abrirGerenciarFiltros() {
   await renderizarFiltrosSalvos();
   document.getElementById('gerenciarFiltrosModal').classList.add('active');
