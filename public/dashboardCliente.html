@@ -424,54 +424,108 @@
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// ===== VARIÁVEIS GLOBAIS =====
+
+// ============================================
+// 🎭 DADOS MOCADOS (SEM BANCO DE DADOS)
+// ============================================
+
+const DADOS_MOCADOS = {
+  pib: {
+    'grande-sp': [3.2, 3.5, 3.7, 4.1, 3.9, 4.3, 4.5, 4.7],
+    'interior': [2.8, 3.0, 3.2, 3.6, 3.4, 3.8, 4.0, 4.2],
+    'litoral': [2.5, 2.7, 2.9, 3.3, 3.1, 3.5, 3.7, 3.9],
+    'itaquera': [3.0, 3.2, 3.4, 3.8, 3.6, 4.0, 4.2, 4.4],
+    'zona-sul': [3.5, 3.7, 3.9, 4.3, 4.1, 4.5, 4.7, 4.9],
+    'zona-leste': [2.9, 3.1, 3.3, 3.7, 3.5, 3.9, 4.1, 4.3],
+    'zona-oeste': [3.6, 3.8, 4.0, 4.4, 4.2, 4.6, 4.8, 5.0],
+    'zona-norte': [2.7, 2.9, 3.1, 3.5, 3.3, 3.7, 3.9, 4.1],
+    'abc': [3.3, 3.5, 3.7, 4.1, 3.9, 4.3, 4.5, 4.7],
+    'campinas': [3.4, 3.6, 3.8, 4.2, 4.0, 4.4, 4.6, 4.8],
+    'santos': [2.6, 2.8, 3.0, 3.4, 3.2, 3.6, 3.8, 4.0],
+    'ribeirao': [2.9, 3.1, 3.3, 3.7, 3.5, 3.9, 4.1, 4.3],
+    'centro': [3.1, 3.3, 3.5, 3.9, 3.7, 4.1, 4.3, 4.5]
+  },
+  
+  setores: {
+    'construcao': [4.2, 4.5, 4.8, 5.1, 5.3, 5.5, 5.7, 5.4, 5.6, 5.8, 6.0, 6.2],
+    'imobiliario': [3.8, 4.1, 4.4, 4.7, 4.9, 5.1, 5.3, 5.0, 5.2, 5.4, 5.6, 5.8],
+    'servicos': [3.5, 3.8, 4.1, 4.4, 4.6, 4.8, 5.0, 4.7, 4.9, 5.1, 5.3, 5.5]
+  },
+  
+  atratividade: {
+    'grande-sp': 85,
+    'interior': 72,
+    'litoral': 68,
+    'itaquera': 78,
+    'zona-sul': 82,
+    'zona-leste': 75,
+    'zona-oeste': 88,
+    'zona-norte': 71,
+    'abc': 79,
+    'campinas': 81,
+    'santos': 73,
+    'ribeirao': 76,
+    'centro': 80
+  },
+  
+  kpis: {
+    'pib-sp': { valor: 3.8, variacao: 0.6, descricao: 'Crescimento acima da média nacional' },
+    'pib-itaquera': { valor: 4.4, variacao: 0.8, descricao: 'Região em forte expansão' },
+    'pib-zonasul': { valor: 4.9, variacao: 1.2, descricao: 'Melhor desempenho do estado' },
+    'pib-zonaleste': { valor: 4.3, variacao: 0.7, descricao: 'Crescimento consistente' },
+    'pib-zonaoeste': { valor: 5.0, variacao: 1.3, descricao: 'Líder em crescimento' },
+    'pib-zonanorte': { valor: 4.1, variacao: 0.5, descricao: 'Crescimento moderado' },
+    'pib-abc': { valor: 4.7, variacao: 1.0, descricao: 'Forte polo industrial' },
+    
+    'construcao': { valor: 5.2, variacao: 1.8, descricao: 'Setor em expansão acelerada' },
+    'imobiliario': { valor: 4.8, variacao: 1.5, descricao: 'Mercado aquecido' },
+    'servicos': { valor: 4.5, variacao: 1.2, descricao: 'Crescimento sólido' },
+    
+    'selic': { valor: 11.75, variacao: 0, descricao: 'Ambiente de crédito moderado' },
+    'inflacao': { valor: 4.6, variacao: -0.3, descricao: 'Dentro da meta do BC' },
+    
+    'faixa-etaria': { valor: 25, variacao: 49.3, descricao: 'SP Capital' },
+    'densidade': { valor: 7.8, variacao: 0, descricao: 'Habitantes por km²' },
+    'renda-media': { valor: 4.2, variacao: 0, descricao: 'Renda média mensal' }
+  },
+  
+  demografia: {
+    'grande-sp': { idadeMedia: 25, densidade: 7.8, rendaMedia: 4.2 },
+    'interior': { idadeMedia: 28, densidade: 3.2, rendaMedia: 3.8 },
+    'litoral': { idadeMedia: 32, densidade: 2.5, rendaMedia: 3.5 },
+    'itaquera': { idadeMedia: 26, densidade: 6.5, rendaMedia: 3.9 },
+    'zona-sul': { idadeMedia: 24, densidade: 8.2, rendaMedia: 4.5 },
+    'zona-leste': { idadeMedia: 27, densidade: 6.8, rendaMedia: 3.7 },
+    'zona-oeste': { idadeMedia: 23, densidade: 8.5, rendaMedia: 5.2 },
+    'zona-norte': { idadeMedia: 29, densidade: 5.9, rendaMedia: 3.4 },
+    'abc': { idadeMedia: 27, densidade: 7.1, rendaMedia: 4.1 },
+    'campinas': { idadeMedia: 26, densidade: 6.3, rendaMedia: 4.3 },
+    'santos': { idadeMedia: 31, densidade: 4.8, rendaMedia: 3.6 },
+    'ribeirao': { idadeMedia: 28, densidade: 5.5, rendaMedia: 3.9 },
+    'centro': { idadeMedia: 25, densidade: 9.2, rendaMedia: 4.8 }
+  }
+};
+
+// ============================================
+// VARIÁVEIS GLOBAIS
+// ============================================
+
 let filtroAtualId = null;
 let usuarioLogado = null;
 let pibRegionalChartInstance = null;
 let valorAdicionadoChartInstance = null;
 let atratividadeChartInstance = null;
-let zonasDisponiveis = [];
 
-// ===== PALETA DE CORES RENOVADA =====
-const paletaCores = {
-  primary: ['#00D9FF', '#00B4D8', '#0096C7', '#0077B6', '#023E8A', '#03045E'],
-  secondary: ['#FF6B6B', '#EE5A6F', '#C44569', '#973AA8', '#6A2C70', '#462749'],
-  success: ['#06FFA5', '#00D9A3', '#00B388', '#008F6E', '#006B54', '#00473A'],
-  warm: ['#FFB627', '#FF9F1C', '#FF8811', '#FF6B00', '#E65100', '#BF360C'],
-  cool: ['#A78BFA', '#8B5CF6', '#7C3AED', '#6D28D9', '#5B21B6', '#4C1D95'],
-  neon: ['#39FF14', '#00FF41', '#00E64D', '#00CC5A', '#00B366', '#009973']
-};
-
-// ===== MAPEAMENTO DE VALORES PARA IDS DE ZONAS =====
-const zonasMapeamento = {
-  'grande-sp': 1,
-  'interior': 2,
-  'litoral': 3,
-  'itaquera': 4,
-  'zona-sul': 5,
-  'zona-leste': 6,
-  'zona-oeste': 7,
-  'zona-norte': 8,
-  'abc': 9,
-  'campinas': 10,
-  'santos': 3,
-  'ribeirao': 2,
-  'centro': 1
-};
-
-// ===== MAPEAMENTO DE LABELS =====
 const labelsKPIs = {
-  'pib-sp': 'PIB Geral',
+  'pib-sp': 'PIB Estado de SP',
   'pib-itaquera': 'PIB - Itaquera',
   'pib-zonasul': 'PIB - Zona Sul',
   'pib-zonaleste': 'PIB - Zona Leste',
   'pib-zonaoeste': 'PIB - Zona Oeste',
   'pib-zonanorte': 'PIB - Zona Norte',
   'pib-abc': 'PIB - ABC Paulista',
-  'construcao': 'Construção Civil',
+  'construcao': 'Valor Adicionado - Construção',
   'imobiliario': 'Valor Adicionado - Imobiliário',
   'servicos': 'Valor Adicionado - Serviços',
   'selic': 'Taxa Selic',
@@ -503,113 +557,41 @@ const labelsSetores = {
   'servicos': 'Serviços'
 };
 
-// ===== INICIALIZAÇÃO =====
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+
 document.addEventListener('DOMContentLoaded', function() {
-  usuarioLogado = JSON.parse(sessionStorage.getItem('USUARIO_LOGADO') || '{}');
-  
-  if (!usuarioLogado || !usuarioLogado.id) {
-    alert('⚠️ Usuário não autenticado! Redirecionando para login...');
-    window.location.href = 'login.html';
-    return;
-  }
+  usuarioLogado = { id: 1, nome: 'Sierra Capital' }; // Mock do usuário
   
   if (usuarioLogado.nome) {
     document.getElementById('nomeUsuario').textContent = usuarioLogado.nome;
   }
   
   console.log('👤 Usuário logado:', usuarioLogado);
+  console.log('🎭 Usando dados mocados (sem banco de dados)');
   
+  // Inicializar gráficos
   inicializarGraficos();
   
-  carregarZonasDisponiveis().then(() => {
-    aplicarFiltroAtivo();
-  });
+  // Aplicar filtro padrão
+  aplicarFiltroAtivo();
   
+  // Configurar eventos
   configurarLimitesRegioes();
   configurarEventosModais();
 });
 
 function logout() {
   if (confirm('⚠️ Tem certeza que deseja sair?')) {
-    sessionStorage.removeItem('USUARIO_LOGADO');
     window.location.href = 'index.html';
   }
 }
 
-// ===== CARREGAR ZONAS DO BANCO =====
-async function carregarZonasDisponiveis() {
-  try {
-    const response = await fetch('http://localhost:3333/dados/zonas');
-    
-    if (response.ok) {
-      zonasDisponiveis = await response.json();
-      console.log('📍 Zonas carregadas:', zonasDisponiveis);
-    } else {
-      console.warn('Zonas não encontradas, usando valores padrão');
-    }
-  } catch (erro) {
-    console.error('Erro ao carregar zonas:', erro);
-  }
-}
+// ============================================
+// INICIALIZAÇÃO DOS GRÁFICOS
+// ============================================
 
-// ===== BUSCAR DADOS DO BANCO =====
-async function buscarDadosDashboard(idsZonas) {
-  try {
-    const zonesParam = idsZonas.join(',');
-    const response = await fetch(`http://localhost:3333/dados/dashboard?zonas=${zonesParam}`);
-    
-    if (!response.ok) {
-      throw new Error('Erro ao buscar dados da dashboard');
-    }
-    
-    const dados = await response.json();
-    console.log('📊 Dados recebidos do banco:', dados);
-    return dados;
-    
-  } catch (erro) {
-    console.error('Erro ao buscar dados:', erro);
-    return null;
-  }
-}
-
-async function buscarAtratividade(idsZonas) {
-  try {
-    const zonesParam = idsZonas.join(',');
-    const response = await fetch(`http://localhost:3333/dados/atratividade?zonas=${zonesParam}`);
-    
-    if (!response.ok) {
-      throw new Error('Erro ao buscar atratividade');
-    }
-    
-    const dados = await response.json();
-    console.log('🎯 Dados de atratividade:', dados);
-    return dados;
-    
-  } catch (erro) {
-    console.error('Erro ao buscar atratividade:', erro);
-    return [];
-  }
-}
-
-async function buscarDemografia(idZona) {
-  try {
-    const response = await fetch(`http://localhost:3333/dados/demografia/${idZona}`);
-    
-    if (!response.ok) {
-      throw new Error('Erro ao buscar demografia');
-    }
-    
-    const dados = await response.json();
-    console.log('👥 Dados demográficos:', dados);
-    return dados;
-    
-  } catch (erro) {
-    console.error('Erro ao buscar demografia:', erro);
-    return null;
-  }
-}
-
-// ===== INICIALIZAR GRÁFICOS =====
 function inicializarGraficos() {
   const defaultOptions = {
     responsive: true,
@@ -617,53 +599,32 @@ function inicializarGraficos() {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "rgba(0, 30, 60, 0.95)",
-        borderColor: "rgba(0, 217, 255, 0.5)",
-        borderWidth: 2,
-        titleColor: "#FFFFFF",
-        bodyColor: "#00D9FF",
-        padding: 14,
-        cornerRadius: 10,
+        backgroundColor: "rgba(9, 61, 31, 0.95)",
+        borderColor: "rgba(14, 105, 48, 0.5)",
+        borderWidth: 1,
+        titleColor: "#f5f5f5",
+        bodyColor: "#f5f5f5",
+        padding: 12,
+        cornerRadius: 8,
         displayColors: true,
-        titleFont: {
-          size: 13,
-          weight: 'bold'
-        },
-        bodyFont: {
-          size: 12,
-          weight: '600'
-        }
       },
     },
     scales: {
       x: {
-        grid: { 
-          color: "rgba(0, 217, 255, 0.08)", 
-          drawBorder: false 
-        },
-        ticks: { 
-          color: "#00B4D8", 
-          font: { size: 11, weight: '600' } 
-        },
+        grid: { color: "rgba(14, 105, 48, 0.08)", drawBorder: false },
+        ticks: { color: "rgba(9, 61, 31, 0.7)", font: { size: 11, weight: '500' } },
       },
       y: {
-        grid: { 
-          color: "rgba(0, 217, 255, 0.08)", 
-          drawBorder: false 
-        },
-        ticks: { 
-          color: "#00B4D8", 
-          font: { size: 11, weight: '600' } 
-        },
+        grid: { color: "rgba(14, 105, 48, 0.08)", drawBorder: false },
+        ticks: { color: "rgba(9, 61, 31, 0.7)", font: { size: 11, weight: '500' } },
       },
     },
   };
 
-  // Gráfico PIB Regional
   pibRegionalChartInstance = new Chart(document.getElementById("pibRegionalChart"), {
     type: "line",
     data: {
-      labels: [],
+      labels: ["Q1 2023", "Q2 2023", "Q3 2023", "Q4 2023", "Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024"],
       datasets: []
     },
     options: {
@@ -681,11 +642,10 @@ function inicializarGraficos() {
     },
   });
 
-  // Gráfico Valor Adicionado
   valorAdicionadoChartInstance = new Chart(document.getElementById("valorAdicionadoChart"), {
     type: "bar",
     data: {
-      labels: [],
+      labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
       datasets: []
     },
     options: {
@@ -694,7 +654,8 @@ function inicializarGraficos() {
         ...defaultOptions.scales,
         x: { ...defaultOptions.scales.x, stacked: false },
         y: { 
-          ...defaultOptions.scales.y,
+          ...defaultOptions.scales.y, 
+          suggestedMax: 7,
           ticks: {
             ...defaultOptions.scales.y.ticks,
             callback: (value) => `${value}%`,
@@ -704,7 +665,6 @@ function inicializarGraficos() {
     },
   });
 
-  // Gráfico Atratividade
   atratividadeChartInstance = new Chart(document.getElementById("atratividadeChart"), {
     type: "bar",
     data: {
@@ -713,7 +673,7 @@ function inicializarGraficos() {
         label: "Score de Atratividade",
         data: [],
         backgroundColor: [],
-        borderRadius: 10,
+        borderRadius: 8,
         borderSkipped: false,
       }]
     },
@@ -738,223 +698,78 @@ function inicializarGraficos() {
   });
 }
 
-// ===== ATUALIZAR DASHBOARD COM FILTRO =====
-async function atualizarDashboardComFiltro(config) {
+// ============================================
+// ATUALIZAÇÃO DA DASHBOARD
+// ============================================
+
+function atualizarDashboardComFiltro(config) {
   console.log('🔄 Atualizando dashboard com:', config);
   
-  const idsZonas = config.graficos.pib.regioes.map(regiao => zonasMapeamento[regiao]).filter(id => id);
+  // Atualizar KPIs
+  atualizarKPIs(config);
   
-  const dadosBanco = await buscarDadosDashboard(idsZonas.length > 0 ? idsZonas : [1, 2, 3]);
-  
-  if (dadosBanco) {
-    await atualizarKPIs(config, dadosBanco);
-    
-if (config.graficos.pib.enabled && config.graficos.pib.regioes.length > 0) {
-  // Verificar se tem 'grande-sp' selecionado para mostrar PIB Regional SP
-  if (config.graficos.pib.regioes.includes('grande-sp') && dadosBanco.pibRegionalSP) {
-    await atualizarGraficoPIBRegionalSP(dadosBanco.pibRegionalSP);
+  // Atualizar gráfico de PIB
+  if (config.graficos.pib.enabled && config.graficos.pib.regioes.length > 0) {
+    atualizarGraficoPIB(config.graficos.pib.regioes);
+    document.querySelector('.chart-card:nth-child(1)').style.display = 'flex';
   } else {
-    await atualizarGraficoPIBComBanco(dadosBanco.pibGrafico);
+    document.querySelector('.chart-card:nth-child(1)').style.display = 'none';
   }
-  document.querySelector('.chart-card:nth-child(1)').style.display = 'flex';
-} else {
-  document.querySelector('.chart-card:nth-child(1)').style.display = 'none';
-}
-    
-    if (config.graficos.setor.enabled && config.graficos.setor.setores.length > 0) {
-      await atualizarGraficoSetoresComBanco(config.graficos.setor.setores, dadosBanco);
-      document.querySelector('.chart-card:nth-child(2)').style.display = 'flex';
-    } else {
-      document.querySelector('.chart-card:nth-child(2)').style.display = 'none';
-    }
-    
-    if (config.graficos.atratividade.enabled && config.graficos.atratividade.regioes.length > 0) {
-      await atualizarGraficoAtraividadeComBanco(config.graficos.atratividade.regioes);
-      document.querySelector('.chart-card:nth-child(3)').style.display = 'flex';
-    } else {
-      document.querySelector('.chart-card:nth-child(3)').style.display = 'none';
-    }
+  
+  // Atualizar gráfico de setores
+  if (config.graficos.setor.enabled && config.graficos.setor.setores.length > 0) {
+    atualizarGraficoSetores(config.graficos.setor.setores);
+    document.querySelector('.chart-card:nth-child(2)').style.display = 'flex';
+  } else {
+    document.querySelector('.chart-card:nth-child(2)').style.display = 'none';
+  }
+  
+  // Atualizar gráfico de atratividade
+  if (config.graficos.atratividade.enabled && config.graficos.atratividade.regioes.length > 0) {
+    atualizarGraficoAtratividade(config.graficos.atratividade.regioes);
+    document.querySelector('.chart-card:nth-child(3)').style.display = 'flex';
+  } else {
+    document.querySelector('.chart-card:nth-child(3)').style.display = 'none';
   }
   
   console.log('✅ Dashboard atualizada com sucesso!');
 }
 
-// ===== ATUALIZAR KPIs (COM CÁLCULO AUTOMÁTICO DE TENDÊNCIA) =====
-async function atualizarKPIs(config, dadosBanco) {
+function atualizarKPIs(config) {
   const kpiCards = document.querySelectorAll('.kpi-card');
   
-  // KPI 1: PIB - pode ser Geral ou Regional SP
+  // KPI 1: Econômico
   if (config.kpis.economico.enabled) {
     kpiCards[0].style.display = 'flex';
+    const dadosKPI = DADOS_MOCADOS.kpis[config.kpis.economico.value];
     kpiCards[0].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.economico.value];
-    
-    if (config.kpis.economico.value === 'pib-sp' && dadosBanco.pibRegionalSPAtual && dadosBanco.pibRegionalSP) {
-      const valorAtual = parseFloat(dadosBanco.pibRegionalSPAtual.pibSP);
-      const anoAtual = parseInt(dadosBanco.pibRegionalSPAtual.ano);
-      const sinal = valorAtual >= 0 ? '+' : '';
-      
-      kpiCards[0].querySelector('.kpi-value').innerHTML = `${sinal}${valorAtual.toFixed(1)}<span class="kpi-unit">%</span>`;
-      kpiCards[0].querySelector('.kpi-description').textContent = `Ano ${anoAtual}`;
-      
-      // Calcular variação em relação ao ano anterior
-      const anoAnterior = dadosBanco.pibRegionalSP.find(item => parseInt(item.ano) === anoAtual - 1);
-      if (anoAnterior) {
-        const valorAnterior = parseFloat(anoAnterior.pibSP);
-        const variacao = valorAtual - valorAnterior;
-        const variacaoAbs = Math.abs(variacao);
-        
-        const trend = kpiCards[0].querySelector('.kpi-trend');
-        if (variacao > 0) {
-          trend.className = 'kpi-trend positive';
-          trend.textContent = `↑ ${variacaoAbs.toFixed(1)}pp vs ${anoAtual - 1}`;
-        } else if (variacao < 0) {
-          trend.className = 'kpi-trend negative';
-          trend.textContent = `↓ ${variacaoAbs.toFixed(1)}pp vs ${anoAtual - 1}`;
-        } else {
-          trend.className = 'kpi-trend neutral';
-          trend.textContent = `→ Igual a ${anoAtual - 1}`;
-        }
-      }
-    } 
-    else if (dadosBanco.pibAtual && dadosBanco.pibGrafico) {
-      const valorAtual = parseFloat(dadosBanco.pibAtual.pibGeral);
-      const sinal = valorAtual >= 0 ? '+' : '';
-      
-      kpiCards[0].querySelector('.kpi-value').innerHTML = `${sinal}${valorAtual.toFixed(1)}<span class="kpi-unit">%</span>`;
-      kpiCards[0].querySelector('.kpi-description').textContent = `${dadosBanco.pibAtual.trimestre} trimestre ${dadosBanco.pibAtual.ano}`;
-      
-      // Calcular variação em relação ao trimestre anterior
-      const dados = [...dadosBanco.pibGrafico].reverse();
-      if (dados.length >= 2) {
-        const valorAnterior = parseFloat(dados[1].pibGeral);
-        const variacao = valorAtual - valorAnterior;
-        const variacaoAbs = Math.abs(variacao);
-        
-        const trend = kpiCards[0].querySelector('.kpi-trend');
-        if (variacao > 0) {
-          trend.className = 'kpi-trend positive';
-          trend.textContent = `↑ ${variacaoAbs.toFixed(1)}pp vs trimestre anterior`;
-        } else if (variacao < 0) {
-          trend.className = 'kpi-trend negative';
-          trend.textContent = `↓ ${variacaoAbs.toFixed(1)}pp vs trimestre anterior`;
-        } else {
-          trend.className = 'kpi-trend neutral';
-          trend.textContent = `→ Estável`;
-        }
-      }
-    }
+    kpiCards[0].querySelector('.kpi-value').innerHTML = `+${dadosKPI.valor.toFixed(1)}<span class="kpi-unit">%</span>`;
+    kpiCards[0].querySelector('.kpi-trend').textContent = `↑ ${dadosKPI.variacao}pp vs 2023`;
+    kpiCards[0].querySelector('.kpi-description').textContent = dadosKPI.descricao;
   } else {
     kpiCards[0].style.display = 'none';
   }
   
-  // KPI 2: Setor (Construção Civil ou Serviços)
+  // KPI 2: Setor
   if (config.kpis.setor.enabled) {
     kpiCards[1].style.display = 'flex';
+    const dadosKPI = DADOS_MOCADOS.kpis[config.kpis.setor.value];
     kpiCards[1].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.setor.value];
-    
-    if (config.kpis.setor.value === 'construcao' && dadosBanco.construcaoAtual && dadosBanco.construcaoGrafico) {
-      const valorAtual = parseFloat(dadosBanco.construcaoAtual.construcaoCivil);
-      const sinal = valorAtual >= 0 ? '+' : '';
-      
-      kpiCards[1].querySelector('.kpi-value').innerHTML = `${sinal}${valorAtual.toFixed(1)}<span class="kpi-unit">%</span>`;
-      kpiCards[1].querySelector('.kpi-description').textContent = `${dadosBanco.construcaoAtual.trimestre} trimestre ${dadosBanco.construcaoAtual.ano}`;
-      
-      // Calcular variação em relação ao trimestre anterior
-      const dados = [...dadosBanco.construcaoGrafico].reverse();
-      if (dados.length >= 2) {
-        const valorAnterior = parseFloat(dados[1].construcaoCivil);
-        const variacao = valorAtual - valorAnterior;
-        const variacaoAbs = Math.abs(variacao);
-        
-        const trend = kpiCards[1].querySelector('.kpi-trend');
-        if (variacao > 0.5) {
-          trend.className = 'kpi-trend positive';
-          trend.textContent = `↑ ${variacaoAbs.toFixed(1)}pp em expansão`;
-        } else if (variacao < -0.5) {
-          trend.className = 'kpi-trend negative';
-          trend.textContent = `↓ ${variacaoAbs.toFixed(1)}pp em retração`;
-        } else {
-          trend.className = 'kpi-trend neutral';
-          trend.textContent = `→ Estável`;
-        }
-      }
-      
-    } else if (config.kpis.setor.value === 'servicos' && dadosBanco.servicosAtual && dadosBanco.servicosGrafico) {
-      const valorAtual = parseFloat(dadosBanco.servicosAtual.servicos);
-      const sinal = valorAtual >= 0 ? '+' : '';
-      
-      kpiCards[1].querySelector('.kpi-value').innerHTML = `${sinal}${valorAtual.toFixed(1)}<span class="kpi-unit">%</span>`;
-      kpiCards[1].querySelector('.kpi-description').textContent = `${dadosBanco.servicosAtual.trimestre} trimestre ${dadosBanco.servicosAtual.ano}`;
-      
-      // Calcular variação em relação ao trimestre anterior
-      const dados = [...dadosBanco.servicosGrafico].reverse();
-      if (dados.length >= 2) {
-        const valorAnterior = parseFloat(dados[1].servicos);
-        const variacao = valorAtual - valorAnterior;
-        const variacaoAbs = Math.abs(variacao);
-        
-        const trend = kpiCards[1].querySelector('.kpi-trend');
-        if (variacao > 0.3) {
-          trend.className = 'kpi-trend positive';
-          trend.textContent = `↑ ${variacaoAbs.toFixed(1)}pp crescimento`;
-        } else if (variacao < -0.3) {
-          trend.className = 'kpi-trend negative';
-          trend.textContent = `↓ ${variacaoAbs.toFixed(1)}pp queda`;
-        } else {
-          trend.className = 'kpi-trend neutral';
-          trend.textContent = `→ Estabilidade`;
-        }
-      }
-    }
+    kpiCards[1].querySelector('.kpi-value').innerHTML = `+${dadosKPI.valor.toFixed(1)}<span class="kpi-unit">%</span>`;
+    kpiCards[1].querySelector('.kpi-trend').textContent = `↑ ${dadosKPI.variacao}pp`;
+    kpiCards[1].querySelector('.kpi-description').textContent = dadosKPI.descricao;
   } else {
     kpiCards[1].style.display = 'none';
   }
   
-  // KPI 3: Selic ou Inflação
+  // KPI 3: Financeiro
   if (config.kpis.financeiro.enabled) {
     kpiCards[2].style.display = 'flex';
+    const dadosKPI = DADOS_MOCADOS.kpis[config.kpis.financeiro.value];
     kpiCards[2].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.financeiro.value];
-    
-    if (config.kpis.financeiro.value === 'selic' && dadosBanco.selic) {
-      const taxaAtual = parseFloat(dadosBanco.selic.taxaSelic);
-      kpiCards[2].querySelector('.kpi-value').innerHTML = `${taxaAtual.toFixed(2)}<span class="kpi-unit">%</span>`;
-      
-      const data = new Date(dadosBanco.selic.dataApuracao);
-      kpiCards[2].querySelector('.kpi-description').textContent = `Atualizado em ${data.toLocaleDateString('pt-BR')}`;
-      
-      // Análise da taxa Selic
-      const trend = kpiCards[2].querySelector('.kpi-trend');
-      if (taxaAtual >= 13) {
-        trend.className = 'kpi-trend negative';
-        trend.textContent = '↑ Taxa elevada';
-      } else if (taxaAtual <= 10) {
-        trend.className = 'kpi-trend positive';
-        trend.textContent = '↓ Taxa favorável';
-      } else {
-        trend.className = 'kpi-trend neutral';
-        trend.textContent = '→ Taxa moderada';
-      }
-      
-    } else if (config.kpis.financeiro.value === 'inflacao' && dadosBanco.inflacao) {
-      const taxaAtual = parseFloat(dadosBanco.inflacao.taxaInflacao);
-      kpiCards[2].querySelector('.kpi-value').innerHTML = `${taxaAtual.toFixed(2)}<span class="kpi-unit">%</span>`;
-      
-      const data = new Date(dadosBanco.inflacao.dataApuracao);
-      kpiCards[2].querySelector('.kpi-description').textContent = `${data.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}`;
-      
-      // Meta de inflação: 3% com tolerância de 1,5pp (1,5% a 4,5%)
-      const trend = kpiCards[2].querySelector('.kpi-trend');
-      if (taxaAtual > 4.5) {
-        trend.className = 'kpi-trend negative';
-        trend.textContent = `↑ ${(taxaAtual - 4.5).toFixed(2)}pp acima da meta`;
-      } else if (taxaAtual < 1.5) {
-        trend.className = 'kpi-trend negative';
-        trend.textContent = `↓ ${(1.5 - taxaAtual).toFixed(2)}pp abaixo da meta`;
-      } else {
-        trend.className = 'kpi-trend positive';
-        trend.textContent = '✓ Dentro da meta';
-      }
-    }
+    kpiCards[2].querySelector('.kpi-value').innerHTML = `${dadosKPI.valor.toFixed(2)}<span class="kpi-unit">%</span>`;
+    kpiCards[2].querySelector('.kpi-trend').textContent = dadosKPI.variacao === 0 ? '→ Estável' : `↓ ${Math.abs(dadosKPI.variacao)}pp`;
+    kpiCards[2].querySelector('.kpi-description').textContent = dadosKPI.descricao;
   } else {
     kpiCards[2].style.display = 'none';
   }
@@ -962,374 +777,153 @@ async function atualizarKPIs(config, dadosBanco) {
   // KPI 4: Demografia
   if (config.kpis.demo.enabled) {
     kpiCards[3].style.display = 'flex';
+    const primeiraRegiao = config.graficos.pib.regioes[0] || 'grande-sp';
+    const dadosDemografia = DADOS_MOCADOS.demografia[primeiraRegiao];
+    const dadosKPI = DADOS_MOCADOS.kpis[config.kpis.demo.value];
+    
     kpiCards[3].querySelector('.kpi-label').textContent = labelsKPIs[config.kpis.demo.value];
     
-    const primeiraZona = config.graficos.pib.regioes[0];
-    const idZona = zonasMapeamento[primeiraZona];
-    
-    if (idZona) {
-      const demografia = await buscarDemografia(idZona);
-      
-      if (demografia) {
-        const trend = kpiCards[3].querySelector('.kpi-trend');
-        
-        if (config.kpis.demo.value === 'faixa-etaria') {
-          const idadeMedia = Math.round(demografia.idadeMedia);
-          kpiCards[3].querySelector('.kpi-value').innerHTML = `${idadeMedia}<span class="kpi-unit">Anos</span>`;
-          kpiCards[3].querySelector('.kpi-description').textContent = `Idade média - ${demografia.municipio}`;
-          
-          // Análise da idade
-          if (idadeMedia < 30) {
-            trend.className = 'kpi-trend positive';
-            trend.textContent = '✓ População jovem';
-          } else if (idadeMedia > 35) {
-            trend.className = 'kpi-trend neutral';
-            trend.textContent = '→ População madura';
-          } else {
-            trend.className = 'kpi-trend positive';
-            trend.textContent = '✓ Faixa produtiva';
-          }
-          
-        } else if (config.kpis.demo.value === 'densidade') {
-          const densidade = parseFloat(demografia.densidadeDemografico).toFixed(1);
-          kpiCards[3].querySelector('.kpi-value').innerHTML = `${densidade}<span class="kpi-unit">k/km²</span>`;
-          kpiCards[3].querySelector('.kpi-description').textContent = `${demografia.municipio}`;
-          
-          // Análise da densidade
-          if (densidade > 5000) {
-            trend.className = 'kpi-trend positive';
-            trend.textContent = '↑ Alta densidade';
-          } else if (densidade > 1000) {
-            trend.className = 'kpi-trend positive';
-            trend.textContent = '✓ Densidade elevada';
-          } else {
-            trend.className = 'kpi-trend neutral';
-            trend.textContent = '→ Densidade moderada';
-          }
-          
-        } else if (config.kpis.demo.value === 'renda-media') {
-          kpiCards[3].querySelector('.kpi-value').innerHTML = `R$ 4,2<span class="kpi-unit">mil</span>`;
-          kpiCards[3].querySelector('.kpi-description').textContent = `Renda mensal média`;
-          
-          trend.className = 'kpi-trend positive';
-          trend.textContent = '✓ Renda adequada';
-        }
-      }
+    if (config.kpis.demo.value === 'faixa-etaria') {
+      kpiCards[3].querySelector('.kpi-value').innerHTML = `${dadosDemografia.idadeMedia}<span class="kpi-unit">Anos</span>`;
+      kpiCards[3].querySelector('.kpi-trend').textContent = `${dadosKPI.variacao}%`;
+    } else if (config.kpis.demo.value === 'densidade') {
+      kpiCards[3].querySelector('.kpi-value').innerHTML = `${dadosDemografia.densidade}<span class="kpi-unit">k/km²</span>`;
+      kpiCards[3].querySelector('.kpi-trend').textContent = '→ Estável';
+    } else if (config.kpis.demo.value === 'renda-media') {
+      kpiCards[3].querySelector('.kpi-value').innerHTML = `R$ ${dadosDemografia.rendaMedia}<span class="kpi-unit">mil</span>`;
+      kpiCards[3].querySelector('.kpi-trend').textContent = '↑ Crescimento';
     }
+    
+    kpiCards[3].querySelector('.kpi-description').textContent = dadosKPI.descricao;
   } else {
     kpiCards[3].style.display = 'none';
   }
 }
 
-async function atualizarGraficoPIBComBanco(dadosPib) {
-  console.log('🔄 Atualizando gráfico PIB com dados reais:', dadosPib);
+function atualizarGraficoPIB(regioes) {
+  const cores = ['#0e6930', 'rgba(9, 61, 31, 0.7)', '#16a34a', '#22c55e', '#10b981', '#14b8a6'];
   
-  // Reverter array para ordem cronológica (mais antigo para mais recente)
-  const dadosOrdenados = [...dadosPib].reverse();
+  const datasets = regioes.map((regiao, index) => {
+    return {
+      label: labelsRegioes[regiao],
+      data: DADOS_MOCADOS.pib[regiao],
+      borderColor: cores[index % cores.length],
+      backgroundColor: cores[index % cores.length] + '22',
+      tension: 0.4,
+      fill: true,
+      borderWidth: 3 - index * 0.3,
+      pointRadius: 4 - index,
+      pointHoverRadius: 6 - index,
+      pointBackgroundColor: cores[index % cores.length],
+    };
+  });
   
-  // Criar labels (Q1 2023, Q2 2023, etc.)
-  const labels = dadosOrdenados.map(item => `${item.trimestre} ${item.ano}`);
-  
-  // Criar dataset único com PIB Geral
-  const dataset = {
-    label: 'PIB Geral',
-    data: dadosOrdenados.map(item => parseFloat(item.pibGeral)),
-    borderColor: paletaCores.primary[0],
-    backgroundColor: hexToRgba(paletaCores.primary[0], 0.15),
-    tension: 0.4,
-    fill: true,
-    borderWidth: 3,
-    pointRadius: 5,
-    pointHoverRadius: 7,
-    pointBackgroundColor: paletaCores.primary[0],
-    pointBorderColor: '#FFFFFF',
-    pointBorderWidth: 2,
-    pointHoverBorderWidth: 3,
-  };
-  
-  // Atualizar gráfico
-  pibRegionalChartInstance.data.labels = labels;
-  pibRegionalChartInstance.data.datasets = [dataset];
-  pibRegionalChartInstance.update();
+  pibRegionalChartInstance.data.datasets = datasets;
   
   // Atualizar legenda
   const legendContainer = document.querySelector('.chart-card:nth-child(1) .chart-legend');
-  legendContainer.innerHTML = `
+  legendContainer.innerHTML = regioes.map((regiao, index) => `
     <span class="legend-item">
-      <span class="dot" style="background: ${paletaCores.primary[0]}; box-shadow: 0 0 8px ${hexToRgba(paletaCores.primary[0], 0.6)}"></span>
-      PIB Geral
+      <span class="dot" style="background: ${cores[index % cores.length]}"></span>
+      ${labelsRegioes[regiao]}
     </span>
-  `;
+  `).join('');
   
-  console.log('✅ Gráfico PIB atualizado com sucesso');
+  pibRegionalChartInstance.update();
 }
 
-// ===== ATUALIZAR GRÁFICO SETORES COM DADOS REAIS =====
-async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
-  console.log('🔄 Atualizando gráfico de setores:', setores);
-  
+function atualizarGraficoSetores(setores) {
   const coresSetores = {
-    'construcao': paletaCores.success[0],
-    'imobiliario': paletaCores.warm[1],
-    'servicos': paletaCores.cool[2]
+    'construcao': '#0e6930',
+    'imobiliario': '#f59e0b',
+    'servicos': '#16a34a'
   };
   
-  // Pegar últimos 12 trimestres
-  let labels = [];
-  const datasets = [];
-  
-  setores.forEach(setor => {
-    let dados = [];
-    let dadosOrdenados = [];
-    
-    if (setor === 'construcao' && dadosBanco.construcaoGrafico) {
-      // Dados reais de Construção Civil
-      dadosOrdenados = [...dadosBanco.construcaoGrafico].reverse();
-      labels = dadosOrdenados.map(item => `${item.trimestre} ${item.ano}`);
-      dados = dadosOrdenados.map(item => parseFloat(item.construcaoCivil));
-      
-    } else if (setor === 'servicos' && dadosBanco.servicosGrafico) {
-      // Dados reais de Serviços
-      dadosOrdenados = [...dadosBanco.servicosGrafico].reverse();
-      if (labels.length === 0) {
-        labels = dadosOrdenados.map(item => `${item.trimestre} ${item.ano}`);
-      }
-      dados = dadosOrdenados.map(item => parseFloat(item.servicos));
-      
-    } else if (setor === 'imobiliario') {
-      // Dados mockados para Imobiliário (aguardando dados reais)
-      dados = [2.8, 3.0, 3.2, 3.4, 3.3, 3.5, 3.6, 3.4, 3.7, 3.8, 3.9, 4.0];
-      if (labels.length === 0) {
-        // Criar labels genéricos se ainda não tiver
-        labels = ['Q1 2023', 'Q2 2023', 'Q3 2023', 'Q4 2023', 'Q1 2024', 'Q2 2024', 
-                  'Q3 2024', 'Q4 2024', 'Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025'];
-      }
-    }
-    
-    datasets.push({
+  const datasets = setores.map(setor => {
+    return {
       label: labelsSetores[setor],
-      data: dados,
+      data: DADOS_MOCADOS.setores[setor],
       backgroundColor: coresSetores[setor],
-      borderRadius: 8,
+      borderRadius: 6,
       borderSkipped: false,
-      hoverBackgroundColor: hexToRgba(coresSetores[setor], 0.8),
-    });
+    };
   });
   
-  valorAdicionadoChartInstance.data.labels = labels;
   valorAdicionadoChartInstance.data.datasets = datasets;
-  valorAdicionadoChartInstance.update();
   
   // Atualizar legenda
   const legendContainer = document.querySelector('.chart-card:nth-child(2) .chart-legend');
   legendContainer.innerHTML = setores.map(setor => `
     <span class="legend-item">
-      <span class="dot" style="background: ${coresSetores[setor]}; box-shadow: 0 0 8px ${hexToRgba(coresSetores[setor], 0.6)}"></span>
+      <span class="dot" style="background: ${coresSetores[setor]}"></span>
       ${labelsSetores[setor]}
     </span>
   `).join('');
   
-  console.log('✅ Gráfico de setores atualizado com sucesso');
+  valorAdicionadoChartInstance.update();
 }
-// ===== ATUALIZAR GRÁFICO ATRATIVIDADE COM DADOS DO BANCO =====
-async function atualizarGraficoAtraividadeComBanco(regioes) {
-  const idsZonas = regioes.map(regiao => zonasMapeamento[regiao]).filter(id => id);
-  const dadosAtratividade = await buscarAtratividade(idsZonas);
+
+function atualizarGraficoAtratividade(regioes) {
+  const cores = ["#0e6930", "#16a34a", "#22c55e", "#f59e0b", "#10b981", "#14b8a6"];
   
-  let labels = [];
-  let data = [];
-  let cores = [];
-  
-  if (dadosAtratividade && dadosAtratividade.length > 0) {
-    labels = dadosAtratividade.map(item => item.nome);
-    data = dadosAtratividade.map(item => Math.min(100, Math.round(parseFloat(item.score))));
-    
-    cores = data.map(score => {
-      if (score >= 80) return paletaCores.success[0];
-      if (score >= 60) return paletaCores.primary[0];
-      if (score >= 40) return paletaCores.warm[1];
-      return paletaCores.secondary[1];
-    });
-  } else {
-    labels = regioes.map(regiao => labelsRegioes[regiao]);
-    data = [82, 75, 88, 79, 71, 76].slice(0, regioes.length);
-    cores = regioes.map((_, index) => paletaCores.primary[index % paletaCores.primary.length]);
-  }
+  const labels = regioes.map(regiao => labelsRegioes[regiao]);
+  const data = regioes.map(regiao => DADOS_MOCADOS.atratividade[regiao]);
+  const backgroundColor = regioes.map((_, index) => cores[index % cores.length]);
   
   atratividadeChartInstance.data.labels = labels;
   atratividadeChartInstance.data.datasets[0].data = data;
-  atratividadeChartInstance.data.datasets[0].backgroundColor = cores;
+  atratividadeChartInstance.data.datasets[0].backgroundColor = backgroundColor;
+  
   atratividadeChartInstance.update();
 }
 
-async function atualizarGraficoPIBRegionalSP(dadosPibSP) {
-  console.log('🔄 Atualizando gráfico PIB Regional de São Paulo:', dadosPibSP);
-  
-  // Criar labels (anos)
-  const labels = dadosPibSP.map(item => item.ano);
-  
-  // Criar dataset com PIB Regional SP
-  const dataset = {
-    label: 'PIB Estado de São Paulo',
-    data: dadosPibSP.map(item => parseFloat(item.pibSP)),
-    borderColor: paletaCores.primary[0],
-    backgroundColor: hexToRgba(paletaCores.primary[0], 0.15),
-    tension: 0.4,
-    fill: true,
-    borderWidth: 3,
-    pointRadius: 5,
-    pointHoverRadius: 7,
-    pointBackgroundColor: paletaCores.primary[0],
-    pointBorderColor: '#FFFFFF',
-    pointBorderWidth: 2,
-    pointHoverBorderWidth: 3,
-  };
-  
-  // Atualizar gráfico
-  pibRegionalChartInstance.data.labels = labels;
-  pibRegionalChartInstance.data.datasets = [dataset];
-  pibRegionalChartInstance.update();
-  
-  // Atualizar legenda
-  const legendContainer = document.querySelector('.chart-card:nth-child(1) .chart-legend');
-  legendContainer.innerHTML = `
-    <span class="legend-item">
-      <span class="dot" style="background: ${paletaCores.primary[0]}; box-shadow: 0 0 8px ${hexToRgba(paletaCores.primary[0], 0.6)}"></span>
-      PIB Estado de São Paulo (Anual)
-    </span>
-  `;
-  
-  // Atualizar título do gráfico
-  document.querySelector('.chart-card:nth-child(1) h3').textContent = '📈 Evolução do PIB Regional - São Paulo';
-  document.querySelector('.chart-card:nth-child(1) span').textContent = 'Crescimento anual do Estado de São Paulo';
-  
-  console.log('✅ Gráfico PIB Regional SP atualizado com sucesso');
-}
+// ============================================
+// GERENCIAMENTO DE FILTROS (LOCALSTORAGE)
+// ============================================
 
-// ===== FUNÇÃO AUXILIAR PARA CONVERTER HEX EM RGBA =====
-function hexToRgba(hex, alpha = 1) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-// ===== CARREGAR FILTROS DO BANCO =====
-async function carregarFiltros() {
-  try {
-    const response = await fetch(`http://localhost:3333/filtros/listar/${usuarioLogado.id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (response.status === 204) {
-      return await criarFiltroPadrao();
-    }
-
-    if (!response.ok) {
-      throw new Error('Erro ao carregar filtros');
-    }
-
-    const filtros = await response.json();
-    console.log('📊 Filtros carregados:', filtros);
-    return filtros;
-
-  } catch (erro) {
-    console.error('Erro ao carregar filtros:', erro);
-    return carregarFiltrosLocalStorage();
-  }
-}
-
-async function criarFiltroPadrao() {
-  try {
-    const configPadrao = getConfigPadrao();
-    
-    const response = await fetch('http://localhost:3333/filtros/criar', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        idUserServer: usuarioLogado.id,
-        nomeServer: '📌 Filtro Padrão',
-        configServer: configPadrao
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Erro ao criar filtro padrão');
-    }
-
-    const resultado = await response.json();
-    console.log('✅ Filtro padrão criado:', resultado);
-    
-    if (resultado.insertId) {
-      await ativarFiltro(resultado.insertId);
-    }
-    
-    return await carregarFiltros();
-
-  } catch (erro) {
-    console.error('Erro ao criar filtro padrão:', erro);
-    return [{
-      id: 'default',
+function carregarFiltros() {
+  const filtros = localStorage.getItem('filtrosDashboard');
+  if (!filtros) {
+    const filtroPadrao = [{
+      id: 1,
       nome: '📌 Filtro Padrão',
       ativo: true,
       config: getConfigPadrao()
     }];
+    localStorage.setItem('filtrosDashboard', JSON.stringify(filtroPadrao));
+    return filtroPadrao;
   }
+  return JSON.parse(filtros);
 }
 
-async function buscarFiltroAtivo() {
-  try {
-    const response = await fetch(`http://localhost:3333/filtros/ativo/${usuarioLogado.id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (response.status === 204) {
-      return null;
-    }
-
-    if (!response.ok) {
-      throw new Error('Erro ao buscar filtro ativo');
-    }
-
-    const filtroAtivo = await response.json();
-    console.log('✅ Filtro ativo:', filtroAtivo);
-    return filtroAtivo;
-
-  } catch (erro) {
-    console.error('Erro ao buscar filtro ativo:', erro);
-    return null;
-  }
+function salvarFiltrosNoStorage(filtros) {
+  localStorage.setItem('filtrosDashboard', JSON.stringify(filtros));
 }
 
-async function aplicarFiltroAtivo() {
-  const filtroAtivo = await buscarFiltroAtivo();
+function buscarFiltroAtivo() {
+  const filtros = carregarFiltros();
+  return filtros.find(f => f.ativo) || null;
+}
+
+function aplicarFiltroAtivo() {
+  const filtroAtivo = buscarFiltroAtivo();
   
   if (!filtroAtivo) {
     console.log('⚠️ Nenhum filtro ativo, aplicando padrão');
-    await atualizarDashboardComFiltro(getConfigPadrao());
+    atualizarDashboardComFiltro(getConfigPadrao());
     return;
   }
   
   console.log('🗺️ Aplicando filtro:', filtroAtivo.nome);
-  
-  let config = filtroAtivo.config;
-  if (typeof config === 'string') {
-    config = JSON.parse(config);
-  }
-  
-  await atualizarDashboardComFiltro(config);
+  atualizarDashboardComFiltro(filtroAtivo.config);
 }
 
-async function abrirGerenciarFiltros() {
-  await renderizarFiltrosSalvos();
+// ============================================
+// MODAIS DE FILTROS
+// ============================================
+
+function abrirGerenciarFiltros() {
+  renderizarFiltrosSalvos();
   document.getElementById('gerenciarFiltrosModal').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -1339,24 +933,18 @@ function fecharGerenciarFiltros() {
   document.body.style.overflow = '';
 }
 
-async function renderizarFiltrosSalvos() {
-  const filtros = await carregarFiltros();
+function renderizarFiltrosSalvos() {
+  const filtros = carregarFiltros();
   const container = document.getElementById('filtrosSalvosList');
   
-  container.innerHTML = filtros.map(filtro => {
-    let config = filtro.config;
-    if (typeof config === 'string') {
-      config = JSON.parse(config);
-    }
-    
-    return `
+  container.innerHTML = filtros.map(filtro => `
     <div class="filtro-item ${filtro.ativo ? 'ativo' : ''}">
       <div class="filtro-info">
         <div class="filtro-header">
           <span class="filtro-nome">${filtro.nome}</span>
           ${filtro.ativo ? '<span class="badge-ativo">✓ Ativo</span>' : ''}
         </div>
-        <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
+        <span class="filtro-detalhes">${getResumoFiltro(filtro.config)}</span>
       </div>
       <div class="filtro-actions">
         ${!filtro.ativo ? `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro.id})" title="Ativar">✓</button>` : ''}
@@ -1364,7 +952,7 @@ async function renderizarFiltrosSalvos() {
         ${filtro.nome !== '📌 Filtro Padrão' ? `<button class="btn-action btn-deletar" onclick="deletarFiltro(${filtro.id})" title="Excluir">🗑️</button>` : ''}
       </div>
     </div>
-  `}).join('');
+  `).join('');
 }
 
 function getResumoFiltro(config) {
@@ -1382,8 +970,8 @@ function criarNovoFiltro() {
   document.getElementById('editarFiltrosModal').classList.add('active');
 }
 
-async function editarFiltro(id) {
-  const filtros = await carregarFiltros();
+function editarFiltro(id) {
+  const filtros = carregarFiltros();
   const filtro = filtros.find(f => f.id === id);
   
   if (!filtro) return;
@@ -1391,51 +979,33 @@ async function editarFiltro(id) {
   filtroAtualId = id;
   document.getElementById('filtroNome').value = filtro.nome.replace(/[📌✏️➕]/g, '').trim();
   document.getElementById('modalTitle').textContent = '✏️ Editar Filtro';
-  
-  let config = filtro.config;
-  if (typeof config === 'string') {
-    config = JSON.parse(config);
-  }
-  
-  carregarConfigNoModal(config);
+  carregarConfigNoModal(filtro.config);
   fecharGerenciarFiltros();
   document.getElementById('editarFiltrosModal').classList.add('active');
 }
 
-async function ativarFiltro(id) {
-  try {
-    const response = await fetch(`http://localhost:3333/filtros/ativar/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        idUserServer: usuarioLogado.id
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Erro ao ativar filtro');
-    }
-
-    console.log('✅ Filtro ativado com sucesso!');
-    
-    await aplicarFiltroAtivo();
-    await renderizarFiltrosSalvos();
-    
-    const filtros = await carregarFiltros();
-    const filtro = filtros.find(f => f.id === id);
-    
-    mostrarToast(`✓ Filtro "${filtro.nome}" ativado!`);
-
-  } catch (erro) {
-    console.error('Erro ao ativar filtro:', erro);
-    alert('❌ Erro ao ativar filtro. Tente novamente.');
+function ativarFiltro(id) {
+  let filtros = carregarFiltros();
+  
+  // Desativar todos
+  filtros = filtros.map(f => ({ ...f, ativo: false }));
+  
+  // Ativar o selecionado
+  const index = filtros.findIndex(f => f.id === id);
+  if (index !== -1) {
+    filtros[index].ativo = true;
   }
+  
+  salvarFiltrosNoStorage(filtros);
+  aplicarFiltroAtivo();
+  renderizarFiltrosSalvos();
+  
+  const filtro = filtros[index];
+  mostrarToast(`✓ Filtro "${filtro.nome}" ativado!`);
 }
 
-async function deletarFiltro(id) {
-  const filtros = await carregarFiltros();
+function deletarFiltro(id) {
+  const filtros = carregarFiltros();
   const filtro = filtros.find(f => f.id === id);
   
   if (!filtro) return;
@@ -1443,33 +1013,22 @@ async function deletarFiltro(id) {
   if (!confirm(`⚠️ Tem certeza que deseja excluir o filtro "${filtro.nome}"?\n\nEsta ação não pode ser desfeita.`)) {
     return;
   }
-
-  try {
-    const response = await fetch(`http://localhost:3333/filtros/deletar/${id}/${usuarioLogado.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error('Erro ao deletar filtro');
-    }
-
-    console.log('✅ Filtro deletado com sucesso!');
-    
-    await renderizarFiltrosSalvos();
-    await aplicarFiltroAtivo();
-    
-    mostrarToast('✅ Filtro excluído com sucesso!');
-
-  } catch (erro) {
-    console.error('Erro ao deletar filtro:', erro);
-    alert('❌ Erro ao deletar filtro. Tente novamente.');
+  
+  const novosFiltros = filtros.filter(f => f.id !== id);
+  
+  // Se deletou o ativo, ativar o primeiro
+  if (filtro.ativo && novosFiltros.length > 0) {
+    novosFiltros[0].ativo = true;
   }
+  
+  salvarFiltrosNoStorage(novosFiltros);
+  renderizarFiltrosSalvos();
+  aplicarFiltroAtivo();
+  
+  mostrarToast('✅ Filtro excluído com sucesso!');
 }
 
-async function salvarFiltro() {
+function salvarFiltro() {
   const nome = document.getElementById('filtroNome').value.trim();
   
   if (!nome) {
@@ -1479,72 +1038,31 @@ async function salvarFiltro() {
   }
   
   const config = getConfigDoModal();
-
-  try {
-    if (filtroAtualId) {
-      const response = await fetch(`http://localhost:3333/filtros/atualizar/${filtroAtualId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          idUserServer: usuarioLogado.id,
-          nomeServer: nome,
-          configServer: config
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao atualizar filtro');
-      }
-
-      console.log('✅ Filtro atualizado!');
-      mostrarToast('✅ Filtro atualizado!');
-
-    } else {
-      const response = await fetch('http://localhost:3333/filtros/criar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          idUserServer: usuarioLogado.id,
-          nomeServer: nome,
-          configServer: config
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao criar filtro');
-      }
-
-      console.log('✅ Filtro criado!');
-      mostrarToast('✅ Novo filtro criado!');
+  let filtros = carregarFiltros();
+  
+  if (filtroAtualId) {
+    // Atualizar existente
+    const index = filtros.findIndex(f => f.id === filtroAtualId);
+    if (index !== -1) {
+      filtros[index].nome = nome;
+      filtros[index].config = config;
     }
-
-    fecharEditarFiltros();
-    await abrirGerenciarFiltros();
-
-  } catch (erro) {
-    console.error('Erro ao salvar filtro:', erro);
-    alert('❌ Erro ao salvar filtro. Tente novamente.');
+    mostrarToast('✅ Filtro atualizado!');
+  } else {
+    // Criar novo
+    const novoId = Math.max(...filtros.map(f => f.id), 0) + 1;
+    filtros.push({
+      id: novoId,
+      nome: nome,
+      ativo: false,
+      config: config
+    });
+    mostrarToast('✅ Novo filtro criado!');
   }
-}
-
-function getConfigPadrao() {
-  return {
-    kpis: {
-      economico: { enabled: true, value: 'pib-sp' },
-      setor: { enabled: true, value: 'construcao' },
-      financeiro: { enabled: true, value: 'selic' },
-      demo: { enabled: true, value: 'faixa-etaria' }
-    },
-    graficos: {
-      pib: { enabled: true, regioes: ['grande-sp', 'interior', 'litoral'] },
-      setor: { enabled: true, setores: ['construcao', 'imobiliario', 'servicos'] },
-      atratividade: { enabled: true, regioes: ['zona-sul', 'zona-leste', 'abc', 'campinas', 'santos', 'ribeirao'] }
-    }
-  };
+  
+  salvarFiltrosNoStorage(filtros);
+  fecharEditarFiltros();
+  abrirGerenciarFiltros();
 }
 
 function fecharEditarFiltros() {
@@ -1626,25 +1144,45 @@ function restaurarPadroes() {
   }
 }
 
+function getConfigPadrao() {
+  return {
+    kpis: {
+      economico: { enabled: true, value: 'pib-sp' },
+      setor: { enabled: true, value: 'construcao' },
+      financeiro: { enabled: true, value: 'selic' },
+      demo: { enabled: true, value: 'faixa-etaria' }
+    },
+    graficos: {
+      pib: { enabled: true, regioes: ['grande-sp', 'interior', 'litoral'] },
+      setor: { enabled: true, setores: ['construcao', 'imobiliario', 'servicos'] },
+      atratividade: { enabled: true, regioes: ['zona-sul', 'zona-leste', 'abc', 'campinas', 'santos', 'ribeirao'] }
+    }
+  };
+}
+
+// ============================================
+// UTILITÁRIOS
+// ============================================
+
 function mostrarToast(mensagem) {
   const toast = document.createElement('div');
   toast.className = 'toast-notification';
   toast.textContent = mensagem;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #0e6930;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 10000;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+  `;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
-}
-
-function carregarFiltrosLocalStorage() {
-  const filtros = localStorage.getItem('filtrosDashboard');
-  if (!filtros) {
-    return [{
-      id: 'default',
-      nome: '📌 Filtro Padrão',
-      ativo: true,
-      config: getConfigPadrao()
-    }];
-  }
-  return JSON.parse(filtros);
 }
 
 function configurarLimitesRegioes() {
@@ -1688,6 +1226,7 @@ function configurarEventosModais() {
     }
   });
 }
+
 </script>
   </body>
 </html>
