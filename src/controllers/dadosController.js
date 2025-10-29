@@ -3,23 +3,32 @@ var dadosModel = require("../models/dadosModel");
 function buscarDadosDashboard(req, res) {
   const idsZonas = req.query.zonas ? req.query.zonas.split(',').map(Number) : [1, 2, 3];
   
-  if (!idsZonas || idsZonas.length === 0) {
-    res.status(400).send("IDs das zonas não fornecidos!");
-    return;
-  }
-
   Promise.all([
-    dadosModel.buscarPibMultiplasZonas(idsZonas),
+    dadosModel.buscarPibParaGrafico(),
+    dadosModel.buscarConstrucaoCivilParaGrafico(),
+    dadosModel.buscarServicosParaGrafico(),           
+    dadosModel.buscarPibAtual(),
+    dadosModel.buscarConstrucaoCivilAtual(),
+    dadosModel.buscarServicosAtual(),                 
     dadosModel.buscarSelicAtual(),
     dadosModel.buscarInflacaoAtual(),
-    dadosModel.buscarPibConstrucao()
+    dadosModel.buscarPopulacaoMultiplasZonas(idsZonas),
+    dadosModel.buscarPibRegionalSP(),
+    dadosModel.buscarPibRegionalSPAtual()
   ])
-  .then(function ([pibData, selicData, inflacaoData, pibConstrucaoData]) {
+  .then(function ([pibGrafico, construcaoGrafico, servicosGrafico, pibAtual, construcaoAtual, servicosAtual, selicData, inflacaoData, populacaoData, pibRegionalSP, pibRegionalSPAtual]) {
     const resultado = {
-      pib: pibData,
+      pibGrafico: pibGrafico,
+      construcaoGrafico: construcaoGrafico,
+      servicosGrafico: servicosGrafico,                                        
+      pibAtual: pibAtual[0] || { pibGeral: 0.4, trimestre: '4º', ano: '2024' },
+      construcaoAtual: construcaoAtual[0] || { construcaoCivil: 0.1, trimestre: '4º', ano: '2024' },
+      servicosAtual: servicosAtual[0] || { servicos: 5.2, trimestre: '4º', ano: '2024' },  
       selic: selicData[0] || { taxaSelic: 11.75 },
       inflacao: inflacaoData[0] || { taxaInflacao: 5.8 },
-      pibConstrucao: pibConstrucaoData
+      populacao: populacaoData,
+      pibRegionalSP: pibRegionalSP,
+      pibRegionalSPAtual: pibRegionalSPAtual[0] || { pibSP: 3.4, ano: '2022' }
     };
     
     console.log('✅ Dados da dashboard carregados com sucesso');
