@@ -183,8 +183,6 @@
       alert("A senha deve conter no mínimo 8 caracteres");
     } else if (senha !== confirmSenha) {
       alert("As senhas devem ser iguais.");
-    } else if (cnpj.length < 14) {
-      alert("Insira um CNPJ válido");
     }
 
     fetch("/usuarios/cadastrar", {

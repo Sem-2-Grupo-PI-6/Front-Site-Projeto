@@ -1,39 +1,165 @@
 var database = require("../database/config");
 
-// Buscar dados de PIB por zona
-function buscarPibPorZona(idZona) {
-  console.log("ACESSEI O DADOS MODEL - function buscarPibPorZona():", idZona);
+// ===== PIB GERAL (TRIMESTRAL COM ZONAS) =====
+function buscarPibParaGrafico(idsZonas) {
+  console.log("ACESSEI O DADOS MODEL - function buscarPibParaGrafico()");
   
   var instrucaoSql = `
-    SELECT p.valor, z.nome as zona_nome
-    FROM pib p
-    INNER JOIN zona z ON p.idZona = z.id
-    WHERE p.idZona = ${idZona}
-    ORDER BY p.id DESC
-    LIMIT 8;
-  `;
-  
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
-}
-
-// Buscar PIB de múltiplas zonas
-function buscarPibMultiplasZonas(idsZonas) {
-  console.log("ACESSEI O DADOS MODEL - function buscarPibMultiplasZonas():", idsZonas);
-  
-  var instrucaoSql = `
-    SELECT p.valor, z.nome as zona_nome, z.id as zona_id
+    SELECT 
+      p.trimestre, 
+      p.ano, 
+      p.pibGeral as valor,
+      z.nome as zona_nome,
+      z.id as zona_id
     FROM pib p
     INNER JOIN zona z ON p.idZona = z.id
     WHERE z.id IN (${idsZonas.join(',')})
-    ORDER BY z.id, p.id DESC;
+    ORDER BY p.ano DESC, 
+      CASE p.trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 36;
   `;
   
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.executar(instrucaoSql);
 }
 
-// Buscar taxa Selic mais recente
+function buscarPibAtual() {
+  console.log("ACESSEI O DADOS MODEL - function buscarPibAtual()");
+  
+  var instrucaoSql = `
+    SELECT trimestre, ano, pibGeral
+    FROM pib
+    WHERE idZona = 1
+    ORDER BY ano DESC, 
+      CASE trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 1;
+  `;
+  
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+// ===== CONSTRUÇÃO CIVIL =====
+function buscarConstrucaoCivilParaGrafico() {
+  console.log("ACESSEI O DADOS MODEL - function buscarConstrucaoCivilParaGrafico()");
+  
+  var instrucaoSql = `
+    SELECT trimestre, ano, construcaoCivil
+    FROM pibSetor
+    ORDER BY ano DESC, 
+      CASE trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 12;
+  `;
+  
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+function buscarConstrucaoCivilAtual() {
+  console.log("ACESSEI O DADOS MODEL - function buscarConstrucaoCivilAtual()");
+  
+  var instrucaoSql = `
+    SELECT trimestre, ano, construcaoCivil
+    FROM pibSetor
+    ORDER BY ano DESC, 
+      CASE trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 1;
+  `;
+  
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+// ===== SERVIÇOS =====
+function buscarServicosParaGrafico() {
+  console.log("ACESSEI O DADOS MODEL - function buscarServicosParaGrafico()");
+  
+  var instrucaoSql = `
+    SELECT trimestre, ano, servicos
+    FROM pibSetor
+    ORDER BY ano DESC, 
+      CASE trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 12;
+  `;
+  
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+function buscarServicosAtual() {
+  console.log("ACESSEI O DADOS MODEL - function buscarServicosAtual()");
+  
+  var instrucaoSql = `
+    SELECT trimestre, ano, servicos
+    FROM pibSetor
+    ORDER BY ano DESC, 
+      CASE trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 1;
+  `;
+  
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+// ===== PIB REGIONAL SP (ANUAL) =====
+function buscarPibRegionalSP() {
+  console.log("ACESSEI O DADOS MODEL - function buscarPibRegionalSP()");
+  
+  var instrucaoSql = `
+    SELECT ano, pibSP
+    FROM pibRegionalSP
+    ORDER BY ano ASC;
+  `;
+  
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+function buscarPibRegionalSPAtual() {
+  console.log("ACESSEI O DADOS MODEL - function buscarPibRegionalSPAtual()");
+  
+  var instrucaoSql = `
+    SELECT ano, pibSP
+    FROM pibRegionalSP
+    ORDER BY ano DESC
+    LIMIT 1;
+  `;
+  
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+// ===== SELIC =====
 function buscarSelicAtual() {
   console.log("ACESSEI O DADOS MODEL - function buscarSelicAtual()");
   
@@ -48,7 +174,7 @@ function buscarSelicAtual() {
   return database.executar(instrucaoSql);
 }
 
-// Buscar taxa de inflação mais recente
+// ===== INFLAÇÃO =====
 function buscarInflacaoAtual() {
   console.log("ACESSEI O DADOS MODEL - function buscarInflacaoAtual()");
   
@@ -63,22 +189,7 @@ function buscarInflacaoAtual() {
   return database.executar(instrucaoSql);
 }
 
-// Buscar PIB da Construção Civil
-function buscarPibConstrucao() {
-  console.log("ACESSEI O DADOS MODEL - function buscarPibConstrucao()");
-  
-  var instrucaoSql = `
-    SELECT valorPib, dataApuracao
-    FROM pibConstrucaoCivil
-    ORDER BY dataApuracao DESC
-    LIMIT 12;
-  `;
-  
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
-}
-
-// Buscar dados demográficos por zona
+// ===== DEMOGRAFIA =====
 function buscarDemografiaPorZona(idZona) {
   console.log("ACESSEI O DADOS MODEL - function buscarDemografiaPorZona():", idZona);
   
@@ -102,7 +213,29 @@ function buscarDemografiaPorZona(idZona) {
   return database.executar(instrucaoSql);
 }
 
-// Buscar todas as zonas disponíveis
+function buscarPopulacaoMultiplasZonas(idsZonas) {
+  console.log("ACESSEI O DADOS MODEL - function buscarPopulacaoMultiplasZonas():", idsZonas);
+  
+  var instrucaoSql = `
+    SELECT 
+      p.id,
+      p.municipio,
+      p.qtdPopulacao,
+      p.idadeMedia,
+      p.densidadeDemografico,
+      z.nome as zona_nome,
+      z.id as zona_id
+    FROM populacao p
+    INNER JOIN zona z ON p.idZona = z.id
+    WHERE z.id IN (${idsZonas.join(',')})
+    ORDER BY p.ano DESC;
+  `;
+  
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
+// ===== ZONAS =====
 function buscarTodasZonas() {
   console.log("ACESSEI O DADOS MODEL - function buscarTodasZonas()");
   
@@ -116,7 +249,7 @@ function buscarTodasZonas() {
   return database.executar(instrucaoSql);
 }
 
-// Buscar score de atratividade calculado
+// ===== ATRATIVIDADE =====
 function buscarScoreAtratividade(idsZonas) {
   console.log("ACESSEI O DADOS MODEL - function buscarScoreAtratividade():", idsZonas);
   
@@ -124,13 +257,15 @@ function buscarScoreAtratividade(idsZonas) {
     SELECT 
       z.id,
       z.nome,
-      AVG(p.valor) as pib_medio,
+      AVG(pop.qtdPopulacao) as populacao_media,
       AVG(pop.densidadeDemografico) as densidade_media,
       AVG(pop.idadeMedia) as idade_media,
-      -- Cálculo simplificado de score (você pode ajustar a fórmula)
-      (AVG(p.valor) * 0.4 + AVG(pop.densidadeDemografico) * 0.3 + (100 - AVG(pop.idadeMedia)) * 0.3) as score
+      (
+        (AVG(pop.qtdPopulacao) / 10000) * 0.3 + 
+        (AVG(pop.densidadeDemografico) / 100) * 0.4 + 
+        ((50 - ABS(AVG(pop.idadeMedia) - 30)) / 50 * 100) * 0.3
+      ) as score
     FROM zona z
-    LEFT JOIN pib p ON z.id = p.idZona
     LEFT JOIN populacao pop ON z.id = pop.idZona
     WHERE z.id IN (${idsZonas.join(',')})
     GROUP BY z.id, z.nome
@@ -142,12 +277,18 @@ function buscarScoreAtratividade(idsZonas) {
 }
 
 module.exports = {
-  buscarPibPorZona,
-  buscarPibMultiplasZonas,
+  buscarPibAtual,
+  buscarPibParaGrafico,
+  buscarConstrucaoCivilParaGrafico,
+  buscarConstrucaoCivilAtual,
+  buscarServicosParaGrafico,
+  buscarServicosAtual,
+  buscarPibRegionalSP,
+  buscarPibRegionalSPAtual,
   buscarSelicAtual,
   buscarInflacaoAtual,
-  buscarPibConstrucao,
   buscarDemografiaPorZona,
+  buscarPopulacaoMultiplasZonas,
   buscarTodasZonas,
   buscarScoreAtratividade
 };

@@ -3,23 +3,45 @@ var dadosModel = require("../models/dadosModel");
 function buscarDadosDashboard(req, res) {
   const idsZonas = req.query.zonas ? req.query.zonas.split(',').map(Number) : [1, 2, 3];
   
-  if (!idsZonas || idsZonas.length === 0) {
-    res.status(400).send("IDs das zonas não fornecidos!");
-    return;
-  }
-
   Promise.all([
-    dadosModel.buscarPibMultiplasZonas(idsZonas),
+    dadosModel.buscarPibParaGrafico(idsZonas),
+    dadosModel.buscarConstrucaoCivilParaGrafico(),
+    dadosModel.buscarServicosParaGrafico(),
+    dadosModel.buscarPibAtual(),
+    dadosModel.buscarConstrucaoCivilAtual(),
+    dadosModel.buscarServicosAtual(),
     dadosModel.buscarSelicAtual(),
     dadosModel.buscarInflacaoAtual(),
-    dadosModel.buscarPibConstrucao()
+    dadosModel.buscarPopulacaoMultiplasZonas(idsZonas),
+    dadosModel.buscarPibRegionalSP(),
+    dadosModel.buscarPibRegionalSPAtual()
   ])
-  .then(function ([pibData, selicData, inflacaoData, pibConstrucaoData]) {
+  .then(function ([
+    pibGrafico, 
+    construcaoGrafico, 
+    servicosGrafico, 
+    pibAtual, 
+    construcaoAtual, 
+    servicosAtual, 
+    selicData, 
+    inflacaoData, 
+    populacaoData, 
+    pibRegionalSP, 
+    pibRegionalSPAtual
+  ]) {
     const resultado = {
-      pib: pibData,
-      selic: selicData[0] || { taxaSelic: 11.75 },
-      inflacao: inflacaoData[0] || { taxaInflacao: 5.8 },
-      pibConstrucao: pibConstrucaoData
+      pib: pibGrafico,
+      pibGrafico: pibGrafico,
+      construcaoGrafico: construcaoGrafico,
+      servicosGrafico: servicosGrafico,
+      pibAtual: pibAtual[0] || null,
+      construcaoAtual: construcaoAtual[0] || null,
+      servicosAtual: servicosAtual[0] || null,
+      selic: selicData[0] || null,
+      inflacao: inflacaoData[0] || null,
+      populacao: populacaoData,
+      pibRegionalSP: pibRegionalSP,
+      pibRegionalSPAtual: pibRegionalSPAtual[0] || null
     };
     
     console.log('✅ Dados da dashboard carregados com sucesso');
