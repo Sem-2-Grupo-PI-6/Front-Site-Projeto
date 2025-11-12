@@ -166,9 +166,9 @@
 <script>
   function cadastrar() {
     const nome = input_nome.value;
-    const cnpj = input_cnpj.value;
     const email = input_email.value;
     const senha = input_senha.value;
+    const cnpj = input_cnpj.value;
     const confirmSenha = input_confirmSenha.value;
 
     if (
@@ -194,9 +194,9 @@
         // crie um atributo que recebe o valor recuperado aqui
         // Agora vá para o arquivo routes/usuario.js
         nomeServer: nome,
-        cnpjServer: cnpj,
         emailServer: email,
         senhaServer: senha,
+        cnpjServer: cnpj,
       }),
     })
       .then(function (resposta) {

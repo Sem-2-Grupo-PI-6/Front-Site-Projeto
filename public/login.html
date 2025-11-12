@@ -55,9 +55,7 @@
                   placeholder="seu@exemplo.com"
                   required
                 />
-                <div class="error" id="err-email">
-                  Insira um e-mail válido.
-                </div>
+                <div class="error" id="err-email">Insira um e-mail válido.</div>
               </div>
 
               <div class="form-group">
@@ -74,8 +72,21 @@
                 </div>
               </div>
 
-              <div style="display: flex; justify-content: space-between; margin-top: 12px">
-                <label style="display: flex; align-items: center; gap: 6px; font-size: 14px">
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  margin-top: 12px;
+                "
+              >
+                <label
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 14px;
+                  "
+                >
                   <input type="checkbox" />
                   <span>Lembrar-me</span>
                 </label>
@@ -83,7 +94,11 @@
               </div>
 
               <div style="margin-top: 20px">
-                <button type="submit" class="btn-primary" style="cursor: pointer">
+                <button
+                  type="submit"
+                  class="btn-primary"
+                  style="cursor: pointer"
+                >
                   Entrar
                 </button>
               </div>
@@ -131,7 +146,7 @@
       return false;
     }
 
-    console.log('📧 Tentando login com:', email);
+    console.log("📧 Tentando login com:", email);
 
     fetch("/usuarios/autenticar", {
       method: "POST",
@@ -155,26 +170,32 @@
         }
       })
       .then(function (usuario) {
-        console.log('✅ Login bem-sucedido!');
-        console.log('👤 Dados do usuário:', usuario);
+        console.log("✅ Login bem-sucedido!");
+        console.log("👤 Dados do usuário:", usuario);
 
-        sessionStorage.setItem('USUARIO_LOGADO', JSON.stringify(usuario));
-        
-        console.log('💾 Dados salvos no sessionStorage:', sessionStorage.getItem('USUARIO_LOGADO'));
+        sessionStorage.setItem("USUARIO_LOGADO", JSON.stringify(usuario));
 
+        console.log(
+          "💾 Dados salvos no sessionStorage:",
+          sessionStorage.getItem("USUARIO_LOGADO")
+        );
 
-        if (usuario.email && usuario.email.includes('@admin.net')) {
-          console.log('🔐 Redirecionando para Dashboard Admin...');
-          alert('✅ Login realizado com sucesso!\n\nBem-vindo(a), Administrador(a)!');
+        if (usuario.EMAIL && usuario.EMAIL.includes("@admin.net")) {
+          console.log("🔐 Redirecionando para Dashboard Admin...");
+          alert(
+            "✅ Login realizado com sucesso!\n\nBem-vindo(a), Administrador(a)!"
+          );
           window.location.href = "./dashboardAdmin.html";
         } else {
-          console.log('👥 Redirecionando para Dashboard Cliente...');
-          alert(`✅ Login realizado com sucesso!\n\nBem-vindo(a), ${usuario.nome}!`);
+          console.log("👥 Redirecionando para Dashboard Cliente...");
+          alert(
+            `✅ Login realizado com sucesso!\n\nBem-vindo(a), ${usuario.NOME}!`
+          );
           window.location.href = "./dashboardCliente.html";
         }
       })
       .catch(function (erro) {
-        console.error('❌ Erro no login:', erro);
+        console.error("❌ Erro no login:", erro);
         alert(`❌ ${erro.message}`);
       });
 
