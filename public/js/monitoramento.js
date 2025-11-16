@@ -1,3 +1,7 @@
+// =========================================
+// SISTEMA DE MONITORAMENTO GLOBAL - SEGURO
+// =========================================
+
 class MonitoramentoSistema {
   constructor() {
     this.metricas = {
@@ -10,19 +14,28 @@ class MonitoramentoSistema {
     };
 
     this.limites = {
-      tempoMaximo: 3000, 
-      tempoAlerta: 2000  
+      tempoMaximo: 3000,
+      tempoAlerta: 2000
     };
+
+    // ⚠️ PROTEÇÃO CONTRA LOOP
+    this.sincronizandoBD = false;
+    this.ultimaSincronizacao = 0;
+    this.intervaloMinimoBD = 5000; // 5 segundos mínimo entre sync
 
     this.iniciarMonitoramento();
   }
 
   iniciarMonitoramento() {
     console.log('📊 Sistema de Monitoramento Iniciado');
-
     this.interceptarFetch();
-
-    setInterval(() => this.calcularMetricas(), 30000);
+    
+    // Sincronizar a cada 10 segundos (REDUZIDO de 30s)
+    setInterval(() => {
+      if (!this.sincronizandoBD) {
+        this.sincronizarComBanco();
+      }
+    }, 10000);
   }
 
   interceptarFetch() {
@@ -33,23 +46,39 @@ class MonitoramentoSistema {
       const url = args[0];
       const inicio = Date.now();
       
+      // ⚠️ IGNORAR ENDPOINTS DE MONITORAMENTO (EVITA LOOP)
+      if (url.includes('/monitoramento/')) {
+        return fetchOriginal.apply(this, args);
+      }
+      
       self.metricas.totalRequisicoes++;
+      console.log(`📡 Requisição #${self.metricas.totalRequisicoes}: ${url}`);
 
       try {
         const resposta = await fetchOriginal.apply(this, args);
         const tempo = Date.now() - inicio;
 
+        // ✅ CONTABILIZAR HTTP 500 COMO ERRO
         if (resposta.ok) {
           self.registrarSucesso(url, tempo);
         } else {
+          console.error(`🔴 ERRO HTTP ${resposta.status} em ${url}`);
           self.registrarErro(url, tempo, `HTTP ${resposta.status}`);
+          
+          // 🔥 SINCRONIZAR IMEDIATAMENTE APÓS ERRO
+          setTimeout(() => self.sincronizarComBanco(), 500);
         }
 
         return resposta;
 
       } catch (erro) {
         const tempo = Date.now() - inicio;
-        self.registrarErro(url, tempo, erro.message);
+        console.error(`🔴 ERRO DE REDE em ${url}:`, erro.message);
+        self.registrarErro(url, tempo, erro.message || 'Erro de rede');
+        
+        // 🔥 SINCRONIZAR IMEDIATAMENTE APÓS ERRO
+        setTimeout(() => self.sincronizarComBanco(), 500);
+        
         throw erro;
       }
     };
@@ -75,10 +104,20 @@ class MonitoramentoSistema {
 
     this.metricas.ultimaSync = new Date().toISOString();
     this.salvarMetricas();
+    
+    console.log(`✅ Sucesso registrado. Total OK: ${this.metricas.requisicoesOK}`);
   }
 
   registrarErro(url, tempo, mensagem) {
     this.metricas.requisicoesErro++;
+    
+    console.log(`❌ ERRO REGISTRADO #${this.metricas.requisicoesErro}:`, {
+      url: this.extrairEndpoint(url),
+      mensagem: mensagem,
+      tempo: tempo,
+      totalRequisicoes: this.metricas.totalRequisicoes,
+      taxaErro: ((this.metricas.requisicoesErro / this.metricas.totalRequisicoes) * 100).toFixed(1) + '%'
+    });
     
     this.metricas.errosDetalhados.push({
       tipo: 'ERRO',
@@ -92,8 +131,56 @@ class MonitoramentoSistema {
       this.metricas.errosDetalhados.shift();
     }
 
-    console.error(`❌ Erro na requisição: ${url} - ${mensagem}`);
     this.salvarMetricas();
+  }
+
+  // ⚠️ SINCRONIZAÇÃO SEGURA COM BD
+  async sincronizarComBanco() {
+    const agora = Date.now();
+    
+    // Evitar sync muito frequentes (mas permitir após erro)
+    const tempoDecorrido = agora - this.ultimaSincronizacao;
+    if (tempoDecorrido < this.intervaloMinimoBD && this.metricas.requisicoesErro === 0) {
+      console.log(`⏸️ Aguardando intervalo mínimo (${Math.round((this.intervaloMinimoBD - tempoDecorrido) / 1000)}s restantes)`);
+      return;
+    }
+    
+    if (this.sincronizandoBD) {
+      console.log('⏸️ Sincronização já em andamento...');
+      return;
+    }
+
+    this.sincronizandoBD = true;
+    this.ultimaSincronizacao = agora;
+    
+    const metricas = this.calcularMetricas();
+    
+    console.log('🔄 Sincronizando métricas com BD:', metricas);
+    
+    try {
+      const response = await fetch('http://localhost:3333/monitoramento/metricas/atualizar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          totalRequisicoes: this.metricas.totalRequisicoes,
+          requisicoesOK: this.metricas.requisicoesOK,
+          requisicoesErro: this.metricas.requisicoesErro,
+          tempoMedioResposta: metricas.tempoMedio
+        })
+      });
+
+      if (response.ok) {
+        console.log('✅ Métricas sincronizadas com BD');
+      } else {
+        console.warn('⚠️ Erro ao sincronizar métricas (HTTP ' + response.status + ')');
+      }
+    } catch (erro) {
+      console.error('❌ Erro ao sincronizar com BD (rede):', erro.message);
+    } finally {
+      this.sincronizandoBD = false;
+    }
   }
 
   calcularMetricas() {
@@ -140,6 +227,10 @@ class MonitoramentoSistema {
       ultimaSync: null
     };
     this.salvarMetricas();
+    
+    // Sincronizar reset com BD
+    this.sincronizarComBanco();
+    
     console.log('🔄 Métricas resetadas');
   }
 
@@ -173,5 +264,4 @@ class MonitoramentoSistema {
 }
 
 window.MonitorSistema = new MonitoramentoSistema();
-
-console.log('✅ Sistema de Monitoramento Carregado');
+console.log('✅ Sistema de Monitoramento Carregado (Seguro + Debug)');

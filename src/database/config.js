@@ -1,43 +1,60 @@
 var mysql = require("mysql2");
 
-// CONEXÃO DO BANCO MYSQL SERVER
 var mySqlConfig = {
-  host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+    host: process.env.DB_HOST || "localhost",
+    database: process.env.DB_DATABASE || "sixtech",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "senha",
+    port: process.env.DB_PORT || 3306
 };
 
-function executar(instrucao, parametros = []) {
-  if (
-    process.env.AMBIENTE_PROCESSO !== "producao" &&
-    process.env.AMBIENTE_PROCESSO !== "desenvolvimento"
-  ) {
-    console.log(
-      "\nO AMBIENTE (produção OU desenvolvimento) NÃO FOI DEFINIDO EM .env OU dev.env OU app.js\n"
-    );
-    return Promise.reject("AMBIENTE NÃO CONFIGURADO EM .env");
-  }
+function executar(instrucaoSql, parametros = []) {
+    return new Promise(function (resolve, reject) {
+        var conexao = mysql.createConnection(mySqlConfig);
 
-  return new Promise(function (resolve, reject) {
-    var conexao = mysql.createConnection(mySqlConfig);
-    conexao.connect();
-    conexao.query(instrucao, parametros, function (erro, resultados) {
-      conexao.end();
-      if (erro) {
-        reject(erro);
-      }
-      const isProcedure = instrucao.trim().toUpperCase().startsWith("CALL");
-      resolve(isProcedure ? resultados[0] : resultados);
-      console.log(resolve);
+        conexao.connect(function (erro) {
+            if (erro) {
+                console.error("❌ Erro ao conectar ao MySQL:", erro);
+                reject(erro);
+                return;
+            }
+            console.log("✅ Conexão MySQL estabelecida");
+        });
+
+        const isProcedure = instrucaoSql.trim().toUpperCase().startsWith('CALL');
+
+        conexao.query(instrucaoSql, parametros, function (erro, resultados) {
+            conexao.end();
+
+            if (erro) {
+                console.error("❌ Erro ao executar query:", erro);
+                console.error("SQL:", instrucaoSql);
+                reject(erro);
+                return;
+            }
+
+            if (!resultados) {
+                console.warn("⚠️ Query não retornou resultados");
+                resolve([]);
+                return;
+            }
+
+            if (isProcedure) {
+                if (Array.isArray(resultados) && resultados.length > 0 && resultados[0]) {
+                    console.log("✅ PROCEDURE executada com sucesso");
+                    resolve(resultados[0]);
+                } else {
+                    console.warn("⚠️ PROCEDURE não retornou dados");
+                    resolve([]);
+                }
+            } else {
+                console.log("✅ Query executada com sucesso");
+                resolve(resultados);
+            }
+        });
     });
-    conexao.on("error", function (erro) {
-      return "ERRO NO MySQL SERVER: ", erro.sqlMessage;
-    });
-  });
 }
 
 module.exports = {
-  executar,
+    executar
 };

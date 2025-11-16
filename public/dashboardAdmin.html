@@ -6,6 +6,7 @@
     <title>Evolvere Invest - Painel Administrativo</title>
     <link rel="stylesheet" href="./css/styleDashboardAdmin.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/monitoramento.js"></script>
   </head>
   <body>
     <main>
@@ -92,91 +93,91 @@
           </div>
         </section>
 
-        <section class="metrics-grid" aria-label="Métricas principais da plataforma">
-          <article class="metric-card metric-primary">
-            <div class="metric-header">
-              <div class="metric-icon">👥</div>
-              <div class="metric-info">
-                <span class="metric-label">Usuários Ativos</span>
-                <span class="metric-badge">Total</span>
-              </div>
-            </div>
-            <div class="metric-value">
-              <span class="value">1627</span>
-              <span class="trend positive">
-                <span class="trend-arrow">↑</span>
-                <span class="trend-text">+18</span>
-              </span>
-            </div>
-            <div class="metric-footer">
-              <span class="metric-detail">232 empresas</span>
-              <a href="#" class="metric-link">Ver →</a>
-            </div>
-          </article>
+<section class="metrics-grid" aria-label="Métricas principais da plataforma">
+  <article class="metric-card metric-primary">
+    <div class="metric-header">
+      <div class="metric-icon">👥</div>
+      <div class="metric-info">
+        <span class="metric-label">Usuários Ativos</span>
+        <span class="metric-badge">Total</span>
+      </div>
+    </div>
+    <div class="metric-value">
+      <span class="value" id="metrica-usuarios">--</span>
+      <span class="trend positive">
+        <span class="trend-arrow">↑</span>
+        <span class="trend-text">+18</span>
+      </span>
+    </div>
+    <div class="metric-footer">
+      <span class="metric-detail">232 empresas</span>
+      <a href="#" class="metric-link">Ver →</a>
+    </div>
+  </article>
 
-          <article class="metric-card metric-success">
-            <div class="metric-header">
-              <div class="metric-icon">📊</div>
-              <div class="metric-info">
-                <span class="metric-label">Consultas</span>
-                <span class="metric-badge">Mês</span>
-              </div>
-            </div>
-            <div class="metric-value">
-              <span class="value">8,429</span>
-              <span class="trend positive">
-                <span class="trend-arrow">↑</span>
-                <span class="trend-text">+24%</span>
-              </span>
-            </div>
-            <div class="metric-footer">
-              <span class="metric-detail">281/dia</span>
-              <a href="#" class="metric-link">Detalhes →</a>
-            </div>
-          </article>
+  <article class="metric-card metric-success">
+    <div class="metric-header">
+      <div class="metric-icon">📊</div>
+      <div class="metric-info">
+        <span class="metric-label">Requisições</span>
+        <span class="metric-badge">Total</span>
+      </div>
+    </div>
+    <div class="metric-value">
+      <span class="value" id="metrica-requisicoes">0</span>
+      <span class="trend positive" id="trend-requisicoes">
+        <span class="trend-arrow">→</span>
+        <span class="trend-text">--</span>
+      </span>
+    </div>
+    <div class="metric-footer">
+      <span class="metric-detail" id="tempo-medio">-- ms/req</span>
+      <a href="#" class="metric-link">Detalhes →</a>
+    </div>
+  </article>
 
-          <article class="metric-card metric-info">
-            <div class="metric-header">
-              <div class="metric-icon">🗄️</div>
-              <div class="metric-info">
-                <span class="metric-label">Sync Dados</span>
-                <span class="metric-badge">Hoje</span>
-              </div>
-            </div>
-            <div class="metric-value">
-              <span class="value">98.5<span class="unit">%</span></span>
-              <span class="trend positive">
-                <span class="trend-arrow">↑</span>
-                <span class="trend-text">+1.2%</span>
-              </span>
-            </div>
-            <div class="metric-footer">
-              <span class="metric-detail">Sync: 14:32</span>
-              <a href="#" class="metric-link">Logs →</a>
-            </div>
-          </article>
+  <article class="metric-card metric-info">
+    <div class="metric-header">
+      <div class="metric-icon">🗄️</div>
+      <div class="metric-info">
+        <span class="metric-label">Sync Dados</span>
+        <span class="metric-badge">Hoje</span>
+      </div>
+    </div>
+    <div class="metric-value">
+      <span class="value" id="metrica-sync">--</span>
+      <span class="trend positive" id="trend-sync">
+        <span class="trend-arrow">↑</span>
+        <span class="trend-text">--</span>
+      </span>
+    </div>
+    <div class="metric-footer">
+      <span class="metric-detail" id="ultima-sync">Sync: --</span>
+      <a href="#" class="metric-link">Logs →</a>
+    </div>
+  </article>
 
-          <article class="metric-card metric-warning">
-            <div class="metric-header">
-              <div class="metric-icon">⚠️</div>
-              <div class="metric-info">
-                <span class="metric-label">Taxa de Erro</span>
-                <span class="metric-badge">24h</span>
-              </div>
-            </div>
-            <div class="metric-value">
-              <span class="value">0.8<span class="unit">%</span></span>
-              <span class="trend neutral">
-                <span class="trend-arrow">→</span>
-                <span class="trend-text">OK</span>
-              </span>
-            </div>
-            <div class="metric-footer">
-              <span class="metric-detail">12 erros</span>
-              <a href="#" class="metric-link">Ver →</a>
-            </div>
-          </article>
-        </section>
+  <article class="metric-card metric-warning">
+    <div class="metric-header">
+      <div class="metric-icon">⚠️</div>
+      <div class="metric-info">
+        <span class="metric-label">Taxa de Erro</span>
+        <span class="metric-badge">24h</span>
+      </div>
+    </div>
+    <div class="metric-value">
+      <span class="value" id="metrica-erro">0</span>
+      <span class="trend neutral" id="trend-erro">
+        <span class="trend-arrow">→</span>
+        <span class="trend-text">OK</span>
+      </span>
+    </div>
+    <div class="metric-footer">
+      <span class="metric-detail" id="total-erros">0 erros</span>
+      <a href="#" class="metric-link">Ver →</a>
+    </div>
+  </article>
+</section>
 
         <section class="dashboard-content">
           <div class="content-left">
@@ -265,6 +266,72 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+// ===== ATUALIZAR MÉTRICAS DO DASHBOARD ADMIN =====
+function atualizarMetricasAdmin() {
+  const metricas = window.MonitorSistema.obterMetricas();
+  
+  console.log('📊 Atualizando dashboard admin:', metricas);
+  
+  // Requisições Totais
+  document.getElementById('metrica-requisicoes').textContent = 
+    window.MonitorSistema.metricas.totalRequisicoes.toLocaleString('pt-BR');
+  
+  // Tempo Médio
+  document.getElementById('tempo-medio').textContent = 
+    `${metricas.tempoMedio}ms/req`;
+  
+  // Taxa de Sucesso (Sync)
+  document.getElementById('metrica-sync').innerHTML = 
+    `${metricas.taxaSucesso}<span class="unit">%</span>`;
+  
+  const trendSync = document.getElementById('trend-sync');
+  if (metricas.taxaSucesso >= 98) {
+    trendSync.className = 'trend positive';
+    trendSync.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
+  } else if (metricas.taxaSucesso >= 95) {
+    trendSync.className = 'trend neutral';
+    trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
+  } else {
+    trendSync.className = 'trend negative';
+    trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
+  }
+  
+  // Última Sync
+  if (metricas.ultimaSync) {
+    const data = new Date(metricas.ultimaSync);
+    const horas = String(data.getHours()).padStart(2, '0');
+    const minutos = String(data.getMinutes()).padStart(2, '0');
+    document.getElementById('ultima-sync').textContent = `Sync: ${horas}:${minutos}`;
+  }
+  
+  // Taxa de Erro
+  document.getElementById('metrica-erro').innerHTML = 
+    `${metricas.taxaErro}<span class="unit">%</span>`;
+  
+  document.getElementById('total-erros').textContent = 
+    `${metricas.totalErros} erro${metricas.totalErros !== 1 ? 's' : ''}`;
+  
+  const trendErro = document.getElementById('trend-erro');
+  if (metricas.taxaErro === 0) {
+    trendErro.className = 'trend positive';
+    trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
+  } else if (metricas.taxaErro < 5) {
+    trendErro.className = 'trend neutral';
+    trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
+  } else {
+    trendErro.className = 'trend negative';
+    trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
+  }
+}
+
+// ⚡ ATUALIZAR A CADA 2 SEGUNDOS (REDUZIDO de 5s)
+setInterval(atualizarMetricasAdmin, 2000);
+
+// Atualizar imediatamente ao carregar
+document.addEventListener('DOMContentLoaded', function() {
+  atualizarMetricasAdmin();
+});
+
       const defaultOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -434,6 +501,7 @@
           },
         },
       });
+
     </script>
   </body>
 </html>
