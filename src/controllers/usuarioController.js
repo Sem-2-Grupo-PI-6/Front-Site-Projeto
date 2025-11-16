@@ -33,12 +33,17 @@ function autenticar(req, res) {
       console.error("❌ ERRO NO LOGIN:", erro);
       console.error("Tipo do erro:", erro.code);
       console.error("Mensagem:", erro.sqlMessage || erro.message);
-      
 
-      if (erro.code === 'ER_SP_DOES_NOT_EXIST') {
-        res.status(500).send("Erro: Procedure 'GetLogin' não existe no banco de dados");
-      } else if (erro.code === 'ECONNREFUSED') {
-        res.status(500).send("Erro: Não foi possível conectar ao banco de dados");
+      if (erro.code === "ER_SP_DOES_NOT_EXIST") {
+        res
+          .status(500)
+          .send(
+            "Erro: Procedure 'getLoginUsuario' não existe no banco de dados"
+          );
+      } else if (erro.code === "ECONNREFUSED") {
+        res
+          .status(500)
+          .send("Erro: Não foi possível conectar ao banco de dados");
       } else {
         res.status(500).send("Erro interno ao realizar login");
       }
@@ -76,10 +81,12 @@ function cadastrar(req, res) {
       console.error("Tipo do erro:", erro.code);
       console.error("Mensagem:", erro.sqlMessage || erro.message);
 
-      if (erro.code === 'ER_DUP_ENTRY') {
+      if (erro.code === "ER_DUP_ENTRY") {
         res.status(400).send("Erro: Email ou CNPJ já cadastrado");
-      } else if (erro.code === 'ECONNREFUSED') {
-        res.status(500).send("Erro: Não foi possível conectar ao banco de dados");
+      } else if (erro.code === "ECONNREFUSED") {
+        res
+          .status(500)
+          .send("Erro: Não foi possível conectar ao banco de dados");
       } else {
         res.status(500).send("Erro interno ao realizar cadastro");
       }

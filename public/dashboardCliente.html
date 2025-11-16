@@ -674,7 +674,7 @@
           sessionStorage.getItem("USUARIO_LOGADO") || "{}"
         );
 
-        if (!usuarioLogado || !usuarioLogado.ID) {
+        if (!usuarioLogado || !usuarioLogado.idUsuario) {
           alert("⚠️ Usuário não autenticado! Redirecionando para login...");
           window.location.href = "login.html";
           return;
@@ -1145,13 +1145,13 @@
         legendContainer.innerHTML = regioes
           .map(
             (regiao, index) => `
-    <span class="legend-item">
-      <span class="dot" style="background: ${
-        cores[index % cores.length]
-      }"></span>
-      ${labelsRegioes[regiao]}
-    </span>
-  `
+        <span class="legend-item">
+          <span class="dot" style="background: ${
+            cores[index % cores.length]
+          }"></span>
+          ${labelsRegioes[regiao]}
+        </span>
+      `
           )
           .join("");
 
@@ -1202,11 +1202,11 @@
         legendContainer.innerHTML = setores
           .map(
             (setor) => `
-    <span class="legend-item">
-      <span class="dot" style="background: ${coresSetores[setor]}"></span>
-      ${labelsSetores[setor]}
-    </span>
-  `
+        <span class="legend-item">
+          <span class="dot" style="background: ${coresSetores[setor]}"></span>
+          ${labelsSetores[setor]}
+        </span>
+      `
           )
           .join("");
 
@@ -1257,7 +1257,7 @@
       async function carregarFiltros() {
         try {
           const response = await fetch(
-            `http://localhost:3333/filtros/listar/${usuarioLogado.id}`,
+            `http://localhost:3333/filtros/listar/${usuarioLogado.idUsuario}`,
             {
               method: "GET",
               headers: {
@@ -1293,7 +1293,7 @@
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              idUserServer: usuarioLogado.id,
+              idUserServer: usuarioLogado.idUsuario,
               nomeServer: "📌 Filtro Padrão",
               configServer: configPadrao,
             }),
@@ -1327,7 +1327,7 @@
       async function buscarFiltroAtivo() {
         try {
           const response = await fetch(
-            `http://localhost:3333/filtros/ativo/${usuarioLogado.id}`,
+            `http://localhost:3333/filtros/ativo/${usuarioLogado.idUsuario}`,
             {
               method: "GET",
               headers: {
@@ -1399,31 +1399,31 @@
             }
 
             return `
-    <div class="filtro-item ${filtro.ativo ? "ativo" : ""}">
-      <div class="filtro-info">
-        <div class="filtro-header">
-          <span class="filtro-nome">${filtro.nome}</span>
-          ${filtro.ativo ? '<span class="badge-ativo">✓ Ativo</span>' : ""}
+        <div class="filtro-item ${filtro.ativo ? "ativo" : ""}">
+          <div class="filtro-info">
+            <div class="filtro-header">
+              <span class="filtro-nome">${filtro.nome}</span>
+              ${filtro.ativo ? '<span class="badge-ativo">✓ Ativo</span>' : ""}
+            </div>
+            <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
+          </div>
+          <div class="filtro-actions">
+            ${
+              !filtro.ativo
+                ? `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro.id})" title="Ativar">✓</button>`
+                : ""
+            }
+            <button class="btn-action btn-editar" onclick="editarFiltro(${
+              filtro.id
+            })" title="Editar">✏️</button>
+            ${
+              filtro.nome !== "📌 Filtro Padrão"
+                ? `<button class="btn-action btn-deletar" onclick="deletarFiltro(${filtro.id})" title="Excluir">🗑️</button>`
+                : ""
+            }
+          </div>
         </div>
-        <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
-      </div>
-      <div class="filtro-actions">
-        ${
-          !filtro.ativo
-            ? `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro.id})" title="Ativar">✓</button>`
-            : ""
-        }
-        <button class="btn-action btn-editar" onclick="editarFiltro(${
-          filtro.id
-        })" title="Editar">✏️</button>
-        ${
-          filtro.nome !== "📌 Filtro Padrão"
-            ? `<button class="btn-action btn-deletar" onclick="deletarFiltro(${filtro.id})" title="Excluir">🗑️</button>`
-            : ""
-        }
-      </div>
-    </div>
-  `;
+      `;
           })
           .join("");
       }
@@ -1480,7 +1480,7 @@
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                idUserServer: usuarioLogado.id,
+                idUserServer: usuarioLogado.idUsuario,
               }),
             }
           );
@@ -1520,7 +1520,7 @@
 
         try {
           const response = await fetch(
-            `http://localhost:3333/filtros/deletar/${id}/${usuarioLogado.id}`,
+            `http://localhost:3333/filtros/deletar/${id}/${usuarioLogado.idUsuario}`,
             {
               method: "DELETE",
               headers: {
@@ -1566,7 +1566,7 @@
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  idUserServer: usuarioLogado.id,
+                  idUserServer: usuarioLogado.idUsuario,
                   nomeServer: nome,
                   configServer: config,
                 }),
@@ -1588,7 +1588,7 @@
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                  idUserServer: usuarioLogado.id,
+                  idUserServer: usuarioLogado.idUsuario,
                   nomeServer: nome,
                   configServer: config,
                 }),
