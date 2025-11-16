@@ -21,16 +21,23 @@ class MonitoramentoSistema {
     // ⚠️ PROTEÇÃO CONTRA LOOP
     this.sincronizandoBD = false;
     this.ultimaSincronizacao = 0;
-    this.intervaloMinimoBD = 5000; // 5 segundos mínimo entre sync
+    this.intervaloMinimoBD = 5000;
+    
+    // ✅ FLAG PARA SABER SE JÁ CARREGOU DO BD
+    this.metricasCarregadas = false;
 
     this.iniciarMonitoramento();
   }
 
-  iniciarMonitoramento() {
+  async iniciarMonitoramento() {
     console.log('📊 Sistema de Monitoramento Iniciado');
+    
+    // ✅ CARREGAR MÉTRICAS DO BD PRIMEIRO
+    await this.carregarMetricasDoBanco();
+    
     this.interceptarFetch();
     
-    // Sincronizar a cada 10 segundos (REDUZIDO de 30s)
+    // Sincronizar a cada 10 segundos
     setInterval(() => {
       if (!this.sincronizandoBD) {
         this.sincronizarComBanco();
@@ -38,6 +45,56 @@ class MonitoramentoSistema {
     }, 10000);
   }
 
+  // ✅ CARREGAR MÉTRICAS DO BANCO DE DADOS
+// ✅ CARREGAR MÉTRICAS DO BANCO DE DADOS
+async carregarMetricasDoBanco() {
+  try {
+    console.log('🔄 Carregando métricas do banco de dados...');
+    
+    const response = await fetch('http://localhost:3333/monitoramento/metricas');
+    
+    if (response.ok) {
+      const dadosBD = await response.json();
+      
+      console.log('📊 Métricas do BD:', dadosBD);
+      
+      // ✅ ATUALIZAR AS MÉTRICAS LOCAIS COM OS DADOS DO BD
+      this.metricas.totalRequisicoes = dadosBD.totalRequisicoes || 0;
+      this.metricas.requisicoesOK = dadosBD.requisicoesOK || 0;
+      this.metricas.requisicoesErro = dadosBD.requisicoesErro || 0;
+      this.metricas.ultimaSync = dadosBD.dtUltimaSync || null;
+      
+      // Preencher array de tempo médio (simulado)
+      if (dadosBD.tempoMedioResposta > 0) {
+        this.metricas.tempoMedioResposta = [dadosBD.tempoMedioResposta];
+      }
+      
+      this.metricasCarregadas = true;
+      
+      console.log('✅ Métricas carregadas do BD:', {
+        total: this.metricas.totalRequisicoes,
+        ok: this.metricas.requisicoesOK,
+        erro: this.metricas.requisicoesErro,
+        taxaErro: this.metricas.totalRequisicoes > 0 
+          ? ((this.metricas.requisicoesErro / this.metricas.totalRequisicoes) * 100).toFixed(1) + '%'
+          : '0%'
+      });
+      
+      this.salvarMetricas();
+      
+      // ⚠️ NÃO RESETAR - APENAS CARREGAR
+      
+    } else if (response.status === 204) {
+      console.warn('⚠️ Nenhuma métrica encontrada no BD (204), mantendo valores atuais');
+      // ⚠️ NÃO ZERAR - MANTER O QUE JÁ TEM
+    } else {
+      console.warn('⚠️ Erro ao buscar métricas (HTTP ' + response.status + ')');
+    }
+  } catch (erro) {
+    console.error('❌ Erro ao carregar métricas do BD:', erro.message);
+    // ⚠️ EM CASO DE ERRO, MANTER MÉTRICAS ATUAIS
+  }
+}
   interceptarFetch() {
     const fetchOriginal = window.fetch;
     const self = this;
@@ -58,7 +115,6 @@ class MonitoramentoSistema {
         const resposta = await fetchOriginal.apply(this, args);
         const tempo = Date.now() - inicio;
 
-        // ✅ CONTABILIZAR HTTP 500 COMO ERRO
         if (resposta.ok) {
           self.registrarSucesso(url, tempo);
         } else {
@@ -134,16 +190,8 @@ class MonitoramentoSistema {
     this.salvarMetricas();
   }
 
-  // ⚠️ SINCRONIZAÇÃO SEGURA COM BD
   async sincronizarComBanco() {
     const agora = Date.now();
-    
-    // Evitar sync muito frequentes (mas permitir após erro)
-    const tempoDecorrido = agora - this.ultimaSincronizacao;
-    if (tempoDecorrido < this.intervaloMinimoBD && this.metricas.requisicoesErro === 0) {
-      console.log(`⏸️ Aguardando intervalo mínimo (${Math.round((this.intervaloMinimoBD - tempoDecorrido) / 1000)}s restantes)`);
-      return;
-    }
     
     if (this.sincronizandoBD) {
       console.log('⏸️ Sincronização já em andamento...');
@@ -217,39 +265,36 @@ class MonitoramentoSistema {
     return this.metricas.errosDetalhados.slice(-limite).reverse();
   }
 
-  resetar() {
-    this.metricas = {
-      totalRequisicoes: 0,
-      requisicoesOK: 0,
-      requisicoesErro: 0,
-      tempoMedioResposta: [],
-      errosDetalhados: [],
-      ultimaSync: null
-    };
-    this.salvarMetricas();
-    
-    // Sincronizar reset com BD
-    this.sincronizarComBanco();
-    
-    console.log('🔄 Métricas resetadas');
+async resetar() {
+  console.warn('🔴🔴🔴 ATENÇÃO: resetar() foi chamado! 🔴🔴🔴');
+  console.trace('Stack trace do reset:'); // ← Mostra quem chamou
+  
+  if (!confirm('⚠️ Tem certeza que deseja RESETAR todas as métricas?\n\nEsta ação não pode ser desfeita!')) {
+    console.log('❌ Reset cancelado pelo usuário');
+    return;
   }
+  
+  this.metricas = {
+    totalRequisicoes: 0,
+    requisicoesOK: 0,
+    requisicoesErro: 0,
+    tempoMedioResposta: [],
+    errosDetalhados: [],
+    ultimaSync: null
+  };
+  this.salvarMetricas();
+  
+  // Sincronizar reset com BD
+  await this.sincronizarComBanco();
+  
+  console.log('🔄 Métricas resetadas');
+}
 
   salvarMetricas() {
     try {
       localStorage.setItem('METRICAS_SISTEMA', JSON.stringify(this.metricas));
     } catch (erro) {
       console.error('Erro ao salvar métricas:', erro);
-    }
-  }
-
-  carregarMetricas() {
-    try {
-      const dados = localStorage.getItem('METRICAS_SISTEMA');
-      if (dados) {
-        this.metricas = JSON.parse(dados);
-      }
-    } catch (erro) {
-      console.error('Erro ao carregar métricas:', erro);
     }
   }
 
@@ -264,4 +309,4 @@ class MonitoramentoSistema {
 }
 
 window.MonitorSistema = new MonitoramentoSistema();
-console.log('✅ Sistema de Monitoramento Carregado (Seguro + Debug)');
+console.log('✅ Sistema de Monitoramento Carregado (com BD)');

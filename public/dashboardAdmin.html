@@ -267,63 +267,84 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
 // ===== ATUALIZAR MÉTRICAS DO DASHBOARD ADMIN =====
-function atualizarMetricasAdmin() {
-  const metricas = window.MonitorSistema.obterMetricas();
-  
-  console.log('📊 Atualizando dashboard admin:', metricas);
-  
-  // Requisições Totais
-  document.getElementById('metrica-requisicoes').textContent = 
-    window.MonitorSistema.metricas.totalRequisicoes.toLocaleString('pt-BR');
-  
-  // Tempo Médio
-  document.getElementById('tempo-medio').textContent = 
-    `${metricas.tempoMedio}ms/req`;
-  
-  // Taxa de Sucesso (Sync)
-  document.getElementById('metrica-sync').innerHTML = 
-    `${metricas.taxaSucesso}<span class="unit">%</span>`;
-  
-  const trendSync = document.getElementById('trend-sync');
-  if (metricas.taxaSucesso >= 98) {
-    trendSync.className = 'trend positive';
-    trendSync.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
-  } else if (metricas.taxaSucesso >= 95) {
-    trendSync.className = 'trend neutral';
-    trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
-  } else {
-    trendSync.className = 'trend negative';
-    trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
-  }
-  
-  // Última Sync
-  if (metricas.ultimaSync) {
-    const data = new Date(metricas.ultimaSync);
-    const horas = String(data.getHours()).padStart(2, '0');
-    const minutos = String(data.getMinutes()).padStart(2, '0');
-    document.getElementById('ultima-sync').textContent = `Sync: ${horas}:${minutos}`;
-  }
-  
-  // Taxa de Erro
-  document.getElementById('metrica-erro').innerHTML = 
-    `${metricas.taxaErro}<span class="unit">%</span>`;
-  
-  document.getElementById('total-erros').textContent = 
-    `${metricas.totalErros} erro${metricas.totalErros !== 1 ? 's' : ''}`;
-  
-  const trendErro = document.getElementById('trend-erro');
-  if (metricas.taxaErro === 0) {
-    trendErro.className = 'trend positive';
-    trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
-  } else if (metricas.taxaErro < 5) {
-    trendErro.className = 'trend neutral';
-    trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
-  } else {
-    trendErro.className = 'trend negative';
-    trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
+// ===== ATUALIZAR MÉTRICAS DO DASHBOARD ADMIN =====
+async function atualizarMetricasAdmin() {
+  try {
+    // ✅ BUSCAR DIRETAMENTE DO BD (NÃO DO FRONTEND)
+    const response = await fetch('http://localhost:3333/monitoramento/metricas');
+    
+    if (!response.ok) {
+      console.warn('⚠️ Erro ao buscar métricas do BD');
+      return;
+    }
+    
+    const dadosBD = await response.json();
+    
+    console.log('📊 Atualizando dashboard com dados do BD:', dadosBD);
+    
+    // Requisições Totais
+    document.getElementById('metrica-requisicoes').textContent = 
+      dadosBD.totalRequisicoes.toLocaleString('pt-BR');
+    
+    // Tempo Médio
+    document.getElementById('tempo-medio').textContent = 
+      `${dadosBD.tempoMedioResposta}ms/req`;
+    
+    // Taxa de Sucesso (Sync)
+    document.getElementById('metrica-sync').innerHTML = 
+      `${parseFloat(dadosBD.taxaSucesso).toFixed(1)}<span class="unit">%</span>`;
+    
+    const trendSync = document.getElementById('trend-sync');
+    if (dadosBD.taxaSucesso >= 98) {
+      trendSync.className = 'trend positive';
+      trendSync.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
+    } else if (dadosBD.taxaSucesso >= 95) {
+      trendSync.className = 'trend neutral';
+      trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
+    } else {
+      trendSync.className = 'trend negative';
+      trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
+    }
+    
+    // Última Sync
+    if (dadosBD.dtUltimaSync) {
+      const data = new Date(dadosBD.dtUltimaSync);
+      const horas = String(data.getHours()).padStart(2, '0');
+      const minutos = String(data.getMinutes()).padStart(2, '0');
+      document.getElementById('ultima-sync').textContent = `Sync: ${horas}:${minutos}`;
+    }
+    
+    // Taxa de Erro
+    document.getElementById('metrica-erro').innerHTML = 
+      `${parseFloat(dadosBD.taxaErro).toFixed(1)}<span class="unit">%</span>`;
+    
+    document.getElementById('total-erros').textContent = 
+      `${dadosBD.requisicoesErro} erro${dadosBD.requisicoesErro !== 1 ? 's' : ''}`;
+    
+    const trendErro = document.getElementById('trend-erro');
+    if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === '0.00') {
+      trendErro.className = 'trend positive';
+      trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
+    } else if (dadosBD.taxaErro < 5) {
+      trendErro.className = 'trend neutral';
+      trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
+    } else {
+      trendErro.className = 'trend negative';
+      trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
+    }
+    
+  } catch (erro) {
+    console.error('❌ Erro ao atualizar métricas da dashboard:', erro);
   }
 }
 
+// ⚡ ATUALIZAR A CADA 2 SEGUNDOS (BUSCA DO BD)
+setInterval(atualizarMetricasAdmin, 2000);
+
+// Atualizar imediatamente ao carregar
+document.addEventListener('DOMContentLoaded', function() {git 
+  setTimeout(atualizarMetricasAdmin, 500);
+});
 // ⚡ ATUALIZAR A CADA 2 SEGUNDOS (REDUZIDO de 5s)
 setInterval(atualizarMetricasAdmin, 2000);
 
