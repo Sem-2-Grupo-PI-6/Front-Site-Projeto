@@ -1,58 +1,82 @@
 var database = require("../database/config");
 
 function autenticar(email, senha) {
-  console.log(
-    "ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function entrar(): ",
-    email,
-    senha
-  );
-
-  // ⚠️ OPÇÃO 1: Usar PROCEDURE (exige nomeFantasia)
-  // Para facilitar, vamos usar query direta primeiro
-
-  var instrucaoSql = `CALL getLoginUsuario(?, ?);`;
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql, [email, senha]);
+  console.log("ACESSEI O USUARIO MODEL - function autenticar():", email);
+  
+  var instrucaoSql = `
+    SELECT 
+      idUsuario,
+      nome,
+      email,
+      tipoUsuario,
+      usuarioAtivo,
+      Empresa_idEmpresa,
+      nomeEmpresa,
+      cnpj,
+      tipoPlano,
+      limiteUsuarios,
+      sitacaoLicensa,
+      dtLicenca,
+      podeAcessar,
+      descricaoAcesso
+    FROM vw_AutenticacaoUsuario
+    WHERE email = '${email}' AND senha = '${senha}';
+  `;
+  
+  console.log("Executando SQL:\n", instrucaoSql);
+  return database.executar(instrucaoSql);
 }
 
-function cadastrar(nome, email, senha, cnpj) {
-  console.log(
-    "ACESSEI O USUARIO MODEL \n \n\t\t >> Se aqui der erro de 'Error: connect ECONNREFUSED',\n \t\t >> verifique suas credenciais de acesso ao banco\n \t\t >> e se o servidor de seu BD está rodando corretamente. \n\n function cadastrar():",
-    nome,
-    email,
-    senha,
-    cnpj
-  );
 
-  // Inserir empresa se não existir
+function cadastrar(nome, email, senha, cnpj) {
+  console.log("ACESSEI O USUARIO MODEL - function cadastrar()");
+
+  let tipoUsuario = 'usuario';
+  if (email.includes('@admin.net')) {
+    tipoUsuario = 'admin';
+  }
+
   var sqlEmpresa = `
     INSERT INTO tblEmpresa (cnpj, nomeFantasia, emailCoorportaiva, dtLicenca, sitacaoLicensa)
-    VALUES (?, ?, ?, CURDATE(), 'Ativa')
+    VALUES ('${cnpj}', '${nome}', '${email}', CURDATE(), 'Ativa')
     ON DUPLICATE KEY UPDATE 
       nomeFantasia = VALUES(nomeFantasia),
       emailCoorportaiva = VALUES(emailCoorportaiva);
   `;
-
-  console.log("Executando cadastro de empresa");
-
-  return database
-    .executar(sqlEmpresa, [cnpj, nome, email])
+  
+  return database.executar(sqlEmpresa)
     .then(function (resultado) {
-      // Pegar ID da empresa (seja nova ou existente)
-      const idEmpresa = resultado.insertId || resultado.affectedRows;
 
-      // Inserir usuário
-      var sqlUsuario = `
-        INSERT INTO tblUsuario (nome, email, senha, dtCriacao, Empresa_idEmpresa) 
-        VALUES (?, ?, ?, CURDATE(), LAST_INSERT_ID());
-      `;
+      const sqlBuscarEmpresa = `SELECT idEmpresa FROM tblEmpresa WHERE cnpj = '${cnpj}' LIMIT 1;`;
+      
+      return database.executar(sqlBuscarEmpresa)
+        .then(function (empresas) {
+          const idEmpresa = empresas[0].idEmpresa;
 
-      console.log("Executando cadastro de usuário");
-      return database.executar(sqlUsuario, [nome, email, senha]);
+          var sqlUsuario = `
+            INSERT INTO tblUsuario (nome, email, senha, tipoUsuario, dtCriacao, Empresa_idEmpresa) 
+            VALUES ('${nome}', '${email}', '${senha}', '${tipoUsuario}', CURDATE(), ${idEmpresa});
+          `;
+          
+          return database.executar(sqlUsuario);
+        });
     });
+}
+
+function atualizarUltimoAcesso(idUsuario) {
+  console.log("ACESSEI O USUARIO MODEL - function atualizarUltimoAcesso():", idUsuario);
+  
+  var instrucaoSql = `
+    UPDATE tblUsuario 
+    SET dtUltimoAcesso = NOW()
+    WHERE idUsuario = ${idUsuario};
+  `;
+  
+  return database.executar(instrucaoSql);
 }
 
 module.exports = {
   autenticar,
   cadastrar,
+  atualizarUltimoAcesso
 };
