@@ -6,8 +6,9 @@
   <title>Evolvere Invest - Painel Administrativo</title>
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/login.css" />
+  <link rel="icon" href="../assets/icon/favicon.png" />
 </head>
-<body>
+<body class="portal-admin">
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
@@ -26,14 +27,12 @@
     <div class="auth-wrapper">
       <div class="auth-card">
         <div class="form-col">
-          <h2 style="margin-bottom: 10px">👑 Acesso Administrativo</h2>
-          <p style="color: var(--text); margin-bottom: 16px">
-            Área restrita - Apenas administradores autorizados
-          </p>
+          <h2>Acesso Administrativo</h2>
+          <p>Área restrita para administradores do sistema</p>
 
           <form onsubmit="return entrar()">
             <div class="form-group">
-              <label for="email">E-mail Admin</label>
+              <label for="email">E-mail Administrativo</label>
               <input
                 id="input_email"
                 type="email"
@@ -53,37 +52,51 @@
               />
             </div>
 
-            <div style="margin-top: 20px">
-              <button type="submit" class="btn-primary" id="btnLogin">
-                Acessar Sistema
-              </button>
-            </div>
+            <button type="submit" class="btn-primary" id="btnLogin">
+              Acessar Sistema
+            </button>
           </form>
         </div>
 
         <aside class="meta-col">
           <div class="meta-box">
-            <h3>🔐 Painel Admin</h3>
-            <p style="color: var(--text)">
-              Gerencie empresas, usuários, métricas e configurações do sistema.
-            </p>
+            <h3>🔐 Painel Master</h3>
+            <p>Gerencie empresas, usuários, métricas do sistema e configurações globais.</p>
+          </div>
+          <div class="meta-box">
+            <ul>
+              <li>Cadastro e gestão de empresas</li>
+              <li>Monitoramento de métricas</li>
+              <li>Configurações do sistema</li>
+              <li>Logs e auditoria</li>
+            </ul>
           </div>
         </aside>
       </div>
     </div>
   </main>
 
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2025 Evolvere Invest — Painel Administrativo</p>
+      <p>Contato: admin@evolvereinvest.net</p>
+    </div>
+  </footer>
+
   <script>
     function entrar() {
       const email = document.getElementById('input_email').value.trim();
       const senha = document.getElementById('input_senha').value.trim();
+      const btnLogin = document.getElementById('btnLogin');
 
       if (!email || !senha) {
         alert("⚠️ Por favor, preencha todos os campos!");
         return false;
       }
 
-      console.log("📤 Login de ADMIN:", email);
+      btnLogin.classList.add('loading');
+      btnLogin.textContent = 'Entrando...';
+      btnLogin.disabled = true;
 
       fetch("/usuarios/autenticar", {
         method: "POST",
@@ -103,15 +116,18 @@
         return response.json();
       })
       .then(usuario => {
-        console.log("✅ Login bem-sucedido:", usuario);
-        
         sessionStorage.setItem("USUARIO_LOGADO", JSON.stringify(usuario));
+        btnLogin.textContent = '✓ Sucesso!';
         
-        alert(`✅ Bem-vindo(a), Administrador(a)!`);
-        window.location.href = "../dashboardAdmin.html";
+        setTimeout(() => {
+
+          window.location.href = "../dashboardAdmin.html";
+        }, 800);
       })
       .catch(erro => {
-        console.error("❌ Erro:", erro);
+        btnLogin.classList.remove('loading');
+        btnLogin.textContent = 'Acessar Sistema';
+        btnLogin.disabled = false;
         alert(`❌ ${erro.message}`);
       });
 

@@ -6,6 +6,7 @@
   <title>Evolvere Invest - Login de Usuário</title>
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="stylesheet" href="../css/login.css" />
+  <link rel="icon" href="../assets/icon/favicon.png" />
 </head>
 <body>
   <header class="site-header">
@@ -26,10 +27,8 @@
     <div class="auth-wrapper">
       <div class="auth-card">
         <div class="form-col">
-          <h2 style="margin-bottom: 10px">👤 Acesso de Usuário</h2>
-          <p style="color: var(--text); margin-bottom: 16px">
-            Digite suas credenciais fornecidas pela sua empresa
-          </p>
+          <h2>Entre na sua conta</h2>
+          <p>Acesse análises macroeconômicas e dashboards personalizados</p>
 
           <form onsubmit="return entrar()">
             <div class="form-group">
@@ -53,76 +52,82 @@
               />
             </div>
 
-            <div style="margin-top: 20px">
-              <button type="submit" class="btn-primary" id="btnLogin">
-                Entrar
-              </button>
-            </div>
+            <button type="submit" class="btn-primary" id="btnLogin">
+              Entrar
+            </button>
           </form>
         </div>
 
         <aside class="meta-col">
           <div class="meta-box">
-            <h3>💡 Portal do Usuário</h3>
-            <p style="color: var(--text)">
-              Acesse análises macroeconômicas, filtre regiões e tome decisões baseadas em dados.
-            </p>
+            <h3>💡 Dashboard Completo</h3>
+            <p>Acesse dados econômicos, demográficos e índices de atratividade regionais.</p>
           </div>
           <div class="meta-box">
-            <p style="font-size: 13px; color: var(--muted);">
-              <strong>Não tem acesso?</strong><br>
-              Entre em contato com o gestor da sua empresa.
-            </p>
+            <p><strong>Primeiro acesso?</strong><br>
+            Suas credenciais foram fornecidas pelo gestor da sua empresa.</p>
           </div>
         </aside>
       </div>
     </div>
   </main>
 
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2025 Evolvere Invest — Protótipo educativo</p>
+      <p>Contato: equipe@evolvereinvest.net</p>
+    </div>
+  </footer>
+
   <script>
-    function entrar() {
-      const email = document.getElementById('input_email').value.trim();
-      const senha = document.getElementById('input_senha').value.trim();
+ function entrar() {
+  const email = document.getElementById('input_email').value.trim();
+  const senha = document.getElementById('input_senha').value.trim();
+  const btnLogin = document.getElementById('btnLogin');
 
-      if (!email || !senha) {
-        alert("⚠️ Por favor, preencha todos os campos!");
-        return false;
-      }
+  if (!email || !senha) {
+    alert("⚠️ Por favor, preencha todos os campos!");
+    return false;
+  }
 
-      console.log("📤 Login de USUÁRIO:", email);
+  btnLogin.classList.add('loading');
+  btnLogin.textContent = 'Entrando...';
+  btnLogin.disabled = true;
 
-      fetch("/usuarios/autenticar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          emailServer: email,
-          senhaServer: senha,
-          tipoEsperadoServer: "usuario"
-        }),
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(data => {
-            throw new Error(data.erro || 'Email ou senha inválidos');
-          });
-        }
-        return response.json();
-      })
-      .then(usuario => {
-        console.log("✅ Login bem-sucedido:", usuario);
-        
-        sessionStorage.setItem("USUARIO_LOGADO", JSON.stringify(usuario));
-        
-        alert(`✅ Bem-vindo(a), ${usuario.nome}!`);
-        window.location.href = "../dashboardCliente.html";
-      })
-      .catch(erro => {
-        console.error("❌ Erro:", erro);
-        alert(`❌ ${erro.message}`);
+  fetch("/usuarios/autenticar", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      emailServer: email,
+      senhaServer: senha,
+      tipoEsperadoServer: "usuario" 
+    }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(data => {
+        throw new Error(data.erro || 'Email ou senha inválidos');
       });
-
-      return false;
     }
+    return response.json();
+  })
+  .then(usuario => {
+    sessionStorage.setItem("USUARIO_LOGADO", JSON.stringify(usuario));
+    btnLogin.textContent = '✓ Sucesso!';
+    
+    setTimeout(() => {
+      window.location.href = "../dashboardCliente.html";
+    }, 800);
+  })
+  .catch(erro => {
+    btnLogin.classList.remove('loading');
+    btnLogin.textContent = 'Entrar';
+    btnLogin.disabled = false;
+    alert(`❌ ${erro.message}`);
+  });
+
+  return false;
+}
   </script>
 </body>
 </html>
