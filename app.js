@@ -21,6 +21,7 @@ var avisosRouter = require("./src/routes/avisos");
 var filtrosRouter = require("./src/routes/filtros");
 var dadosRouter = require("./src/routes/dados");
 var monitoramentoRouter = require("./src/routes/monitoramento");
+var empresaRouter = require("./src/routes/empresa")
 
 
 app.use(express.json());
@@ -35,6 +36,7 @@ app.use("/avisos", avisosRouter);
 app.use("/filtros", filtrosRouter);
 app.use("/dados", dadosRouter);
 app.use("/monitoramento", monitoramentoRouter);
+app.use("/empresas", empresaRouter)
 
 process.on('uncaughtException', function (erro) {
     console.error('❌❌❌ ERRO NÃO TRATADO (uncaughtException) ❌❌❌');
