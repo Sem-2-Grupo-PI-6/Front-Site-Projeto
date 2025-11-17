@@ -42,7 +42,6 @@ main {
   overflow: hidden;
 }
 
-/* ===== SIDEBAR COM AÇÕES RÁPIDAS ===== */
 aside {
   flex: 0 0 220px;
   display: flex;
@@ -181,7 +180,6 @@ nav li:hover {
   background: rgba(93, 209, 255, 0.1);
 }
 
-/* ===== AÇÕES RÁPIDAS NA SIDEBAR ===== */
 .quick-actions-sidebar {
   padding: 0.6rem;
   border-radius: var(--card-radius);
@@ -237,7 +235,6 @@ nav li:hover {
   flex: 1;
 }
 
-/* ===== STATUS DO SISTEMA ===== */
 section.system-status {
   padding: 0.6rem;
   border-radius: var(--card-radius);
@@ -301,7 +298,7 @@ section.system-status h2 {
   color: var(--accent-warning);
 }
 
-/* ===== BOTÃO LOGOUT ===== */
+
 .btn-logout {
   margin-top: auto;
   width: 100%;
@@ -323,7 +320,7 @@ section.system-status h2 {
   transform: translateY(-2px);
 }
 
-/* ===== WORKSPACE SEM DATA SOURCES ===== */
+
 section.workspace {
   flex: 1;
   min-width: 0;
@@ -396,7 +393,6 @@ section.workspace {
   background: rgba(93, 209, 255, 0.15);
 }
 
-/* ===== METRICS GRID ===== */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -564,7 +560,7 @@ section.workspace {
   color: var(--accent-strong);
 }
 
-/* ===== DASHBOARD CONTENT (MAIS ESPAÇO VERTICAL) ===== */
+
 .dashboard-content {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
@@ -692,7 +688,6 @@ canvas {
   height: 100% !important;
 }
 
-/* ===== ACTIVITY CARD ===== */
 .activity-card {
   flex: 1;
   padding: 0.75rem;
@@ -814,7 +809,6 @@ canvas {
   color: var(--text-muted);
 }
 
-/* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -833,25 +827,312 @@ canvas {
   background: rgba(93, 209, 255, 0.5);
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1600px) {
-  .metrics-grid {
-    grid-template-columns: repeat(4, 1fr);
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-@media (max-width: 1400px) {
-  .dashboard-content {
+.modal-container {
+  background: linear-gradient(180deg, rgba(22, 27, 45, 0.98) 0%, rgba(12, 15, 29, 0.95) 100%);
+  border-radius: 20px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(93, 209, 255, 0.2);
+  animation: slideUp 0.3s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-empresa {
+  max-width: 900px;
+}
+
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2rem;
+  border-bottom: 2px solid rgba(93, 209, 255, 0.15);
+  background: linear-gradient(135deg, rgba(93, 209, 255, 0.08), transparent);
+  flex-shrink: 0;
+}
+
+.modal-header h2 {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.btn-close-modal {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.btn-close-modal:hover {
+  background: #ef4444;
+  color: white;
+  transform: rotate(90deg);
+  border-color: #ef4444;
+}
+
+.modal-body {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: rgba(93, 209, 255, 0.05);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: rgba(93, 209, 255, 0.3);
+  border-radius: 3px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(93, 209, 255, 0.5);
+}
+
+.modal-section {
+  margin-bottom: 2rem;
+}
+
+.modal-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(93, 209, 255, 0.15);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.85rem 1rem;
+  border: 2px solid rgba(93, 209, 255, 0.2);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #5dd1ff;
+  background: rgba(93, 209, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(93, 209, 255, 0.15);
+}
+
+.form-group input::placeholder {
+  color: rgba(247, 249, 255, 0.4);
+}
+
+.form-group input:disabled {
+  background: rgba(255, 255, 255, 0.03);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: -0.25rem;
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235dd1ff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.form-group select option {
+  background: #161b2d;
+  color: var(--text-primary);
+  padding: 0.5rem;
+}
+
+.alert {
+  padding: 1.25rem;
+  border-radius: 12px;
+  border-left: 4px solid;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-top: 1.5rem;
+}
+
+.alert-info {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+
+.alert-info strong {
+  color: #60a5fa;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.alert-info p {
+  margin: 0;
+  color: rgba(147, 197, 253, 0.9);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  border-top: 2px solid rgba(93, 209, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 1rem;
+  }
+
+  .modal-container {
+    max-height: 95vh;
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    padding: 1.5rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .form-row {
     grid-template-columns: 1fr;
   }
-  
-  .metrics-grid {
-    grid-template-columns: repeat(2, 1fr);
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .modal-empresa {
+    max-width: 100%;
   }
 }
 
-@media (max-width: 1200px) {
-  aside {
-    flex: 0 0 200px;
-  }
+body.modal-open {
+  overflow: hidden;
 }

@@ -1,358 +1,507 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Evolvere Invest - Painel Administrativo</title>
-    <link rel="stylesheet" href="./css/styleDashboardAdmin.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="./js/monitoramento.js"></script>
-  </head>
-  <body>
-    <main>
-      <aside>
-        <header>
-          <h1>Evolvere Admin</h1>
-          <p>Painel de Controle</p>
-        </header>
-        <section class="user-profile">
-          <figure>RM</figure>
-          <figcaption>
-            <h2>Rodrigo Martins</h2>
-            <span>Administrador Master</span>
-          </figcaption>
-        </section>
-        <nav aria-label="Primary">
-          <h2>Gestão</h2>
-          <ul>
-            <li><a href="#" class="active">📊 Dashboard</a></li>
-            <li><a href="#">📈 Configurar KPIs</a></li>
-          </ul>
-          <h2>Sistema</h2>
-          <ul>
-            <li><a href="./configADM.html">⚙️ Configurações</a></li>
-            <li><a href="#">🔔 Notificações</a></li>
-          </ul>
-        </nav>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evolvere Invest - Painel Administrativo</title>
+  <link rel="stylesheet" href="./css/styleDashboardAdmin.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="./js/monitoramento.js"></script>
+</head>
 
-        <!-- AÇÕES RÁPIDAS NA SIDEBAR -->
-        <section class="quick-actions-sidebar">
-          <h2>⚡ Ações Rápidas</h2>
-          <div class="quick-actions-list">
-            <button class="quick-action-item">
-              <span class="action-icon">👤</span>
-              <span class="action-text">Novo Usuário</span>
-            </button>
-            <button class="quick-action-item">
-              <span class="action-icon">🏢</span>
-              <span class="action-text">Nova Empresa</span>
-            </button>
-            <button class="quick-action-item">
-              <span class="action-icon">📊</span>
-              <span class="action-text">Config. KPI</span>
-            </button>
+<body>
+  <main>
+    <aside>
+      <header>
+        <h1>Evolvere Admin</h1>
+        <p>Painel de Controle</p>
+      </header>
+
+      <section class="user-profile">
+        <figure>RM</figure>
+        <figcaption>
+          <h2>Rodrigo Martins</h2>
+          <span>Administrador Master</span>
+        </figcaption>
+      </section>
+
+      <nav aria-label="Primary">
+        <h2>Gestão</h2>
+        <ul>
+          <li><a href="#" class="active">📊 Dashboard</a></li>
+          <li><a href="#">📈 Configurar KPIs</a></li>
+        </ul>
+        <h2>Sistema</h2>
+        <ul>
+          <li><a href="./configADM.html">⚙️ Configurações</a></li>
+          <li><a href="#">🔔 Notificações</a></li>
+        </ul>
+      </nav>
+
+      <section class="quick-actions-sidebar">
+        <h2>⚡ Ações Rápidas</h2>
+        <div class="quick-actions-list">
+          <button class="quick-action-item" onclick="alert('Funcionalidade em desenvolvimento')">
+            <span class="action-icon">👤</span>
+            <span class="action-text">Novo Usuário</span>
+          </button>
+          <button class="quick-action-item" id="btnNovaEmpresa">
+            <span class="action-icon">🏢</span>
+            <span class="action-text">Nova Empresa</span>
+          </button>
+          <button class="quick-action-item" onclick="alert('Funcionalidade em desenvolvimento')">
+            <span class="action-icon">📊</span>
+            <span class="action-text">Config. KPI</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="system-status">
+        <h2>⚡ Status do Sistema</h2>
+        <div class="status-item">
+          <span class="status-dot online"></span>
+          <span>API IBGE</span>
+          <span class="status-badge success">OK</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot online"></span>
+          <span>API Bacen</span>
+          <span class="status-badge success">OK</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot warning"></span>
+          <span>API IPEA</span>
+          <span class="status-badge warning">Lento</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot online"></span>
+          <span>Database</span>
+          <span class="status-badge success">99%</span>
+        </div>
+      </section>
+
+      <button class="btn-logout" onclick="logout()">🚪 Sair</button>
+    </aside>
+
+    <section class="workspace">
+      <section class="workspace-header">
+        <div>
+          <h2>Visão Geral da Plataforma</h2>
+          <span>Última atualização: <span id="ultima-atualizacao">Carregando...</span> • Período: Últimos 30 dias</span>
+        </div>
+        <div class="header-actions">
+          <button class="btn-secondary">📅 Período</button>
+          <button class="btn-primary">📥 Relatório Executivo</button>
+        </div>
+      </section>
+
+      <section class="metrics-grid" aria-label="Métricas principais da plataforma">
+        <article class="metric-card metric-primary">
+          <div class="metric-header">
+            <div class="metric-icon">👥</div>
+            <div class="metric-info">
+              <span class="metric-label">Usuários Ativos</span>
+              <span class="metric-badge">Total</span>
+            </div>
           </div>
-        </section>
-
-        <section class="system-status">
-          <h2>⚡ Status do Sistema</h2>
-          <div class="status-item">
-            <span class="status-dot online"></span>
-            <span>API IBGE</span>
-            <span class="status-badge success">OK</span>
+          <div class="metric-value">
+            <span class="value" id="metrica-usuarios">--</span>
+            <span class="trend positive">
+              <span class="trend-arrow">↑</span>
+              <span class="trend-text">+18</span>
+            </span>
           </div>
-          <div class="status-item">
-            <span class="status-dot online"></span>
-            <span>API Bacen</span>
-            <span class="status-badge success">OK</span>
+          <div class="metric-footer">
+            <span class="metric-detail" id="total-empresas">-- empresas</span>
+            <a href="#" class="metric-link">Ver →</a>
           </div>
-          <div class="status-item">
-            <span class="status-dot warning"></span>
-            <span>API IPEA</span>
-            <span class="status-badge warning">Lento</span>
+        </article>
+
+        <article class="metric-card metric-success">
+          <div class="metric-header">
+            <div class="metric-icon">📊</div>
+            <div class="metric-info">
+              <span class="metric-label">Requisições</span>
+              <span class="metric-badge">Total</span>
+            </div>
           </div>
-          <div class="status-item">
-            <span class="status-dot online"></span>
-            <span>Database</span>
-            <span class="status-badge success">99%</span>
+          <div class="metric-value">
+            <span class="value" id="metrica-requisicoes">0</span>
+            <span class="trend positive" id="trend-requisicoes">
+              <span class="trend-arrow">→</span>
+              <span class="trend-text">--</span>
+            </span>
           </div>
-        </section>
-
-        <button class="btn-logout">🚪 Sair</button>
-      </aside>
-      
-      <section class="workspace">
-        <section class="workspace-header">
-          <div>
-            <h2>Visão Geral da Plataforma</h2>
-            <span>Última atualização: Hoje, 21:48 • Período: Últimos 30 dias</span>
+          <div class="metric-footer">
+            <span class="metric-detail" id="tempo-medio">-- ms/req</span>
+            <a href="#" class="metric-link">Detalhes →</a>
           </div>
-          <div class="header-actions">
-            <button class="btn-secondary">📅 Período</button>
-            <button class="btn-primary">📥 Relatório Executivo</button>
+        </article>
+
+        <article class="metric-card metric-info">
+          <div class="metric-header">
+            <div class="metric-icon">🗄️</div>
+            <div class="metric-info">
+              <span class="metric-label">Sync Dados</span>
+              <span class="metric-badge">Hoje</span>
+            </div>
           </div>
-        </section>
-
-<section class="metrics-grid" aria-label="Métricas principais da plataforma">
-  <article class="metric-card metric-primary">
-    <div class="metric-header">
-      <div class="metric-icon">👥</div>
-      <div class="metric-info">
-        <span class="metric-label">Usuários Ativos</span>
-        <span class="metric-badge">Total</span>
-      </div>
-    </div>
-    <div class="metric-value">
-      <span class="value" id="metrica-usuarios">--</span>
-      <span class="trend positive">
-        <span class="trend-arrow">↑</span>
-        <span class="trend-text">+18</span>
-      </span>
-    </div>
-    <div class="metric-footer">
-      <span class="metric-detail">232 empresas</span>
-      <a href="#" class="metric-link">Ver →</a>
-    </div>
-  </article>
-
-  <article class="metric-card metric-success">
-    <div class="metric-header">
-      <div class="metric-icon">📊</div>
-      <div class="metric-info">
-        <span class="metric-label">Requisições</span>
-        <span class="metric-badge">Total</span>
-      </div>
-    </div>
-    <div class="metric-value">
-      <span class="value" id="metrica-requisicoes">0</span>
-      <span class="trend positive" id="trend-requisicoes">
-        <span class="trend-arrow">→</span>
-        <span class="trend-text">--</span>
-      </span>
-    </div>
-    <div class="metric-footer">
-      <span class="metric-detail" id="tempo-medio">-- ms/req</span>
-      <a href="#" class="metric-link">Detalhes →</a>
-    </div>
-  </article>
-
-  <article class="metric-card metric-info">
-    <div class="metric-header">
-      <div class="metric-icon">🗄️</div>
-      <div class="metric-info">
-        <span class="metric-label">Sync Dados</span>
-        <span class="metric-badge">Hoje</span>
-      </div>
-    </div>
-    <div class="metric-value">
-      <span class="value" id="metrica-sync">--</span>
-      <span class="trend positive" id="trend-sync">
-        <span class="trend-arrow">↑</span>
-        <span class="trend-text">--</span>
-      </span>
-    </div>
-    <div class="metric-footer">
-      <span class="metric-detail" id="ultima-sync">Sync: --</span>
-      <a href="#" class="metric-link">Logs →</a>
-    </div>
-  </article>
-
-  <article class="metric-card metric-warning">
-    <div class="metric-header">
-      <div class="metric-icon">⚠️</div>
-      <div class="metric-info">
-        <span class="metric-label">Taxa de Erro</span>
-        <span class="metric-badge">24h</span>
-      </div>
-    </div>
-    <div class="metric-value">
-      <span class="value" id="metrica-erro">0</span>
-      <span class="trend neutral" id="trend-erro">
-        <span class="trend-arrow">→</span>
-        <span class="trend-text">OK</span>
-      </span>
-    </div>
-    <div class="metric-footer">
-      <span class="metric-detail" id="total-erros">0 erros</span>
-      <a href="#" class="metric-link">Ver →</a>
-    </div>
-  </article>
-</section>
-
-        <section class="dashboard-content">
-          <div class="content-left">
-            <article class="chart-card full-height">
-              <header class="chart-header">
-                <div>
-                  <h3>📈 Crescimento de Usuários</h3>
-                  <span>Novos cadastros vs Total acumulado</span>
-                </div>
-                <div class="chart-legend">
-                  <span class="legend-item"><span class="dot primary"></span> 2025</span>
-                  <span class="legend-item"><span class="dot secondary"></span> 2024</span>
-                </div>
-              </header>
-              <figure>
-                <canvas id="usuariosChart" aria-label="Gráfico de crescimento de usuários"></canvas>
-              </figure>
-            </article>
-
-            <article class="chart-card">
-              <header class="chart-header">
-                <div>
-                  <h3>🏢 Top 5 Empresas por Uso</h3>
-                  <span>Consultas realizadas (últimos 30 dias)</span>
-                </div>
-              </header>
-              <figure>
-                <canvas id="empresasChart" aria-label="Gráfico de uso por empresa"></canvas>
-              </figure>
-            </article>
+          <div class="metric-value">
+            <span class="value" id="metrica-sync">--</span>
+            <span class="trend positive" id="trend-sync">
+              <span class="trend-arrow">↑</span>
+              <span class="trend-text">--</span>
+            </span>
           </div>
+          <div class="metric-footer">
+            <span class="metric-detail" id="ultima-sync">Sync: --</span>
+            <a href="#" class="metric-link">Logs →</a>
+          </div>
+        </article>
 
-          <div class="content-right">
-            <article class="activity-card">
-              <header class="activity-header">
-                <h3>🔔 Atividade Recente</h3>
-                <button class="btn-text">Ver todas</button>
-              </header>
-              <div class="activity-list">
-                <div class="activity-item">
-                  <div class="activity-icon success">✓</div>
-                  <div class="activity-content">
-                    <p class="activity-title">Novo usuário cadastrado</p>
-                    <p class="activity-meta">Julia Santos • Construtora ABC</p>
-                    <p class="activity-time">Há 5 minutos</p>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <div class="activity-icon info">ℹ</div>
-                  <div class="activity-content">
-                    <p class="activity-title">Sincronização concluída</p>
-                    <p class="activity-meta">API IBGE • 2.3GB processados</p>
-                    <p class="activity-time">Há 14 minutos</p>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <div class="activity-icon warning">!</div>
-                  <div class="activity-content">
-                    <p class="activity-title">API IPEA com latência alta</p>
-                    <p class="activity-meta">Tempo: 2.8s (limite: 2s)</p>
-                    <p class="activity-time">Há 32 minutos</p>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <div class="activity-icon success">✓</div>
-                  <div class="activity-content">
-                    <p class="activity-title">Relatório gerado</p>
-                    <p class="activity-meta">Carlos Mendes • SP Interior</p>
-                    <p class="activity-time">Há 1 hora</p>
-                  </div>
-                </div>
-                <div class="activity-item">
-                  <div class="activity-icon primary">👤</div>
-                  <div class="activity-content">
-                    <p class="activity-title">Empresa verificada</p>
-                    <p class="activity-meta">Investimentos Delta LTDA</p>
-                    <p class="activity-time">Há 2 horas</p>
-                  </div>
+        <article class="metric-card metric-warning">
+          <div class="metric-header">
+            <div class="metric-icon">⚠️</div>
+            <div class="metric-info">
+              <span class="metric-label">Taxa de Erro</span>
+              <span class="metric-badge">24h</span>
+            </div>
+          </div>
+          <div class="metric-value">
+            <span class="value" id="metrica-erro">0</span>
+            <span class="trend neutral" id="trend-erro">
+              <span class="trend-arrow">→</span>
+              <span class="trend-text">OK</span>
+            </span>
+          </div>
+          <div class="metric-footer">
+            <span class="metric-detail" id="total-erros">0 erros</span>
+            <a href="#" class="metric-link">Ver →</a>
+          </div>
+        </article>
+      </section>
+
+      <section class="dashboard-content">
+        <div class="content-left">
+
+          <article class="chart-card full-height">
+            <header class="chart-header">
+              <div>
+                <h3>📈 Crescimento de Usuários</h3>
+                <span>Novos cadastros vs Total acumulado</span>
+              </div>
+              <div class="chart-legend">
+                <span class="legend-item"><span class="dot primary"></span> 2025</span>
+                <span class="legend-item"><span class="dot secondary"></span> 2024</span>
+              </div>
+            </header>
+            <figure>
+              <canvas id="usuariosChart" aria-label="Gráfico de crescimento de usuários"></canvas>
+            </figure>
+          </article>
+
+          <article class="chart-card">
+            <header class="chart-header">
+              <div>
+                <h3>🏢 Top 5 Empresas por Uso</h3>
+                <span>Consultas realizadas (últimos 30 dias)</span>
+              </div>
+            </header>
+            <figure>
+              <canvas id="empresasChart" aria-label="Gráfico de uso por empresa"></canvas>
+            </figure>
+          </article>
+        </div>
+
+        <div class="content-right">
+          <article class="activity-card">
+            <header class="activity-header">
+              <h3>🔔 Atividade Recente</h3>
+              <button class="btn-text">Ver todas</button>
+            </header>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon success">✓</div>
+                <div class="activity-content">
+                  <p class="activity-title">Novo usuário cadastrado</p>
+                  <p class="activity-meta">Julia Santos • Construtora ABC</p>
+                  <p class="activity-time">Há 5 minutos</p>
                 </div>
               </div>
-            </article>
-          </div>
-        </section>
+              <div class="activity-item">
+                <div class="activity-icon info">ℹ</div>
+                <div class="activity-content">
+                  <p class="activity-title">Sincronização concluída</p>
+                  <p class="activity-meta">API IBGE • 2.3GB processados</p>
+                  <p class="activity-time">Há 14 minutos</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon warning">!</div>
+                <div class="activity-content">
+                  <p class="activity-title">API IPEA com latência alta</p>
+                  <p class="activity-meta">Tempo: 2.8s (limite: 2s)</p>
+                  <p class="activity-time">Há 32 minutos</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon success">✓</div>
+                <div class="activity-content">
+                  <p class="activity-title">Relatório gerado</p>
+                  <p class="activity-meta">Carlos Mendes • SP Interior</p>
+                  <p class="activity-time">Há 1 hora</p>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon primary">👤</div>
+                <div class="activity-content">
+                  <p class="activity-title">Empresa verificada</p>
+                  <p class="activity-meta">Investimentos Delta LTDA</p>
+                  <p class="activity-time">Há 2 horas</p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
       </section>
-    </main>
+    </section>
+  </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-// ===== ATUALIZAR MÉTRICAS DO DASHBOARD ADMIN =====
-// ===== ATUALIZAR MÉTRICAS DO DASHBOARD ADMIN =====
-async function atualizarMetricasAdmin() {
-  try {
-    // ✅ BUSCAR DIRETAMENTE DO BD (NÃO DO FRONTEND)
-    const response = await fetch('http://localhost:3333/monitoramento/metricas');
-    
-    if (!response.ok) {
-      console.warn('⚠️ Erro ao buscar métricas do BD');
-      return;
+
+  <div class="modal-overlay" id="modalNovaEmpresa">
+    <div class="modal-container modal-empresa">
+      <div class="modal-header">
+        <div>
+          <h2>🏢 Cadastrar Nova Empresa</h2>
+          <p>Adicione uma empresa e defina seu plano de acesso</p>
+        </div>
+        <button class="btn-close-modal" onclick="fecharModalEmpresa()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="formNovaEmpresa" onsubmit="return cadastrarEmpresa()">
+
+          <section class="modal-section">
+            <h3 class="section-title">📋 Dados da Empresa</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="empresa-cnpj">CNPJ *</label>
+                <input 
+                  type="text" 
+                  id="empresa-cnpj" 
+                  placeholder="00.000.000/0000-00"
+                  maxlength="18"
+                  oninput="formatarCNPJ(this)"
+                  required 
+                />
+                <small class="form-hint">Apenas números serão salvos</small>
+              </div>
+              
+              <div class="form-group">
+                <label for="empresa-nome">Nome Fantasia *</label>
+                <input 
+                  type="text" 
+                  id="empresa-nome" 
+                  placeholder="Ex: Construtora ABC"
+                  maxlength="45"
+                  required 
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="empresa-email">E-mail Corporativo *</label>
+              <input 
+                type="email" 
+                id="empresa-email" 
+                placeholder="contato@empresa.com.br"
+                maxlength="45"
+                required 
+              />
+              <small class="form-hint">Será usado para comunicações oficiais</small>
+            </div>
+          </section>
+
+          <section class="modal-section">
+            <h3 class="section-title">📦 Plano de Acesso</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="empresa-plano">Tipo de Plano *</label>
+                <select id="empresa-plano" onchange="atualizarLimiteUsuarios()" required>
+                  <option value="">Selecione...</option>
+                  <option value="Básico">Básico (até 5 usuários)</option>
+                  <option value="Profissional">Profissional (até 20 usuários)</option>
+                  <option value="Enterprise">Enterprise (ilimitado)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="empresa-limite">Limite de Usuários *</label>
+                <input 
+                  type="number" 
+                  id="empresa-limite" 
+                  min="1"
+                  max="999"
+                  value="5"
+                  required 
+                />
+                <small class="form-hint">Quantidade máxima de acessos</small>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="empresa-licenca">Validade da Licença *</label>
+                <input 
+                  type="date" 
+                  id="empresa-licenca" 
+                  required 
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="empresa-status">Status Inicial *</label>
+                <select id="empresa-status" required>
+                  <option value="Ativa" selected>Ativa</option>
+                  <option value="Inativa">Inativa</option>
+                  <option value="Suspensa">Suspensa</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <div class="alert alert-info">
+            <strong>ℹ️ Resumo:</strong>
+            <p id="resumo-plano">Selecione um plano para ver o resumo</p>
+          </div>
+
+   
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="fecharModalEmpresa()">Cancelar</button>
+            <button type="submit" class="btn-primary">💾 Cadastrar Empresa</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    let chartUsuarios = null;
+    let chartEmpresas = null;
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 Iniciando Dashboard Admin...');
+
+      atualizarTimestamp();
+      setInterval(atualizarTimestamp, 60000);
+
+      atualizarMetricasAdmin();
+      setInterval(atualizarMetricasAdmin, 5000); 
+
+      inicializarGraficos();
+      
+
+      const btnNovaEmpresa = document.getElementById('btnNovaEmpresa');
+      if (btnNovaEmpresa) {
+        btnNovaEmpresa.addEventListener('click', abrirModalNovaEmpresa);
+      }
+
+      document.getElementById('modalNovaEmpresa')?.addEventListener('click', function(e) {
+        if (e.target === this) fecharModalEmpresa();
+      });
+      
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('modalNovaEmpresa').classList.contains('active')) {
+          fecharModalEmpresa();
+        }
+      });
+    });
+
+
+    function atualizarTimestamp() {
+      const agora = new Date();
+      const horas = String(agora.getHours()).padStart(2, '0');
+      const minutos = String(agora.getMinutes()).padStart(2, '0');
+      document.getElementById('ultima-atualizacao').textContent = `Hoje, ${horas}:${minutos}`;
     }
-    
-    const dadosBD = await response.json();
-    
-    console.log('📊 Atualizando dashboard com dados do BD:', dadosBD);
-    
-    // Requisições Totais
-    document.getElementById('metrica-requisicoes').textContent = 
-      dadosBD.totalRequisicoes.toLocaleString('pt-BR');
-    
-    // Tempo Médio
-    document.getElementById('tempo-medio').textContent = 
-      `${dadosBD.tempoMedioResposta}ms/req`;
-    
-    // Taxa de Sucesso (Sync)
-    document.getElementById('metrica-sync').innerHTML = 
-      `${parseFloat(dadosBD.taxaSucesso).toFixed(1)}<span class="unit">%</span>`;
-    
-    const trendSync = document.getElementById('trend-sync');
-    if (dadosBD.taxaSucesso >= 98) {
-      trendSync.className = 'trend positive';
-      trendSync.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
-    } else if (dadosBD.taxaSucesso >= 95) {
-      trendSync.className = 'trend neutral';
-      trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
-    } else {
-      trendSync.className = 'trend negative';
-      trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
+
+    function logout() {
+      if (confirm('⚠️ Tem certeza que deseja sair?')) {
+        sessionStorage.clear();
+        window.location.href = 'index.html';
+      }
     }
-    
-    // Última Sync
-    if (dadosBD.dtUltimaSync) {
-      const data = new Date(dadosBD.dtUltimaSync);
-      const horas = String(data.getHours()).padStart(2, '0');
-      const minutos = String(data.getMinutes()).padStart(2, '0');
-      document.getElementById('ultima-sync').textContent = `Sync: ${horas}:${minutos}`;
+
+
+    async function atualizarMetricasAdmin() {
+      try {
+        const response = await fetch('http://localhost:3333/monitoramento/metricas');
+        
+        if (!response.ok) {
+          console.warn('⚠️ Erro ao buscar métricas do BD');
+          return;
+        }
+        
+        const dadosBD = await response.json();
+        console.log('📊 Métricas atualizadas:', dadosBD);
+
+        document.getElementById('metrica-requisicoes').textContent = 
+          dadosBD.totalRequisicoes.toLocaleString('pt-BR');
+
+        document.getElementById('tempo-medio').textContent = 
+          `${dadosBD.tempoMedioResposta}ms/req`;
+
+        document.getElementById('metrica-sync').innerHTML = 
+          `${parseFloat(dadosBD.taxaSucesso).toFixed(1)}<span class="unit">%</span>`;
+        
+        const trendSync = document.getElementById('trend-sync');
+        if (dadosBD.taxaSucesso >= 98) {
+          trendSync.className = 'trend positive';
+          trendSync.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
+        } else if (dadosBD.taxaSucesso >= 95) {
+          trendSync.className = 'trend neutral';
+          trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
+        } else {
+          trendSync.className = 'trend negative';
+          trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
+        }
+
+        if (dadosBD.dtUltimaSync) {
+          const data = new Date(dadosBD.dtUltimaSync);
+          const horas = String(data.getHours()).padStart(2, '0');
+          const minutos = String(data.getMinutes()).padStart(2, '0');
+          document.getElementById('ultima-sync').textContent = `Sync: ${horas}:${minutos}`;
+        }
+
+        document.getElementById('metrica-erro').innerHTML = 
+          `${parseFloat(dadosBD.taxaErro).toFixed(1)}<span class="unit">%</span>`;
+        
+        document.getElementById('total-erros').textContent = 
+          `${dadosBD.requisicoesErro} erro${dadosBD.requisicoesErro !== 1 ? 's' : ''}`;
+        
+        const trendErro = document.getElementById('trend-erro');
+        if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === '0.00') {
+          trendErro.className = 'trend positive';
+          trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
+        } else if (dadosBD.taxaErro < 5) {
+          trendErro.className = 'trend neutral';
+          trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
+        } else {
+          trendErro.className = 'trend negative';
+          trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
+        }
+        
+      } catch (erro) {
+        console.error('❌ Erro ao atualizar métricas:', erro);
+      }
     }
-    
-    // Taxa de Erro
-    document.getElementById('metrica-erro').innerHTML = 
-      `${parseFloat(dadosBD.taxaErro).toFixed(1)}<span class="unit">%</span>`;
-    
-    document.getElementById('total-erros').textContent = 
-      `${dadosBD.requisicoesErro} erro${dadosBD.requisicoesErro !== 1 ? 's' : ''}`;
-    
-    const trendErro = document.getElementById('trend-erro');
-    if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === '0.00') {
-      trendErro.className = 'trend positive';
-      trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
-    } else if (dadosBD.taxaErro < 5) {
-      trendErro.className = 'trend neutral';
-      trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
-    } else {
-      trendErro.className = 'trend negative';
-      trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
-    }
-    
-  } catch (erro) {
-    console.error('❌ Erro ao atualizar métricas da dashboard:', erro);
-  }
-}
 
-// ⚡ ATUALIZAR A CADA 2 SEGUNDOS (BUSCA DO BD)
-setInterval(atualizarMetricasAdmin, 2000);
-
-// Atualizar imediatamente ao carregar
-document.addEventListener('DOMContentLoaded', function() {git 
-  setTimeout(atualizarMetricasAdmin, 500);
-});
-// ⚡ ATUALIZAR A CADA 2 SEGUNDOS (REDUZIDO de 5s)
-setInterval(atualizarMetricasAdmin, 2000);
-
-// Atualizar imediatamente ao carregar
-document.addEventListener('DOMContentLoaded', function() {
-  atualizarMetricasAdmin();
-});
-
+    function inicializarGraficos() {
       const defaultOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -395,15 +544,14 @@ document.addEventListener('DOMContentLoaded', function() {
         },
       };
 
-      // Gráfico 1: Crescimento de Usuários
-      new Chart(document.getElementById("usuariosChart"), {
+      chartUsuarios = new Chart(document.getElementById("usuariosChart"), {
         type: "line",
         data: {
           labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
           datasets: [
             {
-              label: "Usuários",
-              data: [5, 8, 12, 9, 15, 18, 14, 22, 19, 25],
+              label: "Novos Usuários",
+              data: [5, 8, 12, 9, 15, 18, 14, 22, 19, 25, 28, 31],
               borderColor: "#5dd1ff",
               backgroundColor: "rgba(93, 209, 255, 0.15)",
               tension: 0.4,
@@ -414,8 +562,8 @@ document.addEventListener('DOMContentLoaded', function() {
               pointBackgroundColor: "#5dd1ff",
             },
             {
-              label: "Usuários",
-              data: [45, 53, 65, 74, 89, 107, 121, 143, 162, 187, 208, 226],
+              label: "Total Acumulado",
+              data: [45, 53, 65, 74, 89, 107, 121, 143, 162, 187, 215, 246],
               borderColor: "#8b5dff",
               backgroundColor: "rgba(139, 93, 255, 0.1)",
               tension: 0.4,
@@ -439,9 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           },
           scales: {
-            x: {
-              ...defaultOptions.scales.x,
-            },
+            x: defaultOptions.scales.x,
             y: {
               ...defaultOptions.scales.y,
               type: 'linear',
@@ -473,8 +619,8 @@ document.addEventListener('DOMContentLoaded', function() {
         },
       });
 
-      // Gráfico 2: Top Empresas
-      new Chart(document.getElementById("empresasChart"), {
+
+      chartEmpresas = new Chart(document.getElementById("empresasChart"), {
         type: "bar",
         data: {
           labels: ["Construtora XYZ", "Investimentos ABC", "Fundo Delta", "Imobiliária Sigma", "Capital Omega"],
@@ -506,9 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           },
           scales: {
-            x: {
-              ...defaultOptions.scales.x,
-            },
+            x: defaultOptions.scales.x,
             y: {
               ...defaultOptions.scales.y,
               grid: {
@@ -522,7 +666,141 @@ document.addEventListener('DOMContentLoaded', function() {
           },
         },
       });
+    }
 
-    </script>
-  </body>
+    function abrirModalNovaEmpresa() {
+      document.getElementById('modalNovaEmpresa').classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      const hoje = new Date();
+      const umAno = new Date(hoje.setFullYear(hoje.getFullYear() + 1));
+      document.getElementById('empresa-licenca').value = umAno.toISOString().split('T')[0];
+    }
+
+    function fecharModalEmpresa() {
+      document.getElementById('modalNovaEmpresa').classList.remove('active');
+      document.body.style.overflow = '';
+      document.getElementById('formNovaEmpresa').reset();
+      document.getElementById('resumo-plano').textContent = 'Selecione um plano para ver o resumo';
+    }
+
+    function formatarCNPJ(input) {
+      let valor = input.value.replace(/\D/g, '');
+      
+      if (valor.length <= 14) {
+        valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
+        valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+        valor = valor.replace(/\.(\d{3})(\d)/, '.$1/$2');
+        valor = valor.replace(/(\d{4})(\d)/, '$1-$2');
+      }
+      
+      input.value = valor;
+    }
+
+    function atualizarLimiteUsuarios() {
+      const plano = document.getElementById('empresa-plano').value;
+      const inputLimite = document.getElementById('empresa-limite');
+      const resumo = document.getElementById('resumo-plano');
+      
+      const planos = {
+        'Básico': { 
+          limite: 5, 
+          descricao: '✅ Plano Básico: até 5 usuários simultâneos' 
+        },
+        'Profissional': { 
+          limite: 20, 
+          descricao: '✅ Plano Profissional: até 20 usuários + suporte prioritário' 
+        },
+        'Enterprise': { 
+          limite: 999, 
+          descricao: '✅ Plano Enterprise: usuários ilimitados + suporte dedicado' 
+        }
+      };
+      
+      if (plano && planos[plano]) {
+        inputLimite.value = planos[plano].limite;
+        resumo.textContent = planos[plano].descricao;
+      } else {
+        resumo.textContent = 'Selecione um plano para ver o resumo';
+      }
+    }
+
+    function cadastrarEmpresa() {
+      const cnpj = document.getElementById('empresa-cnpj').value.replace(/\D/g, '');
+      const nome = document.getElementById('empresa-nome').value.trim();
+      const email = document.getElementById('empresa-email').value.trim();
+      const plano = document.getElementById('empresa-plano').value;
+      const limite = parseInt(document.getElementById('empresa-limite').value);
+      const licenca = document.getElementById('empresa-licenca').value;
+      const status = document.getElementById('empresa-status').value;
+
+      if (cnpj.length !== 14) {
+        alert('⚠️ CNPJ deve ter 14 dígitos!');
+        return false;
+      }
+
+      if (!nome || !email || !plano || !licenca) {
+        alert('⚠️ Preencha todos os campos obrigatórios!');
+        return false;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('⚠️ Email inválido!');
+        return false;
+      }
+
+      console.log('📤 Enviando dados da empresa:', {
+        cnpj, nome, email, plano, limite, licenca, status
+      });
+
+      fetch('/empresas/cadastrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cnpjServer: cnpj,
+          nomeServer: nome,
+          emailServer: email,
+          planoServer: plano,
+          limiteServer: limite,
+          licencaServer: licenca,
+          statusServer: status
+        })
+      })
+      .then(response => {
+        console.log('📥 Resposta recebida:', response.status);
+        if (!response.ok) {
+          return response.text().then(text => {
+            throw new Error(text || 'Erro ao cadastrar empresa');
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('✅ Empresa cadastrada:', data);
+        alert(`✅ Empresa "${nome}" cadastrada com sucesso!\n\n` +
+              `ID: ${data.insertId}\n` +
+              `Plano: ${plano}\n` +
+              `Limite de usuários: ${limite}\n` +
+              `Validade: ${new Date(licenca).toLocaleDateString('pt-BR')}`);
+        fecharModalEmpresa();
+        
+        setTimeout(atualizarMetricasAdmin, 1000);
+      })
+      .catch(erro => {
+        console.error('❌ Erro ao cadastrar empresa:', erro);
+        
+        if (erro.message.includes('CNPJ já cadastrado') || erro.message.includes('ER_DUP_ENTRY')) {
+          alert('❌ Este CNPJ já está cadastrado no sistema!');
+        } else if (erro.message.includes('ECONNREFUSED')) {
+          alert('❌ Erro de conexão com o servidor. Verifique se o backend está rodando.');
+        } else {
+          alert('❌ Erro ao cadastrar empresa: ' + erro.message);
+        }
+      });
+
+      return false;
+    }
+  </script>
+</body>
 </html>
