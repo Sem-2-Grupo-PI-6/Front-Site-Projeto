@@ -3,9 +3,8 @@ var usuarioModel = require("../models/usuarioModel");
 function autenticar(req, res) {
   const email = req.body.emailServer;
   const senha = req.body.senhaServer;
-  const tipoEsperado = req.body.tipoEsperadoServer; 
 
-  console.log("📧 Tentativa de login:", email, "| Tipo esperado:", tipoEsperado);
+  console.log("📧 Tentativa de login:", email);
 
   if (!email) {
     res.status(400).send("Email está undefined!");
@@ -27,40 +26,10 @@ function autenticar(req, res) {
 
       const usuario = resultadoAutenticar[0];
 
-      if (!usuario.podeAcessar) {
-        console.log("❌ Acesso negado:", usuario.descricaoAcesso);
-        
-        if (usuario.sitacaoLicensa === 'Suspensa') {
-          res.status(403).json({ erro: "Licença da empresa suspensa. Entre em contato com o suporte." });
-        } else if (usuario.sitacaoLicensa === 'Inativa') {
-          res.status(403).json({ erro: "Licença da empresa inativa. Renove sua assinatura." });
-        } else if (!usuario.usuarioAtivo) {
-          res.status(403).json({ erro: "Usuário desativado. Entre em contato com o administrador." });
-        } else {
-          res.status(403).json({ erro: "Acesso negado. Verifique suas credenciais." });
-        }
-        return;
-      }
-
-
-      if (tipoEsperado && usuario.tipoUsuario !== tipoEsperado) {
-        console.log(`❌ Tipo incorreto. Esperado: ${tipoEsperado}, Recebido: ${usuario.tipoUsuario}`);
-        
-        let mensagemErro = "";
-        if (tipoEsperado === 'admin' && usuario.tipoUsuario !== 'admin') {
-          mensagemErro = "Este portal é exclusivo para administradores.";
-        } else if (tipoEsperado === 'empresa' && usuario.tipoUsuario !== 'empresa') {
-          mensagemErro = "Este portal é exclusivo para gestores de empresa.";
-        } else if (tipoEsperado === 'usuario' && usuario.tipoUsuario !== 'usuario') {
-          mensagemErro = "Este portal é exclusivo para usuários.";
-        }
-        
-        res.status(403).json({ erro: mensagemErro });
-        return;
-      }
+    
 
       console.log("✅ Autenticação bem-sucedida!");
-      console.log("👤 Tipo de usuário:", usuario.tipoUsuario);
+
 
 
       usuarioModel.atualizarUltimoAcesso(usuario.idUsuario)
@@ -71,12 +40,9 @@ function autenticar(req, res) {
         idUsuario: usuario.idUsuario,
         email: usuario.email,
         nome: usuario.nome,
-        tipoUsuario: usuario.tipoUsuario,
         idEmpresa: usuario.Empresa_idEmpresa,
         nomeEmpresa: usuario.nomeEmpresa,
         cnpj: usuario.cnpj,
-        tipoPlano: usuario.tipoPlano,
-        limiteUsuarios: usuario.limiteUsuarios,
         descricaoAcesso: usuario.descricaoAcesso
       });
     })

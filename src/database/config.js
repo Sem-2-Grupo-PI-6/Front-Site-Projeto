@@ -14,11 +14,11 @@ function executar(instrucaoSql, parametros = []) {
 
         conexao.connect(function (erro) {
             if (erro) {
-                console.error("❌ Erro ao conectar ao MySQL:", erro);
+                console.error("Erro ao conectar ao MySQL:", erro);
                 reject(erro);
                 return;
             }
-            console.log("✅ Conexão MySQL estabelecida");
+            console.log("Conexão MySQL estabelecida");
         });
 
         const isProcedure = instrucaoSql.trim().toUpperCase().startsWith('CALL');
@@ -27,28 +27,28 @@ function executar(instrucaoSql, parametros = []) {
             conexao.end();
 
             if (erro) {
-                console.error("❌ Erro ao executar query:", erro);
+                console.error("Erro ao executar query:", erro);
                 console.error("SQL:", instrucaoSql);
                 reject(erro);
                 return;
             }
 
             if (!resultados) {
-                console.warn("⚠️ Query não retornou resultados");
+                console.warn("Query não retornou resultados");
                 resolve([]);
                 return;
             }
 
             if (isProcedure) {
                 if (Array.isArray(resultados) && resultados.length > 0 && resultados[0]) {
-                    console.log("✅ PROCEDURE executada com sucesso");
+                    console.log("PROCEDURE executada com sucesso");
                     resolve(resultados[0]);
                 } else {
-                    console.warn("⚠️ PROCEDURE não retornou dados");
+                    console.warn("PROCEDURE não retornou dados");
                     resolve([]);
                 }
             } else {
-                console.log("✅ Query executada com sucesso");
+                console.log("Query executada com sucesso");
                 resolve(resultados);
             }
         });

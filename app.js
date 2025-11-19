@@ -2,8 +2,7 @@
 var ambiente_processo = 'desenvolvimento';
 
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
-// Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
-// A sintaxe do operador ternário é: condição ? valor_se_verdadeiro : valor_se_falso
+
 
 require("dotenv").config({ path: caminho_env });
 
@@ -39,26 +38,26 @@ app.use("/monitoramento", monitoramentoRouter);
 app.use("/empresas", empresaRouter)
 
 process.on('uncaughtException', function (erro) {
-    console.error('❌❌❌ ERRO NÃO TRATADO (uncaughtException) ❌❌❌');
+    console.error('ERRO NÃO TRATADO');
     console.error('Erro:', erro);
     console.error('Stack:', erro.stack);
-    console.error('⚠️ O servidor CONTINUARÁ rodando, mas corrija este erro!');
+    console.error(' O servidor CONTINUARÁ rodando, mas corrija este erro!');
 });
 
 process.on('unhandledRejection', function (motivo, promise) {
-    console.error('❌❌❌ PROMISE REJEITADA NÃO TRATADA (unhandledRejection) ❌❌❌');
+    console.error('PROMISE REJEITADA NÃO TRATADA');
     console.error('Motivo:', motivo);
     console.error('Promise:', promise);
-    console.error('⚠️ O servidor CONTINUARÁ rodando, mas corrija este erro!');
+    console.error('O servidor CONTINUARÁ rodando, mas corrija este erro');
 });
 
 app.use(function (req, res, next) {
-    res.status(404).send('❌ Rota não encontrada: ' + req.url);
+    res.status(404).send('Rota não encontrada:' + req.url);
 });
 
 app.use(function (err, req, res, next) {
-    console.error('❌ Erro capturado pelo middleware:', err);
-    res.status(500).send('❌ Erro interno do servidor');
+    console.error('Erro capturado pelo middleware:', err);
+    res.status(500).send('Erro interno do servidor');
 });
 
 
