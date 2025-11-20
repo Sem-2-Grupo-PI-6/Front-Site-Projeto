@@ -1,7 +1,7 @@
 
 async function atualizarMetricasAdmin() {
   try {
-    const response = await fetch('http://localhost:3333/dashboardAdmin/metricas');
+    const response = await feach('http://localhost:3333/monitoramento/metricas');
     
     if (!response.ok) {
       console.warn('Erro ao buscar métricas do BD (HTTP ' + response.status + ')');
@@ -81,8 +81,8 @@ async function atualizarMetricasAdmin() {
   }
 }
 
-setInterval(atualizarMetricasAdmin, 2000);
+setInterval(atualizarMetricasAdmin, 300000);
 
 document.addEventListener('DOMContentLoaded', function() {
-  setTimeout(atualizarMetricasAdmin, 50000);
+  setTimeout(atualizarMetricasAdmin, 2000);
 });
