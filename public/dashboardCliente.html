@@ -6,7 +6,6 @@
     <title>Evolvere Invest - Dashboard Investidor</title>
     <link rel="stylesheet" href="./css/styleCliente.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="./js/monitoramento.js"></script>
   </head>
   <body>
     <main>
@@ -1402,7 +1401,7 @@
         <div class="filtro-item ${filtro.ativo ? "ativo" : ""}">
           <div class="filtro-info">
             <div class="filtro-header">
-              <span class="filtro-nome">${filtro.nome}</span>
+              <span class="filtro-nome">${filtro.nomeFiltro}</span>
               ${filtro.ativo ? '<span class="badge-ativo">✓ Ativo</span>' : ""}
             </div>
             <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
@@ -1410,15 +1409,15 @@
           <div class="filtro-actions">
             ${
               !filtro.ativo
-                ? `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro.id})" title="Ativar">✓</button>`
+                ? `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro.idfiltroUsuario})" title="Ativar">✓</button>`
                 : ""
             }
             <button class="btn-action btn-editar" onclick="editarFiltro(${
-              filtro.id
+              filtro.idfiltroUsuario
             })" title="Editar">✏️</button>
             ${
               filtro.nome !== "📌 Filtro Padrão"
-                ? `<button class="btn-action btn-deletar" onclick="deletarFiltro(${filtro.id})" title="Excluir">🗑️</button>`
+                ? `<button class="btn-action btn-deletar" onclick="deletarFiltro(${filtro.idfiltroUsuario})" title="Excluir">🗑️</button>`
                 : ""
             }
           </div>
@@ -1450,7 +1449,7 @@
 
       async function editarFiltro(id) {
         const filtros = await carregarFiltros();
-        const filtro = filtros.find((f) => f.id === id);
+        const filtro = filtros.find((f) => f.idfiltroUsuario === id);
 
         if (!filtro) return;
 
@@ -1495,9 +1494,9 @@
           await renderizarFiltrosSalvos();
 
           const filtros = await carregarFiltros();
-          const filtro = filtros.find((f) => f.id === id);
+          const filtro = filtros.find((f) => f.idfiltroUsuario === id);
 
-          mostrarToast(`✓ Filtro "${filtro.nome}" ativado!`);
+          mostrarToast(`✓ Filtro "${filtro.nomeFiltro}" ativado!`);
         } catch (erro) {
           console.error("Erro ao ativar filtro:", erro);
           alert("❌ Erro ao ativar filtro. Tente novamente.");
@@ -1506,7 +1505,7 @@
 
       async function deletarFiltro(id) {
         const filtros = await carregarFiltros();
-        const filtro = filtros.find((f) => f.id === id);
+        const filtro = filtros.find((f) => f.idfiltroUsuario === id);
 
         if (!filtro) return;
 

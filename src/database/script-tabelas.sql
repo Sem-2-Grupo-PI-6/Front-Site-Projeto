@@ -1,206 +1,431 @@
--- Foi utilizado este script para testar as procedures, atualmente está funcionando as procs: SetCadastro, GetLogin.
-
 DROP DATABASE IF EXISTS sixtech;
-CREATE DATABASE sixtech;
-USE sixtech;
 
+create database sixtech;
+use sixtech;
 
-CREATE TABLE zona (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nome VARCHAR(45)
+CREATE TABLE tblSistema (
+    idtblSistema INT PRIMARY KEY AUTO_INCREMENT,
+    filtroPadrao JSON,
+    dtUpdateFiltroSistema TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );
 
-INSERT INTO zona (nome) VALUES 
-('Litoral'),
-('Zona Sul'),
-('Zona Leste'),
-('Zona Oeste'),
-('Zona Norte');
 
-
-CREATE TABLE pib (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  trimestre VARCHAR(10) NOT NULL,
-  ano CHAR(4) NOT NULL,
-  pibGeral DECIMAL(5,2) NOT NULL,
-  idZona INT,
-  FOREIGN KEY (idZona) REFERENCES zona(id)
+CREATE TABLE tblAdmin (
+    idAdmin INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(45),
+    token CHAR(4),
+    dtAdmissao DATE,
+    tblSistema_idtblSistema INT,
+    FOREIGN KEY (tblSistema_idtblSistema) REFERENCES tblSistema(idtblSistema)
 );
 
-CREATE INDEX idx_ano_trimestre ON pib(ano DESC, trimestre DESC);
+-- SELECT * FROM tblInflacao;
 
 
-INSERT INTO pib (trimestre, ano, pibGeral, idZona) VALUES
--- Grande SP
-('1º', '2023', 0.4, 1), ('2º', '2023', -0.1, 1), ('3º', '2023', 0.8, 1), ('4º', '2023', 0.4, 1),
-('1º', '2024', 2.5, 1), ('2º', '2024', 0.3, 1), ('3º', '2024', -0.4, 1), ('4º', '2024', 1.1, 1),
-('1º', '2025', -0.2, 1), ('2º', '2025', 0.5, 1), ('3º', '2025', 0.8, 1), ('4º', '2025', 1.2, 1),
--- Interior
-('1º', '2023', 0.6, 2), ('2º', '2023', 0.2, 2), ('3º', '2023', 1.0, 2), ('4º', '2023', 0.6, 2),
-('1º', '2024', 2.8, 2), ('2º', '2024', 0.5, 2), ('3º', '2024', -0.2, 2), ('4º', '2024', 1.3, 2),
-('1º', '2025', 0.1, 2), ('2º', '2025', 0.7, 2), ('3º', '2025', 1.0, 2), ('4º', '2025', 1.4, 2),
--- Litoral
-('1º', '2023', 0.3, 3), ('2º', '2023', -0.3, 3), ('3º', '2023', 0.6, 3), ('4º', '2023', 0.2, 3),
-('1º', '2024', 2.2, 3), ('2º', '2024', 0.1, 3), ('3º', '2024', -0.6, 3), ('4º', '2024', 0.9, 3),
-('1º', '2025', -0.4, 3), ('2º', '2025', 0.3, 3), ('3º', '2025', 0.6, 3), ('4º', '2025', 1.0, 3);
-
-
-CREATE TABLE pibSetor (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  trimestre VARCHAR(10) NOT NULL,
-  ano CHAR(4) NOT NULL,
-  construcaoCivil DECIMAL(5,2) NOT NULL,
-  servicos DECIMAL(5,2) NOT NULL
+CREATE TABLE tblEmpresa (
+    idEmpresa INT PRIMARY KEY AUTO_INCREMENT,
+    cnpj CHAR(14),
+    nomeFantasia VARCHAR(45),
+    emailCoorportaiva VARCHAR(45),
+    dtLicenca DATE,
+    sitacaoLicensa ENUM('Ativa', 'Inativa', 'Suspensa', 'Cancelada')
 );
 
-CREATE INDEX idx_setor_ano ON pibSetor(ano DESC, trimestre DESC);
 
--- Inserir dados de Construção Civil e Serviços (últimos 12 trimestres)
-INSERT INTO pibSetor (trimestre, ano, construcaoCivil, servicos) VALUES
-('1º', '2023', 2.5, 6.7), ('2º', '2023', 2.1, 6.4), ('3º', '2023', -0.6, 6.3), ('4º', '2023', 1.0, 5.9),
-('1º', '2024', 1.2, 5.6), ('2º', '2024', -0.2, 5.5), ('3º', '2024', -2.0, 5.3), ('4º', '2024', 0.1, 5.2),
-('1º', '2025', -1.2, 4.8), ('2º', '2025', 0.5, 4.7), ('3º', '2025', 0.8, 4.5), ('4º', '2025', 1.5, 4.3);
-
-CREATE TABLE pibRegionalSP (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  ano CHAR(4) NOT NULL,
-  pibSP DECIMAL(5,2) NOT NULL
+CREATE TABLE tblUsuario (
+    idUsuario INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(45),
+    telefone CHAR(11),
+    email VARCHAR(45),
+    senha VARCHAR(16),
+    dtCriacao DATE,
+    filtrosPersonalizados JSON,
+    Empresa_idEmpresa INT,
+    FOREIGN KEY (Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa)
 );
 
-CREATE INDEX idx_ano_pib_sp ON pibRegionalSP(ano DESC);
 
-INSERT INTO pibRegionalSP (ano, pibSP) VALUES
-('2013', 2.8), ('2014', -1.4), ('2015', -4.1), ('2016', -3.0), ('2017', 0.3),
-('2018', 1.5), ('2019', 1.7), ('2020', -3.5), ('2021', 4.7), ('2022', 3.4);
-
-
-CREATE TABLE populacao (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  ano CHAR(4),
-  codigoIbge VARCHAR(45),
-  municipio VARCHAR(45),
-  qtdPopulacao INT,
-  homens INT,
-  mulheres INT,
-  razaoSexo DECIMAL(5,2),
-  idadeMedia DECIMAL(5,2),
-  densidadeDemografico DECIMAL(10,2),
-  idZona INT,
-  FOREIGN KEY (idZona) REFERENCES zona(id)
+CREATE TABLE filtroUsuario (
+    idfiltroUsuario INT PRIMARY KEY AUTO_INCREMENT,
+    tblUsuario_idUsuario INT,
+    tblUsuario_Empresa_idEmpresa INT,
+    nomeFiltro VARCHAR(45),
+    ativo TINYINT(1),
+    config JSON,
+    dtCreateFiltro TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
+    dtUpdateFiltro TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    FOREIGN KEY (tblUsuario_idUsuario) REFERENCES tblUsuario(idUsuario),
+    FOREIGN KEY (tblUsuario_Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa)
 );
 
--- Inserir dados demográficos por zona
-INSERT INTO populacao (ano, codigoIbge, municipio, qtdPopulacao, homens, mulheres, razaoSexo, idadeMedia, densidadeDemografico, idZona) VALUES
-('2024', '3550308', 'São Paulo', 12400000, 5900000, 6500000, 110.2, 32.3, 7142.8, 1),
-('2024', '3509502', 'Campinas', 1220000, 595000, 625000, 105.0, 31.5, 1235.6, 2),
-('2024', '3548500', 'Santos', 433000, 198000, 235000, 118.7, 37.4, 1494.6, 3),
-('2024', '3547809', 'Santo André', 721000, 347000, 374000, 107.8, 33.2, 4089.3, 4),
-('2024', '3509601', 'Itaquaquecetuba', 365000, 180000, 185000, 102.8, 28.5, 4502.5, 5),
-('2024', '3534401', 'Osasco', 699000, 338000, 361000, 106.8, 30.8, 10500.2, 5),
-('2024', '3518800', 'Guarulhos', 1400000, 682000, 718000, 105.3, 29.6, 4389.1, 4),
-('2024', '3548708', 'São Bernardo do Campo', 844000, 408000, 436000, 106.9, 32.1, 2043.5, 3),
-('2024', '3530607', 'Mauá', 477000, 233000, 244000, 104.7, 30.5, 7723.1, 2),
-('2024', '3513009', 'Diadema', 426000, 207000, 219000, 105.8, 31.8, 13846.2, 1);
 
-CREATE TABLE cadastro (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  nome VARCHAR(99),
-  email VARCHAR(99),
-  senha VARCHAR(99),
-  cnpj CHAR(14)
+CREATE TABLE tblLogSistemaAcesso (
+    idLogSistema INT PRIMARY KEY AUTO_INCREMENT,
+    dtAcontecimento DATE,
+    tipoLog VARCHAR(45),
+    descricaoLog VARCHAR(45),
+    Usuario_idUsuario INT,
+    Usuario_Empresa_idEmpresa INT,
+    Admin_idAdmin INT,
+    tblSistema_idtblSistema INT,
+    FOREIGN KEY (Usuario_idUsuario) REFERENCES tblUsuario(idUsuario),
+    FOREIGN KEY (Usuario_Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa),
+    FOREIGN KEY (Admin_idAdmin) REFERENCES tblAdmin(idAdmin),
+    FOREIGN KEY (tblSistema_idtblSistema) REFERENCES tblSistema(idtblSistema)
 );
 
-CREATE TABLE selic (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  taxaSelic DECIMAL(5,2),
-  dataApuracao DATE
+
+CREATE TABLE tblZona (
+    idZona INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(45)
 );
 
-INSERT INTO selic (dataApuracao, taxaSelic) VALUES
-('2024-10-10', 10.75), ('2024-11-07', 11.25), ('2024-12-12', 12.25),
-('2025-01-30', 13.25), ('2025-03-20', 14.25), ('2025-05-08', 14.75),
-('2025-06-19', 15.00), ('2025-10-10', 15.00);
 
-CREATE TABLE inflacao (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  taxaInflacao DECIMAL(5,2),
-  dataApuracao DATE
+CREATE TABLE tblPopulacao (
+    idtblPopulacao INT PRIMARY KEY AUTO_INCREMENT,
+    ano VARCHAR(45),
+    codigoIbge VARCHAR(45),
+    municipio VARCHAR(45),
+    qtdpopulacao INT,
+    homens INT,
+    mulheres INT,
+    razaoSexo FLOAT,
+    idadeMedia FLOAT,
+    densidadeDemo FLOAT,
+    tblZona_idZona INT,
+    FOREIGN KEY (tblZona_idZona) REFERENCES tblZona(idZona)
 );
 
-INSERT INTO inflacao (dataApuracao, taxaInflacao) VALUES
-('2024-10-01', 4.76), ('2024-11-01', 4.87), ('2024-12-01', 4.83),
-('2025-01-01', 4.56), ('2025-02-01', 5.06), ('2025-03-01', 5.48),
-('2025-04-01', 5.53), ('2025-05-01', 5.32), ('2025-06-01', 5.35),
-('2025-07-01', 5.23), ('2025-08-01', 5.13), ('2025-09-01', 5.17);
 
-CREATE TABLE filtrosUsuario (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  id_user INT NOT NULL,
-  nome VARCHAR(100) NOT NULL,
-  ativo BOOLEAN DEFAULT FALSE,
-  config JSON NOT NULL,
-  create_f TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  update_f TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (id_user) REFERENCES cadastro(id)
+CREATE TABLE tblPib (
+    idPib INT PRIMARY KEY AUTO_INCREMENT,
+    trimestre VARCHAR(45),
+    ano CHAR(4),
+    pibGeral DECIMAL(15,2),
+    tblZona_idZona INT,
+    FOREIGN KEY (tblZona_idZona) REFERENCES tblZona(idZona)
 );
 
-CREATE TABLE loginADM (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  email VARCHAR(55),
-  senha VARCHAR(50),
-  token CHAR(4)
+
+CREATE TABLE tblInflacao (
+    idtblInflacao INT PRIMARY KEY AUTO_INCREMENT,
+    valorTaxa FLOAT,
+    dtApuracao DATE
 );
 
-/*
-SELECT 'ZONAS' AS Tabela, COUNT(*) AS Total FROM zona
-UNION ALL SELECT 'PIB GERAL', COUNT(*) FROM pib
-UNION ALL SELECT 'PIB SETORES', COUNT(*) FROM pibSetor
-UNION ALL SELECT 'PIB REGIONAL SP', COUNT(*) FROM pibRegionalSP
-UNION ALL SELECT 'POPULAÇÃO', COUNT(*) FROM populacao
-UNION ALL SELECT 'SELIC', COUNT(*) FROM selic
-UNION ALL SELECT 'INFLAÇÃO', COUNT(*) FROM inflacao;
-*/
 
-select * from cadastro;
-
-DELIMITER $$
-
-CREATE PROCEDURE GetLogin(
-    IN login_email VARCHAR(99),
-    IN login_senha VARCHAR(99)
-)
-BEGIN
-    SELECT
-        ID, 
-        NOME, 
-        EMAIL 
-    FROM CADASTRO 
-    WHERE EMAIL = login_email
-    AND SENHA = login_senha;
-END$$
-
-DELIMITER ;
-
-
-DELIMITER $$
-
-CREATE PROCEDURE SetCadastro(
-    IN cad_nome VARCHAR(99),
-    IN cad_email VARCHAR(99),
-	IN cad_senha VARCHAR(99),
-	IN cad_cnpj CHAR(14)
-)
-BEGIN
-    INSERT INTO cadastro (nome, email, senha, cnpj) VALUES (cad_nome, cad_email, cad_senha, cad_cnpj);
-END$$
-
-DELIMITER ;
-
-, [nome, email, senha, cnpj]
-
-CALL SetCadastro(
-    'Rodrigo Proc',
-    'rodrigoproc@admin.net',
-	'12345678',
-	'44251251000120'
+CREATE TABLE tblSelic (
+    idtblSelic INT PRIMARY KEY AUTO_INCREMENT,
+    valorTaxa FLOAT,
+    dtApuracao DATE
 );
+
+
+CREATE TABLE tblPibSetor (
+    idtblPibSetor INT PRIMARY KEY AUTO_INCREMENT,
+    trimestre VARCHAR(45),
+    ano CHAR(4),
+    construcaoCivil FLOAT,
+    servico FLOAT
+);
+
+
+CREATE TABLE tblPibRegionalSP (
+    idtblPibRegionalSP INT PRIMARY KEY AUTO_INCREMENT,
+    ano CHAR(4),
+    pibSP DECIMAL(5,2)
+);
+
+SELECT * FROM tblPibRegionalSP;
+
+CREATE TABLE tblLogArquivos (
+    idtblLogArquivos INT PRIMARY KEY AUTO_INCREMENT,
+    tipoLog VARCHAR(15),
+    dataHoraLeitura DATETIME DEFAULT CURRENT_TIMESTAMP,
+    descricao VARCHAR(255),
+    tblPibSetor_idtblPibSetor INT,
+    tblPibRegionalSP_idtblPibRegionalSP INT,
+    tblSelic_idtblSelic INT,
+    tblInflacao_idtblInflacao INT,
+    tblPopulacao_idtblPopulacao INT,
+    tblZona_idZona INT,
+    tblPib_idPib INT,
+    FOREIGN KEY (tblPibSetor_idtblPibSetor) REFERENCES tblPibSetor(idtblPibSetor),
+    FOREIGN KEY (tblPibRegionalSP_idtblPibRegionalSP) REFERENCES tblPibRegionalSP(idtblPibRegionalSP),
+    FOREIGN KEY (tblSelic_idtblSelic) REFERENCES tblSelic(idtblSelic),
+    FOREIGN KEY (tblInflacao_idtblInflacao) REFERENCES tblInflacao(idtblInflacao),
+    FOREIGN KEY (tblPopulacao_idtblPopulacao) REFERENCES tblPopulacao(idtblPopulacao),
+    FOREIGN KEY (tblZona_idZona) REFERENCES tblZona(idZona),
+    FOREIGN KEY (tblPib_idPib) REFERENCES tblPib(idPib)
+);
+
+SELECT * FROM tblLogArquivos;
+SELECT * FROM tblPibSetor ORDER BY idtblPibSetor DESC LIMIT 1;
+
+select * FROM tblInflacao;
+select * FROM tblSelic;
+SELECT * FROM tblPibSetor;
+SELECT * FROM tblPibRegionalSP;
+SELECT * FROM tblPib;
+SELECT municipio FROM tblPopulacao;
+
+SELECT * FROM tblPopulacao ORDER BY idtblPopulacao DESC LIMIT 1;
+SELECT count(*) FROM tblPopulacao;
+SELECT *FROM tblPopulacao;
+CREATE INDEX idx_usuario_email ON tblUsuario(email);
+CREATE INDEX idx_usuario_empresa ON tblUsuario(Empresa_idEmpresa);
+CREATE INDEX idx_filtro_usuario ON filtroUsuario(tblUsuario_idUsuario);
+CREATE INDEX idx_filtro_ativo ON filtroUsuario(ativo);
+CREATE INDEX idx_populacao_municipio ON tblPopulacao(municipio);
+CREATE INDEX idx_populacao_ano ON tblPopulacao(ano);
+CREATE INDEX idx_populacao_zona ON tblPopulacao(tblZona_idZona);
+CREATE INDEX idx_empresa_cnpj ON tblEmpresa(cnpj);
+CREATE INDEX idx_log_data ON tblLogSistemaAcesso(dtAcontecimento);
+CREATE INDEX idx_log_usuario ON tblLogSistemaAcesso(Usuario_idUsuario);
+select * FROM tblSelic;
+select * FROM tblSelic;
+CREATE TABLE tblMetricasSistema (
+    idMetrica INT PRIMARY KEY AUTO_INCREMENT,
+    totalRequisicoes INT DEFAULT 0,
+    requisicoesOK INT DEFAULT 0,
+    requisicoesErro INT DEFAULT 0,
+    tempoMedioResposta INT DEFAULT 0,
+    taxaSucesso DECIMAL(5,2) DEFAULT 100.00,
+    taxaErro DECIMAL(5,2) DEFAULT 0.00,
+    dtUltimaSync TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    dtResetMetricas TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE tblErrosSistema (
+    idErro INT PRIMARY KEY AUTO_INCREMENT,
+    tipoErro ENUM('ERRO', 'LENTIDAO') NOT NULL,
+    endpoint VARCHAR(255),
+    mensagem VARCHAR(500),
+    tempoResposta INT,
+    dtOcorrencia TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_tipo_erro (tipoErro),
+    INDEX idx_data_erro (dtOcorrencia)
+);
+
+select * from tblUsuario;
+
+  SELECT trimestre, ano, construcaoCivil
+    FROM tblPibSetor
+    ORDER BY ano DESC, 
+      CASE trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 12;
+    
+     SELECT trimestre, ano, pibGeral
+    FROM tblPib
+    WHERE tblZona_idZona = 1
+    ORDER BY ano DESC, 
+      CASE trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC;
+      
+          SELECT trimestre, ano, servico
+    FROM tblPibSetor
+    ORDER BY ano DESC, 
+      CASE trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 12;
+    
+    INSERT INTO tblAdmin (email, token, dtAdmissao, tblSistema_idtblSistema)
+VALUES
+  ('admin@sixtech.com', 'A1B2', '2024-01-15', 1),
+  ('suporte@sixtech.com', 'C3D4', '2024-03-20', 2);
+
+/* 3. tblEmpresa */
+INSERT INTO tblEmpresa (cnpj, nomeFantasia, emailCoorportaiva, dtLicenca, sitacaoLicensa)
+VALUES
+  ('12345678000111', 'Alpha Dados', 'contato@alphadados.com', '2024-02-01', 'Ativa'),
+  ('55566677000122', 'Beta Insights', 'suporte@betainsights.com', '2024-05-10', 'Ativa'),
+  ('99887766000155', 'Gamma Tech', 'admin@gammatech.com', '2024-06-01', 'Suspensa');
+
+/* 4. tblUsuario */
+INSERT INTO tblUsuario (nome, telefone, email, senha, dtCriacao, filtrosPersonalizados, Empresa_idEmpresa)
+VALUES
+  ('João Silva', '11988887777', 'joao@alphadados.com', 'senha123', '2024-06-10',
+     JSON_ARRAY(JSON_OBJECT('nome','População SP','campos',JSON_ARRAY('municipio','qtdpopulacao'))),
+     1),
+  ('Maria Souza', '11999996666', 'maria@betainsights.com', 'beta2024', '2024-06-12',
+     JSON_ARRAY(JSON_OBJECT('nome','PIB Sudeste','periodo','2023')),
+     2),
+  ('Carlos Lima', '11970001234', 'carlos@gammatech.com', 'gtech#45', '2024-06-15',
+     JSON_ARRAY(JSON_OBJECT('nome','Inflacao Últimos 6','intervalo','6m')),
+     3);
+
+/* 5. tblZona */
+INSERT INTO tblZona (nome)
+VALUES ('Norte'), ('Nordeste'), ('Centro-Oeste'), ('Sudeste'), ('Sul');
+
+/* 6. tblPopulacao (exemplo para alguns municípios) */
+INSERT INTO tblPopulacao (ano, codigoIbge, municipio, qtdpopulacao, homens, mulheres, razaoSexo, idadeMedia, densidadeDemo, tblZona_idZona)
+VALUES
+  ('2023', '3550308', 'São Paulo', 11250000, 5200000, 6050000, 5200000/6050000, 32.5, 7500.00, 4),
+  ('2023', '3304557', 'Rio de Janeiro', 6700000, 3100000, 3600000, 3100000/3600000, 34.2, 5300.00, 4),
+  ('2023', '4205407', 'Florianópolis', 530000, 250000, 280000, 250000/280000, 35.0, 900.00, 5),
+  ('2023', '1302603', 'Manaus', 2250000, 1080000, 1170000, 1080000/1170000, 29.8, 190.00, 1),
+  ('2023', '2927408', 'Salvador', 2900000, 1330000, 1570000, 1330000/1570000, 30.4, 4100.00, 2),
+  ('2022', '3550308', 'São Paulo', 11150000, 5150000, 6000000, 5150000/6000000, 32.3, 7450.00, 4),
+  ('2022', '3304557', 'Rio de Janeiro', 6680000, 3090000, 3590000, 3090000/3590000, 34.0, 5280.00, 4),
+  ('2022', '4205407', 'Florianópolis', 520000, 245000, 275000, 245000/275000, 34.8, 880.00, 5),
+  ('2022', '1302603', 'Manaus', 2235000, 1075000, 1160000, 1075000/1160000, 29.6, 188.00, 1),
+  ('2022', '2927408', 'Salvador', 2885000, 1325000, 1560000, 1325000/1560000, 30.2, 4050.00, 2);
+
+/* 7. tblInflacao (IPCA fictício mês a mês 2024) */
+INSERT INTO tblInflacao (valorTaxa, dtApuracao)
+VALUES
+  (0.42, '2024-01-31'),
+  (0.83, '2024-02-29'),
+  (0.45, '2024-03-31'),
+  (0.61, '2024-04-30'),
+  (0.23, '2024-05-31'),
+  (0.18, '2024-06-30'),
+  (0.42, '2024-07-31'),
+  (0.25, '2024-08-31'),
+  (0.34, '2024-09-30'),
+  (0.29, '2024-10-31');
+
+/* 8. tblSelic (taxa anualizada referência – valores fictícios) */
+INSERT INTO tblSelic (valorTaxa, dtApuracao)
+VALUES
+  (11.75, '2024-01-15'),
+  (11.50, '2024-02-15'),
+  (11.25, '2024-03-15'),
+  (10.75, '2024-04-15'),
+  (10.50, '2024-05-15'),
+  (10.25, '2024-06-15'),
+  (10.00, '2024-07-15'),
+  (9.75, '2024-08-15'),
+  (9.50, '2024-09-15'),
+  (9.25, '2024-10-15');
+
+/* 9. tblPib (PIB trimestral por zona – valores fictícios em milhões) */
+INSERT INTO tblPib (trimestre, ano, pibGeral, tblZona_idZona)
+VALUES
+  ('1º', '2023', 850000.00, 4),
+  ('2º', '2023', 860500.00, 4),
+  ('3º', '2023', 870300.00, 4),
+  ('4º', '2023', 880100.00, 4),
+  ('1º', '2024', 890500.00, 4),
+  ('1º', '2024', 210000.00, 1),
+  ('1º', '2024', 340000.00, 2),
+  ('1º', '2024', 150000.00, 3),
+  ('1º', '2024', 180000.00, 5);
+
+/* 10. tblPibSetor (PIB setorial – valores fictícios) */
+INSERT INTO tblPibSetor (trimestre, ano, construcaoCivil, servico)
+VALUES
+  ('1º', '2023', 12000.50, 450.75),
+  ('2º', '2023', 12150.40, 452.60),
+  ('3º', '2023', 11890.10, 455.80),
+  ('4º', '2023', 12500.90, 460.40),
+  ('1º', '2024', 12780.30, 465100.90),
+  ('2º', '2024', 12950.20, 468500.60);
+
+/* 11. tblPibRegionalSP (PIB SP anual – valores fictícios em bilhões) */
+INSERT INTO tblPibRegionalSP (ano, pibSP)
+VALUES 
+  ('2022', 750.25),
+  ('2023', 770.80),
+  ('2024', 785.40);
+
+/* 12. filtroUsuario (relacionado a usuários) */
+INSERT INTO filtroUsuario (tblUsuario_idUsuario, tblUsuario_Empresa_idEmpresa, nomeFiltro, ativo, config)
+VALUES
+  (1, 1, 'População Grandes Capitais', 1, JSON_OBJECT('ano','2023','minPopulacao',2000000)),
+  (2, 2, 'PIB Construção', 1, JSON_OBJECT('ano','2024','setor','construcaoCivil')),
+  (3, 3, 'Inflacao Mensal', 1, JSON_OBJECT('ultimosMeses',6,'tipo','IPCA'));
+
+drop table filtroUsuario;
+/* 13. tblLogSistemaAcesso */
+INSERT INTO tblLogSistemaAcesso (dtAcontecimento, tipoLog, descricaoLog, Usuario_idUsuario, Usuario_Empresa_idEmpresa, Admin_idAdmin, tblSistema_idtblSistema)
+VALUES
+  ('2024-06-20', 'LOGIN', 'Login efetuado', 1, 1, NULL, 1),
+  ('2024-06-21', 'API_CALL', 'Consulta PIB', 2, 2, NULL, 1),
+  ('2024-06-22', 'CONFIG', 'Admin alterou filtro', NULL, NULL, 1, 1),
+  ('2024-06-23', 'LOGIN_FAIL', 'Senha incorreta', 3, 3, NULL, 2);
+
+/* 14. tblLogArquivos (simulando leituras de arquivos de carga) */
+INSERT INTO tblLogArquivos (tipoLog, descricao, tblPibSetor_idtblPibSetor, tblPibRegionalSP_idtblPibRegionalSP, tblSelic_idtblSelic, tblInflacao_idtblInflacao, tblPopulacao_idtblPopulacao, tblZona_idZona, tblPib_idPib)
+VALUES
+  ('LOAD', 'Carga PIB Setor Q1 2024', 5, NULL, NULL, NULL, NULL, NULL, NULL),
+  ('LOAD', 'Carga Inflacao Abril 2024', NULL, NULL, NULL, 4, NULL, NULL, NULL),
+  ('LOAD', 'Carga População São Paulo 2023', NULL, NULL, NULL, NULL, 1, 4, NULL),
+  ('LOAD', 'Carga PIB Sudeste Q1 2024', NULL, NULL, NULL, NULL, NULL, 4, 5);
+
+/* 15. tblMetricasSistema (estado inicial) */
+INSERT INTO tblMetricasSistema (totalRequisicoes, requisicoesOK, requisicoesErro, tempoMedioResposta, taxaSucesso, taxaErro)
+VALUES
+  (0, 0, 0, 0, 100.00, 0.00),
+  (150, 140, 10, 220, (140/150)*100, (10/150)*100);
+
+/* 16. tblErrosSistema (exemplos) */
+INSERT INTO tblErrosSistema (tipoErro, endpoint, mensagem, tempoResposta)
+VALUES
+  ('ERRO', '/api/v1/pib', 'Falha ao processar parâmetros', 50),
+   ('LENTIDAO', '/api/v1/populacao', 'Tempo de resposta acima do limite (1200ms)', 1200),
+  ('ERRO', '/api/v1/inflacao', 'Timeout na consulta', 3000);
+  
+  
+   SELECT 
+      p.idtblPopulacao,
+      p.municipio,
+      p.qtdPopulacao,
+      p.idadeMedia,
+      p.densidadeDemo,
+      z.nome as zona_nome,
+      z.idZona as tblZona_idZona
+    FROM tblPopulacao p
+    INNER JOIN tblZona z ON p.tblZona_idZona = z.idZona
+    WHERE z.idZona
+    ORDER BY p.ano DESC;
+    
+        SELECT 
+      p.trimestre, 
+      p.ano, 
+      p.pibGeral as valor,
+      z.nome as zona_nome,
+      z.idZona as zona_id
+    FROM tblPib p
+    INNER JOIN tblZona z ON p.idPib = z.idZona
+    ORDER BY p.ano DESC, 
+      CASE p.trimestre
+        WHEN '4º' THEN 4
+        WHEN '3º' THEN 3
+        WHEN '2º' THEN 2
+        WHEN '1º' THEN 1
+      END DESC
+    LIMIT 36;
+    
+    
+        SELECT idfiltroUsuario, nomeFiltro, ativo, CAST(config AS CHAR) as config, dtCreateFiltro, dtUpdateFiltro 
+    FROM filtroUsuario 
+    WHERE tblUsuario_idUsuario = 1
+    ORDER BY ativo DESC, dtCreateFiltro DESC;
+    
+    
+        SELECT idfiltroUsuario, nomeFiltro, ativo, CAST(config AS CHAR) as config, dtCreateFiltro, dtUpdateFiltro 
+    FROM filtroUsuario 
+    WHERE tblUsuario_idUsuario = 2
+    ORDER BY ativo DESC, dtCreateFiltro DESC;
+    
+        UPDATE filtroUsuario 
+    SET ativo = TRUE 
+    WHERE idfiltroUsuario = 2 AND tblUsuario_idUsuario = 2;
+    
+    
+    select * from tblInflacao;

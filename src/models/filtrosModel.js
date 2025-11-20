@@ -5,10 +5,10 @@ function listarFiltros(idUser) {
   console.log("ACESSEI O FILTROS MODEL - function listarFiltros():", idUser);
   
   var instrucaoSql = `
-    SELECT id, nome, ativo, CAST(config AS CHAR) as config, create_f, update_f 
-    FROM filtrosUsuario 
-    WHERE id_user = ${idUser} 
-    ORDER BY ativo DESC, create_f DESC;
+    SELECT idfiltroUsuario, nomeFiltro, ativo, CAST(config AS CHAR) as config, dtCreateFiltro, dtUpdateFiltro 
+    FROM filtroUsuario 
+    WHERE tblUsuario_idUsuario = ${idUser} 
+    ORDER BY ativo DESC, dtCreateFiltro DESC;
   `;
   
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -20,9 +20,9 @@ function buscarFiltroAtivo(idUser) {
   console.log("ACESSEI O FILTROS MODEL - function buscarFiltroAtivo():", idUser);
   
   var instrucaoSql = `
-    SELECT id, nome, ativo, CAST(config AS CHAR) as config 
-    FROM filtrosUsuario 
-    WHERE id_user = ${idUser} AND ativo = TRUE 
+    SELECT idfiltroUsuario, nomeFiltro, ativo, CAST(config AS CHAR) as config 
+    FROM filtroUsuario 
+    WHERE tblUsuario_idUsuario = ${idUser} AND ativo = TRUE 
     LIMIT 1;
   `;
   
@@ -34,11 +34,10 @@ function buscarFiltroAtivo(idUser) {
 function criarFiltro(idUser, nome, config) {
   console.log("ACESSEI O FILTROS MODEL - function criarFiltro():", idUser, nome);
   
-  // Converter config para JSON string
   const configJson = JSON.stringify(config);
   
   var instrucaoSql = `
-    INSERT INTO filtrosUsuario (id_user, nome, config, ativo) 
+    INSERT INTO filtroUsuario (tblUsuario_idUsuario, nomeFiltro, config, ativo) 
     VALUES (${idUser}, '${nome}', '${configJson}', FALSE);
   `;
   
@@ -54,8 +53,8 @@ function atualizarFiltro(id, idUser, nome, config) {
   
   var instrucaoSql = `
     UPDATE filtrosUsuario 
-    SET nome = '${nome}', config = '${configJson}' 
-    WHERE id = ${id} AND id_user = ${idUser};
+    SET nomeFiltro = '${nome}', config = '${configJson}' 
+    WHERE idfiltroUsuario  = ${id} AND tblUsuario_idUsuario = ${idUser};
   `;
   
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -65,24 +64,22 @@ function atualizarFiltro(id, idUser, nome, config) {
 // Ativar filtro (desativa outros do mesmo usuário)
 function ativarFiltro(id, idUser) {
   console.log("ACESSEI O FILTROS MODEL - function ativarFiltro():", id, idUser);
-  
-  // Primeiro desativa todos os filtros do usuário
+
   var instrucaoSql1 = `
-    UPDATE filtrosUsuario 
+    UPDATE filtroUsuario 
     SET ativo = FALSE 
-    WHERE id_user = ${idUser};
+    WHERE tblUsuario_idUsuario = ${idUser};
   `;
   
-  // Depois ativa o filtro selecionado
+
   var instrucaoSql2 = `
-    UPDATE filtrosUsuario 
+    UPDATE filtroUsuario 
     SET ativo = TRUE 
-    WHERE id = ${id} AND id_user = ${idUser};
+    WHERE idfiltroUsuario = ${id} AND tblUsuario_idUsuario = ${idUser};
   `;
   
   console.log("Executando as instruções SQL: \n" + instrucaoSql1 + "\n" + instrucaoSql2);
   
-  // Executar ambas as queries
   return database.executar(instrucaoSql1)
     .then(() => database.executar(instrucaoSql2));
 }
@@ -92,8 +89,8 @@ function deletarFiltro(id, idUser) {
   console.log("ACESSEI O FILTROS MODEL - function deletarFiltro():", id, idUser);
   
   var instrucaoSql = `
-    DELETE FROM filtrosUsuario 
-    WHERE id = ${id} AND id_user = ${idUser};
+    DELETE FROM filtroUsuario 
+    WHERE idfiltroUsuario = ${id} AND tblUsuario_idUsuario = ${idUser};
   `;
   
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
