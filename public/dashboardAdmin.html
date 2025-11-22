@@ -29,7 +29,6 @@
         <h2>Gestão</h2>
         <ul>
           <li><a href="#" class="active">📊 Dashboard</a></li>
-          <li><a href="#">📈 Configurar KPIs</a></li>
         </ul>
         <h2>Sistema</h2>
         <ul>
@@ -41,7 +40,7 @@
       <section class="quick-actions-sidebar">
         <h2>⚡ Ações Rápidas</h2>
         <div class="quick-actions-list">
-          <button class="quick-action-item" onclick="alert('Funcionalidade em desenvolvimento')">
+          <button class="quick-action-item" id="btnNovoUsuario">
             <span class="action-icon">👤</span>
             <span class="action-text">Novo Usuário</span>
           </button>
@@ -183,7 +182,6 @@
 
       <section class="dashboard-content">
         <div class="content-left">
-
           <article class="chart-card full-height">
             <header class="chart-header">
               <div>
@@ -267,7 +265,111 @@
     </section>
   </main>
 
+  <!-- MODAL NOVO USUÁRIO -->
+  <div class="modal-overlay" id="modalNovoUsuario">
+    <div class="modal-container modal-usuario">
+      <div class="modal-header">
+        <div>
+          <h2>👤 Cadastrar Novo Usuário</h2>
+          <p>Adicione um usuário e vincule a uma empresa</p>
+        </div>
+        <button class="btn-close-modal" onclick="fecharModalUsuario()">✕</button>
+      </div>
 
+      <div class="modal-body">
+        <form id="formNovoUsuario" onsubmit="return cadastrarUsuario(event)">
+          <section class="modal-section">
+            <h3 class="section-title">📋 Dados Pessoais</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="usuario-nome">Nome Completo *</label>
+                <input 
+                  type="text" 
+                  id="usuario-nome" 
+                  placeholder="Ex: João Silva"
+                  maxlength="100"
+                  required 
+                />
+              </div>
+              
+              <div class="form-group">
+                <label for="usuario-email">E-mail *</label>
+                <input 
+                  type="email" 
+                  id="usuario-email" 
+                  placeholder="usuario@empresa.com"
+                  maxlength="100"
+                  required 
+                />
+                <small class="form-hint">Será usado para login</small>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="usuario-senha">Senha *</label>
+                <input 
+                  type="password" 
+                  id="usuario-senha" 
+                  placeholder="Mínimo 8 caracteres"
+                  minlength="8"
+                  required 
+                />
+              </div>
+              
+              <div class="form-group">
+                <label for="usuario-confirmar-senha">Confirmar Senha *</label>
+                <input 
+                  type="password" 
+                  id="usuario-confirmar-senha" 
+                  placeholder="Repita a senha"
+                  minlength="8"
+                  required 
+                />
+              </div>
+            </div>
+          </section>
+
+          <section class="modal-section">
+            <h3 class="section-title">🏢 Vínculo Empresarial</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="usuario-empresa">Empresa *</label>
+                <select id="usuario-empresa" required onchange="atualizarResumoUsuario()">
+                  <option value="">Selecione uma empresa...</option>
+                </select>
+                <small class="form-hint">Empresas ativas no sistema</small>
+              </div>
+
+              <div class="form-group">
+                <label for="usuario-tipo">Tipo de Acesso *</label>
+                <select id="usuario-tipo" required onchange="atualizarResumoUsuario()">
+                  <option value="">Selecione...</option>
+                  <option value="Administrador">Administrador</option>
+                  <option value="Usuário">Usuário Padrão</option>
+                  <option value="Visualizador">Visualizador</option>
+                </select>
+              </div>
+            </div>
+          </section>
+
+          <div class="alert alert-info">
+            <strong>ℹ️ Resumo:</strong>
+            <p id="resumo-usuario">Selecione uma empresa e tipo de acesso</p>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" onclick="fecharModalUsuario()">Cancelar</button>
+            <button type="submit" class="btn-primary">💾 Cadastrar Usuário</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NOVA EMPRESA -->
   <div class="modal-overlay" id="modalNovaEmpresa">
     <div class="modal-container modal-empresa">
       <div class="modal-header">
@@ -279,8 +381,7 @@
       </div>
 
       <div class="modal-body">
-        <form id="formNovaEmpresa" onsubmit="return cadastrarEmpresa()">
-
+        <form id="formNovaEmpresa" onsubmit="return cadastrarEmpresa(event)">
           <section class="modal-section">
             <h3 class="section-title">📋 Dados da Empresa</h3>
             
@@ -323,13 +424,11 @@
             </div>
           </section>
 
-
           <div class="alert alert-info">
             <strong>ℹ️ Resumo:</strong>
-            <p id="resumo-plano">Selecione um plano para ver o resumo</p>
+            <p id="resumo-plano">Preencha os dados da empresa</p>
           </div>
 
-   
           <div class="form-actions">
             <button type="button" class="btn-secondary" onclick="fecharModalEmpresa()">Cancelar</button>
             <button type="submit" class="btn-primary">💾 Cadastrar Empresa</button>
@@ -339,47 +438,80 @@
     </div>
   </div>
 
-
   <script>
     let chartUsuarios = null;
     let chartEmpresas = null;
 
-
+    // ========== INICIALIZAÇÃO ==========
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🚀 Iniciando Dashboard Admin...');
 
-      atualizarTimestamp();
-      setInterval(atualizarTimestamp, 60000);
+      try {
+        // Timestamp
+        atualizarTimestamp();
+        setInterval(atualizarTimestamp, 60000);
 
-      atualizarMetricasAdmin();
-      setInterval(atualizarMetricasAdmin, 5000); 
+        // Métricas
+        atualizarMetricasAdmin();
+        setInterval(atualizarMetricasAdmin, 5000);
 
-      inicializarGraficos();
-      
-
-      const btnNovaEmpresa = document.getElementById('btnNovaEmpresa');
-      if (btnNovaEmpresa) {
-        btnNovaEmpresa.addEventListener('click', abrirModalNovaEmpresa);
-      }
-
-      document.getElementById('modalNovaEmpresa')?.addEventListener('click', function(e) {
-        if (e.target === this) fecharModalEmpresa();
-      });
-      
-
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && document.getElementById('modalNovaEmpresa').classList.contains('active')) {
-          fecharModalEmpresa();
+        // Gráficos
+        inicializarGraficos();
+        
+        // Event listeners para botões
+        const btnNovoUsuario = document.getElementById('btnNovoUsuario');
+        if (btnNovoUsuario) {
+          btnNovoUsuario.addEventListener('click', abrirModalNovoUsuario);
+          console.log('✅ Botão Novo Usuário configurado');
         }
-      });
+
+        const btnNovaEmpresa = document.getElementById('btnNovaEmpresa');
+        if (btnNovaEmpresa) {
+          btnNovaEmpresa.addEventListener('click', abrirModalNovaEmpresa);
+          console.log('✅ Botão Nova Empresa configurado');
+        }
+
+        // Fechar modais clicando fora
+        document.getElementById('modalNovoUsuario')?.addEventListener('click', function(e) {
+          if (e.target === this) fecharModalUsuario();
+        });
+
+        document.getElementById('modalNovaEmpresa')?.addEventListener('click', function(e) {
+          if (e.target === this) fecharModalEmpresa();
+        });
+        
+        // Fechar modais com ESC
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            if (document.getElementById('modalNovoUsuario')?.classList.contains('active')) {
+              fecharModalUsuario();
+            }
+            if (document.getElementById('modalNovaEmpresa')?.classList.contains('active')) {
+              fecharModalEmpresa();
+            }
+          }
+        });
+
+        console.log('✅ Dashboard inicializado com sucesso!');
+      } catch (erro) {
+        console.error('❌ Erro na inicialização:', erro);
+      }
     });
 
-
+    // ========== FUNÇÕES GERAIS ==========
+    
     function atualizarTimestamp() {
-      const agora = new Date();
-      const horas = String(agora.getHours()).padStart(2, '0');
-      const minutos = String(agora.getMinutes()).padStart(2, '0');
-      document.getElementById('ultima-atualizacao').textContent = `Hoje, ${horas}:${minutos}`;
+      try {
+        const agora = new Date();
+        const horas = String(agora.getHours()).padStart(2, '0');
+        const minutos = String(agora.getMinutes()).padStart(2, '0');
+        const elemento = document.getElementById('ultima-atualizacao');
+        if (elemento) {
+          elemento.textContent = `Hoje, ${horas}:${minutos}`;
+        }
+      } catch (erro) {
+        console.error('❌ Erro ao atualizar timestamp:', erro);
+      }
     }
 
     function logout() {
@@ -388,7 +520,6 @@
         window.location.href = 'index.html';
       }
     }
-
 
     async function atualizarMetricasAdmin() {
       try {
@@ -400,52 +531,69 @@
         }
         
         const dadosBD = await response.json();
-        console.log('📊 Métricas atualizadas:', dadosBD);
 
-        document.getElementById('metrica-requisicoes').textContent = 
-          dadosBD.totalRequisicoes.toLocaleString('pt-BR');
+        // Atualizar métricas
+        const metricaReq = document.getElementById('metrica-requisicoes');
+        if (metricaReq) {
+          metricaReq.textContent = dadosBD.totalRequisicoes.toLocaleString('pt-BR');
+        }
 
-        document.getElementById('tempo-medio').textContent = 
-          `${dadosBD.tempoMedioResposta}ms/req`;
+        const tempoMedio = document.getElementById('tempo-medio');
+        if (tempoMedio) {
+          tempoMedio.textContent = `${dadosBD.tempoMedioResposta}ms/req`;
+        }
 
-        document.getElementById('metrica-sync').innerHTML = 
-          `${parseFloat(dadosBD.taxaSucesso).toFixed(1)}<span class="unit">%</span>`;
+        const metricaSync = document.getElementById('metrica-sync');
+        if (metricaSync) {
+          metricaSync.innerHTML = `${parseFloat(dadosBD.taxaSucesso).toFixed(1)}<span class="unit">%</span>`;
+        }
         
         const trendSync = document.getElementById('trend-sync');
-        if (dadosBD.taxaSucesso >= 98) {
-          trendSync.className = 'trend positive';
-          trendSync.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
-        } else if (dadosBD.taxaSucesso >= 95) {
-          trendSync.className = 'trend neutral';
-          trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
-        } else {
-          trendSync.className = 'trend negative';
-          trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
+        if (trendSync) {
+          if (dadosBD.taxaSucesso >= 98) {
+            trendSync.className = 'trend positive';
+            trendSync.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
+          } else if (dadosBD.taxaSucesso >= 95) {
+            trendSync.className = 'trend neutral';
+            trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
+          } else {
+            trendSync.className = 'trend negative';
+            trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
+          }
         }
 
         if (dadosBD.dtUltimaSync) {
-          const data = new Date(dadosBD.dtUltimaSync);
-          const horas = String(data.getHours()).padStart(2, '0');
-          const minutos = String(data.getMinutes()).padStart(2, '0');
-          document.getElementById('ultima-sync').textContent = `Sync: ${horas}:${minutos}`;
+          const ultimaSync = document.getElementById('ultima-sync');
+          if (ultimaSync) {
+            const data = new Date(dadosBD.dtUltimaSync);
+            const horas = String(data.getHours()).padStart(2, '0');
+            const minutos = String(data.getMinutes()).padStart(2, '0');
+            ultimaSync.textContent = `Sync: ${horas}:${minutos}`;
+          }
         }
 
-        document.getElementById('metrica-erro').innerHTML = 
-          `${parseFloat(dadosBD.taxaErro).toFixed(1)}<span class="unit">%</span>`;
+        const metricaErro = document.getElementById('metrica-erro');
+        if (metricaErro) {
+          metricaErro.innerHTML = `${parseFloat(dadosBD.taxaErro).toFixed(1)}<span class="unit">%</span>`;
+        }
         
-        document.getElementById('total-erros').textContent = 
-          `${dadosBD.requisicoesErro} erro${dadosBD.requisicoesErro !== 1 ? 's' : ''}`;
+        const totalErros = document.getElementById('total-erros');
+        if (totalErros) {
+          totalErros.textContent = `${dadosBD.requisicoesErro} erro${dadosBD.requisicoesErro !== 1 ? 's' : ''}`;
+        }
         
         const trendErro = document.getElementById('trend-erro');
-        if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === '0.00') {
-          trendErro.className = 'trend positive';
-          trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
-        } else if (dadosBD.taxaErro < 5) {
-          trendErro.className = 'trend neutral';
-          trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
-        } else {
-          trendErro.className = 'trend negative';
-          trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
+        if (trendErro) {
+          if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === '0.00') {
+            trendErro.className = 'trend positive';
+            trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
+          } else if (dadosBD.taxaErro < 5) {
+            trendErro.className = 'trend neutral';
+            trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
+          } else {
+            trendErro.className = 'trend negative';
+            trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
+          }
         }
         
       } catch (erro) {
@@ -454,186 +602,340 @@
     }
 
     function inicializarGraficos() {
-      const defaultOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: "rgba(12, 15, 29, 0.95)",
-            borderColor: "rgba(93, 209, 255, 0.5)",
-            borderWidth: 1,
-            titleColor: "#f7f9ff",
-            bodyColor: "#f7f9ff",
-            padding: 10,
-            cornerRadius: 8,
-            displayColors: true,
-          },
-        },
-        scales: {
-          x: {
-            grid: {
-              color: "rgba(93, 209, 255, 0.08)",
-              drawBorder: false,
+      try {
+        const defaultOptions = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "rgba(12, 15, 29, 0.95)",
+              borderColor: "rgba(93, 209, 255, 0.5)",
+              borderWidth: 1,
+              titleColor: "#f7f9ff",
+              bodyColor: "#f7f9ff",
+              padding: 10,
+              cornerRadius: 8,
+              displayColors: true,
             },
-            ticks: {
-              color: "rgba(247, 249, 255, 0.6)",
-              font: { size: 9, weight: '500' },
-              maxRotation: 0,
-              minRotation: 0,
-            },
-          },
-          y: {
-            grid: {
-              color: "rgba(93, 209, 255, 0.08)",
-              drawBorder: false,
-            },
-            ticks: {
-              color: "rgba(247, 249, 255, 0.6)",
-              font: { size: 9, weight: '500' }
-            },
-          },
-        },
-      };
-
-      chartUsuarios = new Chart(document.getElementById("usuariosChart"), {
-        type: "line",
-        data: {
-          labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-          datasets: [
-            {
-              label: "Novos Usuários",
-              data: [5, 8, 12, 9, 15, 18, 14, 22, 19, 25, 28, 31],
-              borderColor: "#5dd1ff",
-              backgroundColor: "rgba(93, 209, 255, 0.15)",
-              tension: 0.4,
-              fill: true,
-              borderWidth: 3,
-              pointRadius: 4,
-              pointHoverRadius: 6,
-              pointBackgroundColor: "#5dd1ff",
-            },
-            {
-              label: "Total Acumulado",
-              data: [45, 53, 65, 74, 89, 107, 121, 143, 162, 187, 215, 246],
-              borderColor: "#8b5dff",
-              backgroundColor: "rgba(139, 93, 255, 0.1)",
-              tension: 0.4,
-              fill: true,
-              borderWidth: 2.5,
-              pointRadius: 3,
-              pointHoverRadius: 5,
-              pointBackgroundColor: "#8b5dff",
-              yAxisID: 'y1',
-            },
-          ],
-        },
-        options: {
-          ...defaultOptions,
-          layout: {
-            padding: {
-              top: 10,
-              right: 10,
-              bottom: 5,
-              left: 5
-            }
           },
           scales: {
-            x: defaultOptions.scales.x,
-            y: {
-              ...defaultOptions.scales.y,
-              type: 'linear',
-              display: true,
-              position: 'left',
-              title: {
-                display: true,
-                text: 'Novos',
-                color: 'rgba(247, 249, 255, 0.6)',
-                font: { size: 9, weight: '600' },
-              },
-            },
-            y1: {
-              ...defaultOptions.scales.y,
-              type: 'linear',
-              display: true,
-              position: 'right',
-              title: {
-                display: true,
-                text: 'Total',
-                color: 'rgba(247, 249, 255, 0.6)',
-                font: { size: 9, weight: '600' },
-              },
-              grid: {
-                drawOnChartArea: false,
-              },
-            },
-          },
-        },
-      });
-
-
-      chartEmpresas = new Chart(document.getElementById("empresasChart"), {
-        type: "bar",
-        data: {
-          labels: ["Construtora XYZ", "Investimentos ABC", "Fundo Delta", "Imobiliária Sigma", "Capital Omega"],
-          datasets: [
-            {
-              label: "Consultas",
-              data: [1420, 1180, 980, 860, 740],
-              backgroundColor: [
-                "#5dd1ff",
-                "#8b5dff",
-                "#60a5fa",
-                "#7dd3fc",
-                "#c084fc",
-              ],
-              borderRadius: 8,
-              borderSkipped: false,
-            },
-          ],
-        },
-        options: {
-          ...defaultOptions,
-          indexAxis: 'y',
-          layout: {
-            padding: {
-              top: 5,
-              right: 10,
-              bottom: 5,
-              left: 5
-            }
-          },
-          scales: {
-            x: defaultOptions.scales.x,
-            y: {
-              ...defaultOptions.scales.y,
-              grid: {
-                display: false,
-              },
+            x: {
+              grid: { color: "rgba(93, 209, 255, 0.08)", drawBorder: false },
               ticks: {
-                color: "rgba(247, 249, 255, 0.7)",
+                color: "rgba(247, 249, 255, 0.6)",
                 font: { size: 9, weight: '500' },
+                maxRotation: 0,
+                minRotation: 0,
+              },
+            },
+            y: {
+              grid: { color: "rgba(93, 209, 255, 0.08)", drawBorder: false },
+              ticks: {
+                color: "rgba(247, 249, 255, 0.6)",
+                font: { size: 9, weight: '500' }
               },
             },
           },
-        },
-      });
+        };
+
+        const canvasUsuarios = document.getElementById("usuariosChart");
+        if (canvasUsuarios) {
+          chartUsuarios = new Chart(canvasUsuarios, {
+            type: "line",
+            data: {
+              labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+              datasets: [
+                {
+                  label: "Novos Usuários",
+                  data: [5, 8, 12, 9, 15, 18, 14, 22, 19, 25, 28, 31],
+                  borderColor: "#5dd1ff",
+                  backgroundColor: "rgba(93, 209, 255, 0.15)",
+                  tension: 0.4,
+                  fill: true,
+                  borderWidth: 3,
+                  pointRadius: 4,
+                  pointHoverRadius: 6,
+                  pointBackgroundColor: "#5dd1ff",
+                },
+                {
+                  label: "Total Acumulado",
+                  data: [45, 53, 65, 74, 89, 107, 121, 143, 162, 187, 215, 246],
+                  borderColor: "#8b5dff",
+                  backgroundColor: "rgba(139, 93, 255, 0.1)",
+                  tension: 0.4,
+                  fill: true,
+                  borderWidth: 2.5,
+                  pointRadius: 3,
+                  pointHoverRadius: 5,
+                  pointBackgroundColor: "#8b5dff",
+                  yAxisID: 'y1',
+                },
+              ],
+            },
+            options: {
+              ...defaultOptions,
+              layout: { padding: { top: 10, right: 10, bottom: 5, left: 5 } },
+              scales: {
+                x: defaultOptions.scales.x,
+                y: {
+                  ...defaultOptions.scales.y,
+                  type: 'linear',
+                  display: true,
+                  position: 'left',
+                  title: {
+                    display: true,
+                    text: 'Novos',
+                    color: 'rgba(247, 249, 255, 0.6)',
+                    font: { size: 9, weight: '600' },
+                  },
+                },
+                y1: {
+                  ...defaultOptions.scales.y,
+                  type: 'linear',
+                  display: true,
+                  position: 'right',
+                  title: {
+                    display: true,
+                    text: 'Total',
+                    color: 'rgba(247, 249, 255, 0.6)',
+                    font: { size: 9, weight: '600' },
+                  },
+                  grid: { drawOnChartArea: false },
+                },
+              },
+            },
+          });
+        }
+
+        const canvasEmpresas = document.getElementById("empresasChart");
+        if (canvasEmpresas) {
+          chartEmpresas = new Chart(canvasEmpresas, {
+            type: "bar",
+            data: {
+              labels: ["Construtora XYZ", "Investimentos ABC", "Fundo Delta", "Imobiliária Sigma", "Capital Omega"],
+              datasets: [
+                {
+                  label: "Consultas",
+                  data: [1420, 1180, 980, 860, 740],
+                  backgroundColor: ["#5dd1ff", "#8b5dff", "#60a5fa", "#7dd3fc", "#c084fc"],
+                  borderRadius: 8,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: {
+              ...defaultOptions,
+              indexAxis: 'y',
+              layout: { padding: { top: 5, right: 10, bottom: 5, left: 5 } },
+              scales: {
+                x: defaultOptions.scales.x,
+                y: {
+                  ...defaultOptions.scales.y,
+                  grid: { display: false },
+                  ticks: {
+                    color: "rgba(247, 249, 255, 0.7)",
+                    font: { size: 9, weight: '500' },
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        console.log('✅ Gráficos inicializados');
+      } catch (erro) {
+        console.error('❌ Erro ao inicializar gráficos:', erro);
+      }
     }
 
-    function abrirModalNovaEmpresa() {
-      document.getElementById('modalNovaEmpresa').classList.add('active');
-      document.body.style.overflow = 'hidden';
+    // ========== MODAL NOVO USUÁRIO ==========
+    
+    async function abrirModalNovoUsuario() {
+      try {
+        const modal = document.getElementById('modalNovoUsuario');
+        if (modal) {
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          await carregarEmpresas();
+        }
+      } catch (erro) {
+        console.error('❌ Erro ao abrir modal usuário:', erro);
+      }
+    }
 
-      const hoje = new Date();
-      const umAno = new Date(hoje.setFullYear(hoje.getFullYear() + 1));
-      document.getElementById('empresa-licenca').value = umAno.toISOString().split('T')[0];
+    function fecharModalUsuario() {
+      const modal = document.getElementById('modalNovoUsuario');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        const form = document.getElementById('formNovoUsuario');
+        if (form) form.reset();
+        const resumo = document.getElementById('resumo-usuario');
+        if (resumo) resumo.textContent = 'Selecione uma empresa e tipo de acesso';
+      }
+    }
+
+    async function carregarEmpresas() {
+      try {
+        const response = await fetch('http://localhost:3333/empresas/listar');
+        
+        if (!response.ok) {
+          console.warn('⚠️ Erro ao buscar empresas');
+          return;
+        }
+        
+        const empresas = await response.json();
+        const selectEmpresa = document.getElementById('usuario-empresa');
+        
+        if (selectEmpresa) {
+          selectEmpresa.innerHTML = '<option value="">Selecione uma empresa...</option>';
+          
+          empresas
+            .filter(emp => emp.status === 'Ativo')
+            .forEach(empresa => {
+              const option = document.createElement('option');
+              option.value = empresa.idEmpresa;
+              option.textContent = `${empresa.nomeFantasia} (${empresa.cnpj})`;
+              option.dataset.plano = empresa.plano;
+              selectEmpresa.appendChild(option);
+            });
+            
+          console.log('✅ Empresas carregadas:', empresas.length);
+        }
+      } catch (erro) {
+        console.error('❌ Erro ao carregar empresas:', erro);
+        alert('⚠️ Erro ao carregar lista de empresas. Tente novamente.');
+      }
+    }
+
+    function atualizarResumoUsuario() {
+      try {
+        const empresaSelect = document.getElementById('usuario-empresa');
+        const tipoAcesso = document.getElementById('usuario-tipo')?.value;
+        const resumo = document.getElementById('resumo-usuario');
+        
+        if (!resumo) return;
+        
+        if (!empresaSelect?.value || !tipoAcesso) {
+          resumo.textContent = 'Selecione uma empresa e tipo de acesso';
+          return;
+        }
+        
+        const empresaNome = empresaSelect.options[empresaSelect.selectedIndex].text;
+        const plano = empresaSelect.options[empresaSelect.selectedIndex].dataset.plano;
+        
+        const permissoes = {
+          'Administrador': 'Acesso total + gerenciar usuários',
+          'Usuário': 'Acesso completo às consultas',
+          'Visualizador': 'Apenas visualização de relatórios'
+        };
+        
+        resumo.innerHTML = `✅ Usuário tipo <strong>${tipoAcesso}</strong> para <strong>${empresaNome}</strong> (Plano ${plano})<br>` +
+                          `Permissões: ${permissoes[tipoAcesso] || 'Padrão'}`;
+      } catch (erro) {
+        console.error('❌ Erro ao atualizar resumo:', erro);
+      }
+    }
+
+    function cadastrarUsuario(event) {
+      event.preventDefault();
+      
+      try {
+        const nome = document.getElementById('usuario-nome')?.value.trim();
+        const email = document.getElementById('usuario-email')?.value.trim();
+        const senha = document.getElementById('usuario-senha')?.value;
+        const confirmarSenha = document.getElementById('usuario-confirmar-senha')?.value;
+        const empresaId = document.getElementById('usuario-empresa')?.value;
+        const tipoAcesso = document.getElementById('usuario-tipo')?.value;
+
+        if (!nome || !email || !senha || !empresaId || !tipoAcesso) {
+          alert('⚠️ Preencha todos os campos obrigatórios!');
+          return false;
+        }
+
+        if (senha.length < 8) {
+          alert('⚠️ A senha deve ter no mínimo 8 caracteres!');
+          return false;
+        }
+
+        if (senha !== confirmarSenha) {
+          alert('⚠️ As senhas não coincidem!');
+          return false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          alert('⚠️ Email inválido!');
+          return false;
+        }
+
+        console.log('📤 Enviando dados do usuário:', { nome, email, empresaId, tipoAcesso });
+
+        fetch('http://localhost:3333/usuarios/cadastrar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nomeServer: nome,
+            emailServer: email,
+            senhaServer: senha,
+            empresaIdServer: empresaId,
+            tipoAcessoServer: tipoAcesso
+          })
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.text().then(text => {
+              throw new Error(text || 'Erro ao cadastrar usuário');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('✅ Usuário cadastrado:', data);
+          const empresaNome = document.getElementById('usuario-empresa').options[document.getElementById('usuario-empresa').selectedIndex].text;
+          alert(`✅ Usuário "${nome}" cadastrado com sucesso!\n\nID: ${data.insertId}\nEmpresa: ${empresaNome}\nTipo: ${tipoAcesso}\nEmail: ${email}`);
+          fecharModalUsuario();
+          setTimeout(atualizarMetricasAdmin, 1000);
+        })
+        .catch(erro => {
+          console.error('❌ Erro ao cadastrar usuário:', erro);
+          if (erro.message.includes('Email já cadastrado') || erro.message.includes('ER_DUP_ENTRY')) {
+            alert('❌ Este email já está cadastrado no sistema!');
+          } else if (erro.message.includes('ECONNREFUSED')) {
+            alert('❌ Erro de conexão com o servidor. Verifique se o backend está rodando.');
+          } else {
+            alert('❌ Erro ao cadastrar usuário: ' + erro.message);
+          }
+        });
+
+        return false;
+      } catch (erro) {
+        console.error('❌ Erro no cadastro:', erro);
+        return false;
+      }
+    }
+
+    // ========== MODAL NOVA EMPRESA ==========
+
+    function abrirModalNovaEmpresa() {
+      const modal = document.getElementById('modalNovaEmpresa');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     }
 
     function fecharModalEmpresa() {
-      document.getElementById('modalNovaEmpresa').classList.remove('active');
-      document.body.style.overflow = '';
-      document.getElementById('formNovaEmpresa').reset();
-      document.getElementById('resumo-plano').textContent = 'Selecione um plano para ver o resumo';
+      const modal = document.getElementById('modalNovaEmpresa');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        const form = document.getElementById('formNovaEmpresa');
+        if (form) form.reset();
+        const resumo = document.getElementById('resumo-plano');
+        if (resumo) resumo.textContent = 'Preencha os dados da empresa';
+      }
     }
 
     function formatarCNPJ(input) {
@@ -649,109 +951,71 @@
       input.value = valor;
     }
 
-    function atualizarLimiteUsuarios() {
-      const plano = document.getElementById('empresa-plano').value;
-      const inputLimite = document.getElementById('empresa-limite');
-      const resumo = document.getElementById('resumo-plano');
+    function cadastrarEmpresa(event) {
+      event.preventDefault();
       
-      const planos = {
-        'Básico': { 
-          limite: 5, 
-          descricao: '✅ Plano Básico: até 5 usuários simultâneos' 
-        },
-        'Profissional': { 
-          limite: 20, 
-          descricao: '✅ Plano Profissional: até 20 usuários + suporte prioritário' 
-        },
-        'Enterprise': { 
-          limite: 999, 
-          descricao: '✅ Plano Enterprise: usuários ilimitados + suporte dedicado' 
+      try {
+        const cnpj = document.getElementById('empresa-cnpj')?.value.replace(/\D/g, '');
+        const nome = document.getElementById('empresa-nome')?.value.trim();
+        const email = document.getElementById('empresa-email')?.value.trim();
+
+        if (!cnpj || !nome || !email) {
+          alert('⚠️ Preencha todos os campos obrigatórios!');
+          return false;
         }
-      };
-      
-      if (plano && planos[plano]) {
-        inputLimite.value = planos[plano].limite;
-        resumo.textContent = planos[plano].descricao;
-      } else {
-        resumo.textContent = 'Selecione um plano para ver o resumo';
-      }
-    }
 
-    function cadastrarEmpresa() {
-      const cnpj = document.getElementById('empresa-cnpj').value.replace(/\D/g, '');
-      const nome = document.getElementById('empresa-nome').value.trim();
-      const email = document.getElementById('empresa-email').value.trim();
-      const plano = document.getElementById('empresa-plano').value;
-      const limite = parseInt(document.getElementById('empresa-limite').value);
-      const licenca = document.getElementById('empresa-licenca').value;
-      const status = document.getElementById('empresa-status').value;
+        if (cnpj.length !== 14) {
+          alert('⚠️ CNPJ deve ter 14 dígitos!');
+          return false;
+        }
 
-      if (cnpj.length !== 14) {
-        alert('⚠️ CNPJ deve ter 14 dígitos!');
-        return false;
-      }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          alert('⚠️ Email inválido!');
+          return false;
+        }
 
-      if (!nome || !email || !plano || !licenca) {
-        alert('⚠️ Preencha todos os campos obrigatórios!');
-        return false;
-      }
+        console.log('📤 Enviando dados da empresa:', { cnpj, nome, email });
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        alert('⚠️ Email inválido!');
-        return false;
-      }
-
-      console.log('📤 Enviando dados da empresa:', {
-        cnpj, nome, email, plano, limite, licenca, status
-      });
-
-      fetch('/empresas/cadastrar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          cnpjServer: cnpj,
-          nomeServer: nome,
-          emailServer: email,
-          planoServer: plano,
-          limiteServer: limite,
-          licencaServer: licenca,
-          statusServer: status
+        fetch('http://localhost:3333/empresas/cadastrar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            cnpjServer: cnpj,
+            nomeServer: nome,
+            emailServer: email
+          })
         })
-      })
-      .then(response => {
-        console.log('📥 Resposta recebida:', response.status);
-        if (!response.ok) {
-          return response.text().then(text => {
-            throw new Error(text || 'Erro ao cadastrar empresa');
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('✅ Empresa cadastrada:', data);
-        alert(`✅ Empresa "${nome}" cadastrada com sucesso!\n\n` +
-              `ID: ${data.insertId}\n` +
-              `Plano: ${plano}\n` +
-              `Limite de usuários: ${limite}\n` +
-              `Validade: ${new Date(licenca).toLocaleDateString('pt-BR')}`);
-        fecharModalEmpresa();
-        
-        setTimeout(atualizarMetricasAdmin, 1000);
-      })
-      .catch(erro => {
-        console.error('❌ Erro ao cadastrar empresa:', erro);
-        
-        if (erro.message.includes('CNPJ já cadastrado') || erro.message.includes('ER_DUP_ENTRY')) {
-          alert('❌ Este CNPJ já está cadastrado no sistema!');
-        } else if (erro.message.includes('ECONNREFUSED')) {
-          alert('❌ Erro de conexão com o servidor. Verifique se o backend está rodando.');
-        } else {
-          alert('❌ Erro ao cadastrar empresa: ' + erro.message);
-        }
-      });
+        .then(response => {
+          if (!response.ok) {
+            return response.text().then(text => {
+              throw new Error(text || 'Erro ao cadastrar empresa');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('✅ Empresa cadastrada:', data);
+          alert(`✅ Empresa "${nome}" cadastrada com sucesso!\n\nID: ${data.insertId}`);
+          fecharModalEmpresa();
+          setTimeout(atualizarMetricasAdmin, 1000);
+        })
+        .catch(erro => {
+          console.error('❌ Erro ao cadastrar empresa:', erro);
+          if (erro.message.includes('CNPJ já cadastrado') || erro.message.includes('ER_DUP_ENTRY')) {
+            alert('❌ Este CNPJ já está cadastrado no sistema!');
+          } else if (erro.message.includes('ECONNREFUSED')) {
+            alert('❌ Erro de conexão com o servidor. Verifique se o backend está rodando.');
+          } else {
+            alert('❌ Erro ao cadastrar empresa: ' + erro.message);
+          }
+        });
 
-      return false;
+        return false;
+      } catch (erro) {
+        console.error('❌ Erro no cadastro:', erro);
+        return false;
+      }
     }
   </script>
 </body>
