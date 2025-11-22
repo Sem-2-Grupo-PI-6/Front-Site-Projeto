@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="./css/configAdmin.css" />
     <link rel="icon" href="./assets/icon/favicon.png" />
     <script src="./js/monitoramento.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <header class="site-header">
@@ -26,7 +29,9 @@
         <nav>
           <ul class="nav-list">
             <li><a href="dashboardAdmin.html">📊 Dashboard</a></li>
-            <li><a href="configAdmin.html" class="active">⚙️ Configurações</a></li>
+            <li>
+              <a href="configAdmin.html" class="active">⚙️ Configurações</a>
+            </li>
             <li class="divider">|</li>
             <li><a href="#" class="btn-link">Sair</a></li>
           </ul>
@@ -104,7 +109,11 @@
                 <p>Visualize, edite ou remova usuários da plataforma</p>
               </div>
               <div class="card-actions">
-                <input type="search" placeholder="🔍 Buscar usuário..." class="search-input" />
+                <input
+                  type="search"
+                  placeholder="🔍 Buscar usuário..."
+                  class="search-input"
+                />
                 <select class="filter-select">
                   <option value="all">Todos</option>
                   <option value="admin">Administradores</option>
@@ -141,8 +150,12 @@
                     <td>15/01/2024</td>
                     <td>
                       <div class="table-actions">
-                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                        <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
+                        <button class="btn-icon btn-edit" title="Editar">
+                          ✏️
+                        </button>
+                        <button class="btn-icon btn-delete" title="Excluir">
+                          🗑️
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -160,8 +173,12 @@
                     <td>22/02/2024</td>
                     <td>
                       <div class="table-actions">
-                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                        <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
+                        <button class="btn-icon btn-edit" title="Editar">
+                          ✏️
+                        </button>
+                        <button class="btn-icon btn-delete" title="Excluir">
+                          🗑️
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -179,8 +196,12 @@
                     <td>10/03/2024</td>
                     <td>
                       <div class="table-actions">
-                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                        <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
+                        <button class="btn-icon btn-edit" title="Editar">
+                          ✏️
+                        </button>
+                        <button class="btn-icon btn-delete" title="Excluir">
+                          🗑️
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -198,8 +219,12 @@
                     <td>05/04/2024</td>
                     <td>
                       <div class="table-actions">
-                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
-                        <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
+                        <button class="btn-icon btn-edit" title="Editar">
+                          ✏️
+                        </button>
+                        <button class="btn-icon btn-delete" title="Excluir">
+                          🗑️
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -229,22 +254,42 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="create-name">Nome Completo *</label>
-                  <input type="text" id="create-name" placeholder="Ex: João Silva" required />
+                  <input
+                    type="text"
+                    id="create-name"
+                    placeholder="Ex: João Silva"
+                    required
+                  />
                 </div>
                 <div class="form-group">
                   <label for="create-email">Email *</label>
-                  <input type="email" id="create-email" placeholder="usuario@exemplo.com" required />
+                  <input
+                    type="email"
+                    id="create-email"
+                    placeholder="usuario@exemplo.com"
+                    required
+                  />
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label for="create-password">Senha *</label>
-                  <input type="password" id="create-password" placeholder="Mínimo 8 caracteres" required />
+                  <input
+                    type="password"
+                    id="create-password"
+                    placeholder="Mínimo 8 caracteres"
+                    required
+                  />
                 </div>
                 <div class="form-group">
                   <label for="create-confirm">Confirmar Senha *</label>
-                  <input type="password" id="create-confirm" placeholder="Repita a senha" required />
+                  <input
+                    type="password"
+                    id="create-confirm"
+                    placeholder="Repita a senha"
+                    required
+                  />
                 </div>
               </div>
 
@@ -256,26 +301,40 @@
                     <option value="user">Usuário Padrão</option>
                     <option value="admin">Administrador (@admin.net)</option>
                   </select>
-                  <small class="form-hint">Administradores têm acesso total ao sistema</small>
+                  <small class="form-hint"
+                    >Administradores têm acesso total ao sistema</small
+                  >
                 </div>
                 <div class="form-group">
                   <label for="create-company">Empresa (Opcional)</label>
-                  <input type="text" id="create-company" placeholder="Nome da empresa" />
+                  <input
+                    type="text"
+                    id="create-company"
+                    placeholder="Nome da empresa"
+                  />
                 </div>
               </div>
 
               <div class="form-group">
                 <label for="create-cnpj">CNPJ (Opcional)</label>
-                <input type="text" id="create-cnpj" placeholder="00.000.000/0000-00" />
+                <input
+                  type="text"
+                  id="create-cnpj"
+                  placeholder="00.000.000/0000-00"
+                />
               </div>
 
               <div class="alert alert-info">
-                <strong>ℹ️ Atenção:</strong> Usuários administradores devem usar email com domínio <strong>@admin.net</strong>. Usuários padrão podem usar qualquer domínio.
+                <strong>ℹ️ Atenção:</strong> Usuários administradores devem usar
+                email com domínio <strong>@admin.net</strong>. Usuários padrão
+                podem usar qualquer domínio.
               </div>
 
               <div class="form-actions">
                 <button type="button" class="btn-secondary">Cancelar</button>
-                <button type="submit" class="btn-primary">✓ Criar Usuário</button>
+                <button type="submit" class="btn-primary">
+                  ✓ Criar Usuário
+                </button>
               </div>
             </form>
           </div>
@@ -304,11 +363,20 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="profile-name">Nome Completo</label>
-                  <input type="text" id="profile-name" value="Rodrigo Martins" />
+                  <input
+                    type="text"
+                    id="profile-name"
+                    value="Rodrigo Martins"
+                  />
                 </div>
                 <div class="form-group">
                   <label for="profile-email">Email</label>
-                  <input type="email" id="profile-email" value="rodrigo@admin.net" disabled />
+                  <input
+                    type="email"
+                    id="profile-email"
+                    value="rodrigo@admin.net"
+                    disabled
+                  />
                   <small class="form-hint">Email não pode ser alterado</small>
                 </div>
               </div>
@@ -320,24 +388,40 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="profile-current-password">Senha Atual</label>
-                  <input type="password" id="profile-current-password" placeholder="Digite sua senha atual" />
+                  <input
+                    type="password"
+                    id="profile-current-password"
+                    placeholder="Digite sua senha atual"
+                  />
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label for="profile-new-password">Nova Senha</label>
-                  <input type="password" id="profile-new-password" placeholder="Mínimo 8 caracteres" />
+                  <input
+                    type="password"
+                    id="profile-new-password"
+                    placeholder="Mínimo 8 caracteres"
+                  />
                 </div>
                 <div class="form-group">
-                  <label for="profile-confirm-password">Confirmar Nova Senha</label>
-                  <input type="password" id="profile-confirm-password" placeholder="Repita a nova senha" />
+                  <label for="profile-confirm-password"
+                    >Confirmar Nova Senha</label
+                  >
+                  <input
+                    type="password"
+                    id="profile-confirm-password"
+                    placeholder="Repita a nova senha"
+                  />
                 </div>
               </div>
 
               <div class="form-actions">
                 <button type="button" class="btn-secondary">Cancelar</button>
-                <button type="submit" class="btn-primary">💾 Salvar Alterações</button>
+                <button type="submit" class="btn-primary">
+                  💾 Salvar Alterações
+                </button>
               </div>
             </form>
           </div>
@@ -440,8 +524,12 @@
               </div>
 
               <div class="form-actions">
-                <button type="button" class="btn-secondary">Restaurar Padrões</button>
-                <button type="submit" class="btn-primary">💾 Salvar Configurações</button>
+                <button type="button" class="btn-secondary">
+                  Restaurar Padrões
+                </button>
+                <button type="submit" class="btn-primary">
+                  💾 Salvar Configurações
+                </button>
               </div>
             </form>
           </div>
@@ -461,205 +549,225 @@
 </html>
 
 <script>
-    // ===== TABS SYSTEM =====
-document.addEventListener('DOMContentLoaded', function() {
-  const tabButtons = document.querySelectorAll('.tab-btn');
-  const tabContents = document.querySelectorAll('.tab-content');
+  // ===== TABS SYSTEM =====
+  document.addEventListener("DOMContentLoaded", function () {
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabContents = document.querySelectorAll(".tab-content");
 
-  tabButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const targetTab = button.getAttribute('data-tab');
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const targetTab = button.getAttribute("data-tab");
 
-      // Remove active class from all buttons and contents
-      tabButtons.forEach(btn => btn.classList.remove('active'));
-      tabContents.forEach(content => content.classList.remove('active'));
+        // Remove active class from all buttons and contents
+        tabButtons.forEach((btn) => btn.classList.remove("active"));
+        tabContents.forEach((content) => content.classList.remove("active"));
 
-      // Add active class to clicked button and corresponding content
-      button.classList.add('active');
-      document.getElementById(`tab-${targetTab}`).classList.add('active');
+        // Add active class to clicked button and corresponding content
+        button.classList.add("active");
+        document.getElementById(`tab-${targetTab}`).classList.add("active");
+      });
     });
-  });
 
-  // ===== FORM VALIDATIONS =====
-  
-  // Create User Form
-  const createUserForm = document.querySelector('#tab-create form');
-  if (createUserForm) {
-    createUserForm.addEventListener('submit', function(e) {
-      e.preventDefault();
+    // ===== FORM VALIDATIONS =====
 
-      const name = document.getElementById('create-name').value;
-      const email = document.getElementById('create-email').value;
-      const password = document.getElementById('create-password').value;
-      const confirm = document.getElementById('create-confirm').value;
-      const type = document.getElementById('create-type').value;
+    // Create User Form
+    const createUserForm = document.querySelector("#tab-create form");
+    if (createUserForm) {
+      createUserForm.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-      // Validações
-      if (!name || !email || !password || !type) {
-        alert('⚠️ Por favor, preencha todos os campos obrigatórios!');
-        return;
-      }
+        const name = document.getElementById("create-name").value;
+        const email = document.getElementById("create-email").value;
+        const password = document.getElementById("create-password").value;
+        const confirm = document.getElementById("create-confirm").value;
+        const type = document.getElementById("create-type").value;
 
-      if (password.length < 8) {
-        alert('⚠️ A senha deve ter no mínimo 8 caracteres!');
-        return;
-      }
-
-      if (password !== confirm) {
-        alert('⚠️ As senhas não coincidem!');
-        return;
-      }
-
-      // Validação de email admin
-      if (type === 'admin' && !email.endsWith('@admin.net')) {
-        alert('⚠️ Administradores devem usar email com domínio @admin.net!');
-        return;
-      }
-
-      // Simular criação de usuário
-      alert(`✅ Usuário ${name} criado com sucesso!`);
-      createUserForm.reset();
-    });
-  }
-
-  // Profile Form
-  const profileForm = document.querySelector('#tab-profile form');
-  if (profileForm) {
-    profileForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const currentPassword = document.getElementById('profile-current-password').value;
-      const newPassword = document.getElementById('profile-new-password').value;
-      const confirmPassword = document.getElementById('profile-confirm-password').value;
-
-      // Se está alterando senha
-      if (currentPassword || newPassword || confirmPassword) {
-        if (!currentPassword) {
-          alert('⚠️ Digite sua senha atual!');
+        // Validações
+        if (!name || !email || !password || !type) {
+          alert("⚠️ Por favor, preencha todos os campos obrigatórios!");
           return;
         }
 
-        if (newPassword.length < 8) {
-          alert('⚠️ A nova senha deve ter no mínimo 8 caracteres!');
+        if (password.length < 8) {
+          alert("⚠️ A senha deve ter no mínimo 8 caracteres!");
           return;
         }
 
-        if (newPassword !== confirmPassword) {
-          alert('⚠️ As senhas não coincidem!');
+        if (password !== confirm) {
+          alert("⚠️ As senhas não coincidem!");
           return;
         }
-      }
 
-      alert('✅ Perfil atualizado com sucesso!');
-    });
-  }
-
-  // Settings Form
-  const settingsForm = document.querySelector('#tab-settings form');
-  if (settingsForm) {
-    settingsForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('✅ Configurações salvas com sucesso!');
-    });
-  }
-
-  // ===== SEARCH FUNCTIONALITY =====
-  const searchInput = document.querySelector('.search-input');
-  const filterSelect = document.querySelector('.filter-select');
-  const tableRows = document.querySelectorAll('.users-table tbody tr');
-
-  function filterTable() {
-    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
-    const filterType = filterSelect ? filterSelect.value : 'all';
-
-    tableRows.forEach(row => {
-      const name = row.querySelector('.user-info span')?.textContent.toLowerCase() || '';
-      const email = row.querySelectorAll('td')[1]?.textContent.toLowerCase() || '';
-      const type = row.querySelector('.badge')?.textContent.toLowerCase() || '';
-
-      const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
-      const matchesFilter = filterType === 'all' || 
-                           (filterType === 'admin' && type.includes('admin')) ||
-                           (filterType === 'user' && type.includes('usuário'));
-
-      row.style.display = matchesSearch && matchesFilter ? '' : 'none';
-    });
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener('input', filterTable);
-  }
-
-  if (filterSelect) {
-    filterSelect.addEventListener('change', filterTable);
-  }
-
-  // ===== DELETE BUTTON =====
-  const deleteButtons = document.querySelectorAll('.btn-delete');
-  deleteButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      const row = this.closest('tr');
-      const userName = row.querySelector('.user-info span').textContent;
-
-      if (confirm(`⚠️ Tem certeza que deseja excluir o usuário "${userName}"?\n\nEsta ação não pode ser desfeita!`)) {
-        row.remove();
-        alert('✅ Usuário excluído com sucesso!');
-      }
-    });
-  });
-
-  // ===== EDIT BUTTON =====
-  const editButtons = document.querySelectorAll('.btn-edit');
-  editButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      alert('ℹ️ Funcionalidade de edição em desenvolvimento...');
-    });
-  });
-
-  const syncButton = document.querySelector('.btn-sync');
-  if (syncButton) {
-    syncButton.addEventListener('click', function() {
-      this.disabled = true;
-      this.innerHTML = '<span>🔄</span><span>Sincronizando...</span>';
-
-      setTimeout(() => {
-        this.disabled = false;
-        this.innerHTML = '<span>🔄</span><span>Forçar Sincronização Agora</span>';
-        alert('✅ Sincronização concluída com sucesso!');
-      }, 2000);
-    });
-  }
-
-  const typeSelect = document.getElementById('create-type');
-  const emailInput = document.getElementById('create-email');
-
-  if (typeSelect && emailInput) {
-    typeSelect.addEventListener('change', function() {
-      if (this.value === 'admin') {
-        const currentEmail = emailInput.value;
-        if (currentEmail && !currentEmail.includes('@')) {
-          emailInput.value = currentEmail + '@admin.net';
-        } else if (!currentEmail) {
-          emailInput.placeholder = 'usuario@admin.net';
+        // Validação de email admin
+        if (type === "admin" && !email.endsWith("@admin.net")) {
+          alert("⚠️ Administradores devem usar email com domínio @admin.net!");
+          return;
         }
-      } else {
-        emailInput.placeholder = 'usuario@exemplo.com';
-      }
-    });
-  }
 
-  const cancelButtons = document.querySelectorAll('.btn-secondary');
-  cancelButtons.forEach(button => {
-    if (button.textContent.includes('Cancelar')) {
-      button.addEventListener('click', function() {
-        const form = this.closest('form');
-        if (form) {
-          if (confirm('⚠️ Tem certeza que deseja cancelar? Todas as alterações serão perdidas.')) {
-            form.reset();
+        // Simular criação de usuário
+        alert(`✅ Usuário ${name} criado com sucesso!`);
+        createUserForm.reset();
+      });
+    }
+
+    // Profile Form
+    const profileForm = document.querySelector("#tab-profile form");
+    if (profileForm) {
+      profileForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const currentPassword = document.getElementById(
+          "profile-current-password"
+        ).value;
+        const newPassword = document.getElementById(
+          "profile-new-password"
+        ).value;
+        const confirmPassword = document.getElementById(
+          "profile-confirm-password"
+        ).value;
+
+        // Se está alterando senha
+        if (currentPassword || newPassword || confirmPassword) {
+          if (!currentPassword) {
+            alert("⚠️ Digite sua senha atual!");
+            return;
           }
+
+          if (newPassword.length < 8) {
+            alert("⚠️ A nova senha deve ter no mínimo 8 caracteres!");
+            return;
+          }
+
+          if (newPassword !== confirmPassword) {
+            alert("⚠️ As senhas não coincidem!");
+            return;
+          }
+        }
+
+        alert("✅ Perfil atualizado com sucesso!");
+      });
+    }
+
+    // Settings Form
+    const settingsForm = document.querySelector("#tab-settings form");
+    if (settingsForm) {
+      settingsForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        alert("✅ Configurações salvas com sucesso!");
+      });
+    }
+
+    // ===== SEARCH FUNCTIONALITY =====
+    const searchInput = document.querySelector(".search-input");
+    const filterSelect = document.querySelector(".filter-select");
+    const tableRows = document.querySelectorAll(".users-table tbody tr");
+
+    function filterTable() {
+      const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+      const filterType = filterSelect ? filterSelect.value : "all";
+
+      tableRows.forEach((row) => {
+        const name =
+          row.querySelector(".user-info span")?.textContent.toLowerCase() || "";
+        const email =
+          row.querySelectorAll("td")[1]?.textContent.toLowerCase() || "";
+        const type =
+          row.querySelector(".badge")?.textContent.toLowerCase() || "";
+
+        const matchesSearch =
+          name.includes(searchTerm) || email.includes(searchTerm);
+        const matchesFilter =
+          filterType === "all" ||
+          (filterType === "admin" && type.includes("admin")) ||
+          (filterType === "user" && type.includes("usuário"));
+
+        row.style.display = matchesSearch && matchesFilter ? "" : "none";
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener("input", filterTable);
+    }
+
+    if (filterSelect) {
+      filterSelect.addEventListener("change", filterTable);
+    }
+
+    // ===== DELETE BUTTON =====
+    const deleteButtons = document.querySelectorAll(".btn-delete");
+    deleteButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const row = this.closest("tr");
+        const userName = row.querySelector(".user-info span").textContent;
+
+        if (
+          confirm(
+            `⚠️ Tem certeza que deseja excluir o usuário "${userName}"?\n\nEsta ação não pode ser desfeita!`
+          )
+        ) {
+          row.remove();
+          alert("✅ Usuário excluído com sucesso!");
+        }
+      });
+    });
+
+    // ===== EDIT BUTTON =====
+    const editButtons = document.querySelectorAll(".btn-edit");
+    editButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        alert("ℹ️ Funcionalidade de edição em desenvolvimento...");
+      });
+    });
+
+    const syncButton = document.querySelector(".btn-sync");
+    if (syncButton) {
+      syncButton.addEventListener("click", function () {
+        this.disabled = true;
+        this.innerHTML = "<span>🔄</span><span>Sincronizando...</span>";
+
+        setTimeout(() => {
+          this.disabled = false;
+          this.innerHTML =
+            "<span>🔄</span><span>Forçar Sincronização Agora</span>";
+          alert("✅ Sincronização concluída com sucesso!");
+        }, 2000);
+      });
+    }
+
+    const typeSelect = document.getElementById("create-type");
+    const emailInput = document.getElementById("create-email");
+
+    if (typeSelect && emailInput) {
+      typeSelect.addEventListener("change", function () {
+        if (this.value === "admin") {
+          const currentEmail = emailInput.value;
+          if (currentEmail && !currentEmail.includes("@")) {
+            emailInput.value = currentEmail + "@admin.net";
+          } else if (!currentEmail) {
+            emailInput.placeholder = "usuario@admin.net";
+          }
+        } else {
+          emailInput.placeholder = "usuario@exemplo.com";
         }
       });
     }
+
+    const cancelButtons = document.querySelectorAll(".btn-secondary");
+    cancelButtons.forEach((button) => {
+      if (button.textContent.includes("Cancelar")) {
+        button.addEventListener("click", function () {
+          const form = this.closest("form");
+          if (form) {
+            if (
+              confirm(
+                "⚠️ Tem certeza que deseja cancelar? Todas as alterações serão perdidas."
+              )
+            ) {
+              form.reset();
+            }
+          }
+        });
+      }
+    });
   });
-});
 </script>

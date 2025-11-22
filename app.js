@@ -20,6 +20,7 @@ var filtrosRouter = require("./src/routes/filtros");
 var dadosRouter = require("./src/routes/dados");
 var monitoramentoRouter = require("./src/routes/monitoramento");
 var empresaRouter = require("./src/routes/empresa");
+var adminRouter = require("./src/routes/admin");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -34,6 +35,7 @@ app.use("/filtros", filtrosRouter);
 app.use("/dados", dadosRouter);
 app.use("/monitoramento", monitoramentoRouter);
 app.use("/empresa", empresaRouter);
+app.use("/admin", adminRouter);
 
 process.on("uncaughtException", function (erro) {
   console.error("ERRO NÃO TRATADO");
