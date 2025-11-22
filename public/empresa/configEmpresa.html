@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evolvere Invest - Configurações Admin</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/configEmpresa.css" />
+    <link rel="icon" href="../assets/icon/favicon.png" />
+    <script src="../js/monitoramento.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="logo">
+          <a href="index.html">
+            <img src="../imgs/Logo-projeto.png" alt="Evolvere Logo" />
+          </a>
+          <div class="brand-txt">
+            <h1>Evolvere Invest</h1>
+            <small>Painel Administrativo</small>
+          </div>
+        </div>
+
+        <nav>
+          <ul class="nav-list">
+            <li><a href="../dashboardCliente.html">📊 Dashboard</a></li>
+            <li class="divider">|</li>
+            <li><a href="#" class="btn-link">Sair</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container main-content">
+      <!-- TABS DE CONFIGURAÇÃO -->
+      <section class="config-tabs">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="users">
+            <span class="tab-icon">👥</span>
+            <span>Gerenciar Usuários</span>
+          </button>
+          <button class="tab-btn" data-tab="create">
+            <span class="tab-icon">➕</span>
+            <span>Criar Usuário</span>
+          </button>
+          <button class="tab-btn" data-tab="profile">
+            <span class="tab-icon">💻</span>
+            <span>Minha empresa</span>
+          </button>
+        </div>
+
+        <!-- TAB 1: GERENCIAR USUÁRIOS -->
+        <div class="tab-content active" id="tab-users">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>👥 Gerenciar Usuários</h2>
+                <p>Visualize, edite ou remova usuários da plataforma</p>
+              </div>
+              <div class="card-actions">
+                <input type="search" placeholder="🔍 Buscar usuário..." class="search-input" />
+                <select class="filter-select">
+                  <option value="all">Todos</option>
+                  <option value="admin">Administradores</option>
+                  <option value="user">Usuários Padrão</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="users-table-wrapper">
+              <table class="users-table">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Tipo</th>
+                    <th>Empresa</th>
+                    <th>Status</th>
+                    <th>Cadastro</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="user-info">
+                        <div class="user-avatar">RM</div>
+                        <span>Rodrigo Martins</span>
+                      </div>
+                    </td>
+                    <td>rodrigo@admin.net</td>
+                    <td><span class="badge badge-admin">Admin</span></td>
+                    <td>Evolvere Invest</td>
+                    <td><span class="status-dot active"></span> Ativo</td>
+                    <td>15/01/2024</td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
+                        <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-info">
+                        <div class="user-avatar">JS</div>
+                        <span>Julia Santos</span>
+                      </div>
+                    </td>
+                    <td>julia.santos@construtoraabc.com</td>
+                    <td><span class="badge badge-user">Usuário</span></td>
+                    <td>Construtora ABC</td>
+                    <td><span class="status-dot active"></span> Ativo</td>
+                    <td>22/02/2024</td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
+                        <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-info">
+                        <div class="user-avatar">CM</div>
+                        <span>Carlos Mendes</span>
+                      </div>
+                    </td>
+                    <td>carlos@investimentos.com</td>
+                    <td><span class="badge badge-user">Usuário</span></td>
+                    <td>Investimentos Delta</td>
+                    <td><span class="status-dot active"></span> Ativo</td>
+                    <td>10/03/2024</td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
+                        <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-info">
+                        <div class="user-avatar">AP</div>
+                        <span>Ana Paula Silva</span>
+                      </div>
+                    </td>
+                    <td>ana.paula@fundosigma.com</td>
+                    <td><span class="badge badge-user">Usuário</span></td>
+                    <td>Fundo Sigma</td>
+                    <td><span class="status-dot inactive"></span> Inativo</td>
+                    <td>05/04/2024</td>
+                    <td>
+                      <div class="table-actions">
+                        <button class="btn-icon btn-edit" title="Editar">✏️</button>
+                        <button class="btn-icon btn-delete" title="Excluir">🗑️</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination">
+              <button class="btn-pagination">← Anterior</button>
+              <span class="pagination-info">Página 1 de 10 • 127 usuários</span>
+              <button class="btn-pagination">Próximo →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: CRIAR USUÁRIO -->
+        <div class="tab-content" id="tab-create">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>➕ Criar Novo Usuário</h2>
+                <p>Adicione funcionários da sua empresa</p>
+              </div>
+            </div>
+
+            <form class="config-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="create-name">Nome Completo *</label>
+                  <input type="text" id="create-name" placeholder="Ex: João Silva" required />
+                </div>
+                <div class="form-group">
+                  <label for="create-email">Email *</label>
+                  <input type="email" id="create-email" placeholder="usuario@exemplo.com" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="create-password">Senha *</label>
+                  <input type="password" id="create-password" placeholder="Mínimo 8 caracteres" required />
+                </div>
+                <div class="form-group">
+                  <label for="create-confirm">Confirmar Senha *</label>
+                  <input type="password" id="create-confirm" placeholder="Repita a senha" required />
+                </div>
+              </div>
+
+              <div class="alert alert-info">
+                <strong>ℹ️ Atenção:</strong> Funcionários devem usar email com domínio da sua empresa. Exemplo: <strong>@evolvere.net</strong>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn-secondary">Cancelar</button>
+                <button type="submit" class="btn-primary">✓ Criar Usuário</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 3: MINHA EMPRESA -->
+        <div class="tab-content" id="tab-profile">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2>💻 Minha empresa</h2>
+                <p>Gerencie as informações da sua empresa</p>
+              </div>
+            </div>
+
+            <form class="config-form">
+              <div class="profile-header">
+                <div class="profile-avatar-large">EV</div>
+                <div class="profile-info">
+                  <h3>Evolvere Invest</h3>
+                  <p>vitor.gomes@evolvere.net</p>
+                  <span class="badge badge-admin">Administrador Master</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-name">Nome Fantasia</label>
+                  <input type="text" id="profile-name" value="Evolvere Invest" />
+                </div>
+                <div class="form-group">
+                  <label for="profile-email">Email</label>
+                  <input type="email" id="profile-email" value="vitor.gomes@evolvere.net" disabled />
+                  <small class="form-hint">Email não pode ser alterado</small>
+                </div>
+              </div>
+
+              <div class="form-divider">
+                <span>Alterar Senha</span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-current-password">Senha Atual</label>
+                  <input type="password" id="profile-current-password" placeholder="Digite sua senha atual" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="profile-new-password">Nova Senha</label>
+                  <input type="password" id="profile-new-password" placeholder="Mínimo 8 caracteres" />
+                </div>
+                <div class="form-group">
+                  <label for="profile-confirm-password">Confirmar Nova Senha</label>
+                  <input type="password" id="profile-confirm-password" placeholder="Repita a nova senha" />
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn-secondary">Cancelar</button>
+                <button type="submit" class="btn-primary">💾 Salvar Alterações</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>&copy; 2025 Evolvere Invest — Painel Administrativo</p>
+        <p>Contato: admin@evolvereinvest.net</p>
+      </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const targetTab = button.getAttribute('data-tab');
+
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          tabContents.forEach(content => content.classList.remove('active'));
+
+          button.classList.add('active');
+          document.getElementById(`tab-${targetTab}`).classList.add('active');
+        });
+      });
+
+      const createUserForm = document.querySelector('#tab-create form');
+      if (createUserForm) {
+        createUserForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+
+          const name = document.getElementById('create-name').value;
+          const email = document.getElementById('create-email').value;
+          const password = document.getElementById('create-password').value;
+          const confirm = document.getElementById('create-confirm').value;
+
+          if (!name || !email || !password) {
+            alert('⚠️ Por favor, preencha todos os campos obrigatórios!');
+            return;
+          }
+
+          if (password.length < 8) {
+            alert('⚠️ A senha deve ter no mínimo 8 caracteres!');
+            return;
+          }
+
+          if (password !== confirm) {
+            alert('⚠️ As senhas não coincidem!');
+            return;
+          }
+
+          alert(`✅ Usuário ${name} criado com sucesso!`);
+          createUserForm.reset();
+        });
+      }
+
+      const profileForm = document.querySelector('#tab-profile form');
+      if (profileForm) {
+        profileForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+
+          const currentPassword = document.getElementById('profile-current-password').value;
+          const newPassword = document.getElementById('profile-new-password').value;
+          const confirmPassword = document.getElementById('profile-confirm-password').value;
+
+          if (currentPassword || newPassword || confirmPassword) {
+            if (!currentPassword) {
+              alert('⚠️ Digite sua senha atual!');
+              return;
+            }
+
+            if (newPassword.length < 8) {
+              alert('⚠️ A nova senha deve ter no mínimo 8 caracteres!');
+              return;
+            }
+
+            if (newPassword !== confirmPassword) {
+              alert('⚠️ As senhas não coincidem!');
+              return;
+            }
+          }
+
+          alert('✅ Perfil atualizado com sucesso!');
+        });
+      }
+
+      const searchInput = document.querySelector('.search-input');
+      const filterSelect = document.querySelector('.filter-select');
+      const tableRows = document.querySelectorAll('.users-table tbody tr');
+
+      function filterTable() {
+        const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+        const filterType = filterSelect ? filterSelect.value : 'all';
+
+        tableRows.forEach(row => {
+          const name = row.querySelector('.user-info span')?.textContent.toLowerCase() || '';
+          const email = row.querySelectorAll('td')[1]?.textContent.toLowerCase() || '';
+          const type = row.querySelector('.badge')?.textContent.toLowerCase() || '';
+
+          const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
+          const matchesFilter = filterType === 'all' || 
+                               (filterType === 'admin' && type.includes('admin')) ||
+                               (filterType === 'user' && type.includes('usuário'));
+
+          row.style.display = matchesSearch && matchesFilter ? '' : 'none';
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('input', filterTable);
+      }
+
+      if (filterSelect) {
+        filterSelect.addEventListener('change', filterTable);
+      }
+
+      const deleteButtons = document.querySelectorAll('.btn-delete');
+      deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const row = this.closest('tr');
+          const userName = row.querySelector('.user-info span').textContent;
+
+          if (confirm(`⚠️ Tem certeza que deseja excluir o usuário "${userName}"?\n\nEsta ação não pode ser desfeita!`)) {
+            row.remove();
+            alert('✅ Usuário excluído com sucesso!');
+          }
+        });
+      });
+
+      const editButtons = document.querySelectorAll('.btn-edit');
+      editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          alert('ℹ️ Funcionalidade de edição em desenvolvimento...');
+        });
+      });
+
+      const cancelButtons = document.querySelectorAll('.btn-secondary');
+      cancelButtons.forEach(button => {
+        if (button.textContent.includes('Cancelar')) {
+          button.addEventListener('click', function() {
+            const form = this.closest('form');
+            if (form && confirm('⚠️ Tem certeza que deseja cancelar? Todas as alterações serão perdidas.')) {
+              form.reset();
+            }
+          });
+        }
+      });
+    });
+    </script>
+  </body>
+</html>

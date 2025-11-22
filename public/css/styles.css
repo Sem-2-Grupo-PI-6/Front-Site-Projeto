@@ -39,7 +39,7 @@ body {
   padding: 0 20px;
 }
 
-/* ===== HEADER MELHORADO ===== */
+
 header.site-header {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
   color: white;
