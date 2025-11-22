@@ -84,7 +84,6 @@ function obterDadosUsuario(idUsuario) {
       u.telefone,
       u.dtCriacao,
       u.receberNotificacao,
-      u.dtUltimoAcesso,
       e.idEmpresa,
       e.nomeFantasia,
       e.cnpj
@@ -96,6 +95,66 @@ function obterDadosUsuario(idUsuario) {
   console.log("Executando SQL:\n", instrucaoSql);
   return database.executar(instrucaoSql);
 }
+function obterSlack(idUsuario) {
+  var instrucaoSql = `
+    SELECT 
+      u.fkSlack,
+      s.*
+    FROM tblUsuario u
+    LEFT JOIN tblSlack s ON u.fkSlack = s.idSlack
+    WHERE u.idUsuario = ${idUsuario};
+  `;
+  
+  return database.executar(instrucaoSql);
+}
+
+function criarSlack(idUsuario, maiorPopulacao, aumentoSelic, crescimentoPib, 
+                    alertaError, alertaWarning, alertaInfo) {
+  var instrucaoSql = `
+    INSERT INTO tblSlack (maiorPopulacao, aumentoSelic, crescimentoPib, 
+                          alertaError, alertaWarning, alertaInfo)
+    VALUES (${maiorPopulacao}, ${aumentoSelic}, ${crescimentoPib},
+            ${alertaError}, ${alertaWarning}, ${alertaInfo});
+  `;
+  
+  return database.executar(instrucaoSql).then(resultado => {
+    const idSlack = resultado.insertId;
+
+    const updateSql = `
+      UPDATE tblUsuario 
+      SET fkSlack = ${idSlack}
+      WHERE idUsuario = ${idUsuario};
+    `;
+    
+    return database.executar(updateSql).then(() => resultado);
+  });
+}
+
+function atualizarSlack(idSlack, maiorPopulacao, aumentoSelic, crescimentoPib,
+                        alertaError, alertaWarning, alertaInfo) {
+  var instrucaoSql = `
+    UPDATE tblSlack
+    SET maiorPopulacao = ${maiorPopulacao},
+        aumentoSelic = ${aumentoSelic},
+        crescimentoPib = ${crescimentoPib},
+        alertaError = ${alertaError},
+        alertaWarning = ${alertaWarning},
+        alertaInfo = ${alertaInfo}
+    WHERE idSlack = ${idSlack};
+  `;
+  
+  return database.executar(instrucaoSql);
+}
+
+function desativarSlack(idUsuario) {
+  var instrucaoSql = `
+    UPDATE tblUsuario
+    SET fkSlack = NULL
+    WHERE idUsuario = ${idUsuario};
+  `;
+  
+  return database.executar(instrucaoSql);
+}
 
 module.exports = {
   autenticar,
@@ -104,5 +163,9 @@ module.exports = {
   atualizarPerfil,
   alterarSenha,
   atualizarPreferencias,
-  obterDadosUsuario
+  obterDadosUsuario,
+  obterSlack,
+  criarSlack,
+  atualizarSlack,
+  desativarSlack
 };

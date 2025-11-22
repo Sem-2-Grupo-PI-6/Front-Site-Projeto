@@ -27,4 +27,21 @@ router.put("/atualizarPreferencias", function (req, res) {
     usuarioController.atualizarPreferencias(req, res);
 });
 
+
+router.get("/slack/:idUsuario", function (req, res) {
+    usuarioController.obterConfiguracaoSlack(req, res);
+});
+
+router.post("/slack/criar", function (req, res) {
+    usuarioController.criarConfiguracaoSlack(req, res);
+});
+
+router.put("/slack/atualizar/:idSlack", function (req, res) {
+    usuarioController.atualizarConfiguracaoSlack(req, res);
+});
+
+router.put("/slack/desativar/:idUsuario", function (req, res) {
+    usuarioController.desativarSlack(req, res);
+});
+
 module.exports = router;

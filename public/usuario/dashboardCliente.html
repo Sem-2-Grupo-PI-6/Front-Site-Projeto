@@ -1399,15 +1399,15 @@
             }
 
             return `
-        <div class="filtro-item ${filtro.ativo ? "ativo" : ""}">
-          <div class="filtro-info">
-            <div class="filtro-header">
-              <span class="filtro-nome">${filtro.nomeFiltro}</span>
-              ${filtro.ativo ? '<span class="badge-ativo">✓ Ativo</span>' : ""}
-            </div>
-            <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
-          </div>
-          <div class="filtro-actions">
+              <div class="filtro-item ${filtro.ativo ? "ativo" : ""}">
+                <div class="filtro-info">
+                  <div class="filtro-header">
+                    <span class="filtro-nome">${filtro.nomeFiltro}</span>
+                    ${filtro.ativo ? '<span class="badge-ativo">✓ Ativo</span>' : ""}
+                  </div>
+                  <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
+                </div>
+                <div class="filtro-actions">
             ${
               !filtro.ativo
                 ? `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro.idfiltroUsuario})" title="Ativar">✓</button>`

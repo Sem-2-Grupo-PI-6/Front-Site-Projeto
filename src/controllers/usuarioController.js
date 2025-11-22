@@ -196,11 +196,84 @@ function atualizarPreferencias(req, res) {
     });
 }
 
+function obterConfiguracaoSlack(req, res) {
+  const idUsuario = req.params.idUsuario;
+
+  usuarioModel
+    .obterSlack(idUsuario)
+    .then(resultado => {
+      if (resultado.length === 0) {
+        res.status(204).send();
+        return;
+      }
+      res.json(resultado[0]);
+    })
+    .catch(erro => {
+      console.error('Erro ao obter Slack:', erro);
+      res.status(500).json({ erro:'Erro ao buscar configuração Slack' });
+    });
+}
+
+function criarConfiguracaoSlack(req, res) {
+  const { idUsuarioServer, maiorPopulacaoServer, aumentoSelicServer, 
+          crescimentoPibServer, alertaErrorServer, alertaWarningServer, 
+          alertaInfoServer } = req.body;
+
+  usuarioModel
+    .criarSlack(idUsuarioServer, maiorPopulacaoServer, aumentoSelicServer,
+                crescimentoPibServer, alertaErrorServer, alertaWarningServer, alertaInfoServer)
+    .then(resultado => {
+      console.log('Slack criado!');
+      res.json(resultado);
+    })
+    .catch(erro => {
+      console.error('Erro ao criar Slack:', erro);
+      res.status(500).json({ erro: 'Erro ao criar configuração Slack' });
+    });
+}
+
+function atualizarConfiguracaoSlack(req, res) {
+  const idSlack = req.params.idSlack;
+  const { maiorPopulacaoServer, aumentoSelicServer, crescimentoPibServer,
+          alertaErrorServer, alertaWarningServer, alertaInfoServer } = req.body;
+
+  usuarioModel
+    .atualizarSlack(idSlack, maiorPopulacaoServer, aumentoSelicServer,
+                    crescimentoPibServer, alertaErrorServer, alertaWarningServer, alertaInfoServer)
+    .then(resultado => {
+      console.log('Slack atualizado!');
+      res.json({ mensagem: 'Configuração atualizada com sucesso!' });
+    })
+    .catch(erro => {
+      console.error('Erro ao atualizar Slack:', erro);
+      res.status(500).json({ erro: 'Erro ao atualizar configuração Slack' });
+    });
+}
+
+function desativarSlack(req, res) {
+  const idUsuario = req.params.idUsuario;
+
+  usuarioModel
+    .desativarSlack(idUsuario)
+    .then(resultado => {
+      console.log('Slack desativado!');
+      res.json({ mensagem: 'Slack desativado com sucesso!' });
+    })
+    .catch(erro => {
+      console.error('Erro ao desativar Slack:', erro);
+      res.status(500).json({ erro: 'Erro ao desativar Slack' });
+    });
+}
+
 module.exports = {
   autenticar,
   cadastrar,
   obterDados,
   atualizarPerfil,
   alterarSenha,
-  atualizarPreferencias
+  atualizarPreferencias,
+  obterConfiguracaoSlack,
+  criarConfiguracaoSlack,
+  atualizarConfiguracaoSlack,
+  desativarSlack
 };

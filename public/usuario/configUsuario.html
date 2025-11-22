@@ -333,6 +333,17 @@
                   </label>
                 </div>
               </div>
+
+              <div class="toggle-item slack-config-item">
+                <div class="toggle-info">
+                  <strong>Notificações via Slack</strong>
+                  <p>Configure alertas automáticos para seu workspace Slack</p>
+                </div>
+                <button type="button" class="btn-config-slack" onclick="abrirModalSlack()">
+                  ⚙️ Configurar Slack
+                </button>
+              </div>
+
               <div class="form-actions">
                 <button type="button" class="btn-secondary">
                   Restaurar Padrões
@@ -498,6 +509,210 @@
         </div>
       </section>
     </main>
+
+          <div class="modal-overlay" id="modalSlack">
+        <div class="modal-container modal-slack">
+          <div class="modal-header">
+            <div>
+              <h2>⚡ Configurar Notificações Slack</h2>
+              <p>Receba alertas importantes diretamente no seu workspace</p>
+            </div>
+            <button class="btn-close-modal" onclick="fecharModalSlack()">✕</button>
+          </div>
+
+          <div class="modal-body">
+            <!-- SEÇÃO 1: ATIVAR/DESATIVAR SLACK -->
+            <section class="modal-section">
+              <div class="slack-master-toggle">
+                <div class="slack-toggle-content">
+                  <div class="slack-icon-big">💬</div>
+                  <div>
+                    <h3>Integração Slack</h3>
+                    <p class="slack-status-text" id="slackStatusText">
+                      Ative para receber notificações automatizadas sobre mudanças nos indicadores econômicos
+                    </p>
+                  </div>
+                </div>
+                <label class="toggle-switch toggle-switch-large">
+                  <input type="checkbox" id="slackMasterToggle" onchange="toggleSlackMaster()" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+            </section>
+
+            <!-- SEÇÃO 2: CANAIS DE NOTIFICAÇÃO -->
+            <section class="modal-section" id="slackCanaisSection">
+              <h3 class="section-title">📢 Escolha os Canais de Notificação</h3>
+              <p class="section-description">Selecione em quais canais você deseja receber alertas específicos</p>
+
+              <div class="slack-canais-grid">
+                <!-- Canal: População -->
+                <div class="slack-canal-card">
+                  <div class="canal-header">
+                    <div class="canal-icon">👥</div>
+                    <label class="canal-checkbox">
+                      <input 
+                        type="checkbox" 
+                        id="canalPopulacao" 
+                        class="canal-toggle"
+                        onchange="validarCanais()"
+                      />
+                      <span class="checkbox-custom-large"></span>
+                    </label>
+                  </div>
+                  <div class="canal-content">
+                    <h4>Mudanças Demográficas</h4>
+                    <p>Alertas sobre crescimento populacional, densidade demográfica e faixas etárias predominantes nas regiões</p>
+                    <span class="canal-badge">Canal: #demografia</span>
+                  </div>
+                </div>
+
+                <!-- Canal: Selic -->
+                <div class="slack-canal-card">
+                  <div class="canal-header">
+                    <div class="canal-icon">💰</div>
+                    <label class="canal-checkbox">
+                      <input 
+                        type="checkbox" 
+                        id="canalSelic" 
+                        class="canal-toggle"
+                        onchange="validarCanais()"
+                      />
+                      <span class="checkbox-custom-large"></span>
+                    </label>
+                  </div>
+                  <div class="canal-content">
+                    <h4>Taxa Selic</h4>
+                    <p>Notificações sobre alterações na taxa básica de juros, impactando crédito e investimentos imobiliários</p>
+                    <span class="canal-badge">Canal: #economia</span>
+                  </div>
+                </div>
+
+                <!-- Canal: PIB -->
+                <div class="slack-canal-card">
+                  <div class="canal-header">
+                    <div class="canal-icon">📊</div>
+                    <label class="canal-checkbox">
+                      <input 
+                        type="checkbox" 
+                        id="canalPib" 
+                        class="canal-toggle"
+                        onchange="validarCanais()"
+                      />
+                      <span class="checkbox-custom-large"></span>
+                    </label>
+                  </div>
+                  <div class="canal-content">
+                    <h4>Crescimento do PIB</h4>
+                    <p>Acompanhe variações trimestrais do PIB regional e setorial (construção civil, serviços, imobiliário)</p>
+                    <span class="canal-badge">Canal: #indicadores</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="alert alert-info">
+                <strong>ℹ️ Dica:</strong> Selecione pelo menos um canal para ativar as notificações do Slack.
+              </div>
+            </section>
+
+            <!-- SEÇÃO 3: GATILHOS DE ALERTA -->
+            <section class="modal-section" id="slackGatilhosSection">
+              <h3 class="section-title">🔔 Defina os Gatilhos de Alerta</h3>
+              <p class="section-description">Escolha a criticidade dos alertas que deseja receber</p>
+
+              <div class="gatilhos-group">
+                <!-- Gatilho: ERROR -->
+                <div class="gatilho-item">
+                  <label class="gatilho-label">
+                    <input 
+                      type="checkbox" 
+                      id="gatilhoError" 
+                      class="gatilho-toggle"
+                      checked
+                    />
+                    <span class="checkbox-custom"></span>
+                    <div class="gatilho-info">
+                      <div class="gatilho-badge error">🚨 CRÍTICO</div>
+                      <strong>Alertas Críticos</strong>
+                      <p>Quedas bruscas (>5%) em PIB, Selic acima de 15%, ou população reduzindo</p>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Gatilho: WARNING -->
+                <div class="gatilho-item">
+                  <label class="gatilho-label">
+                    <input 
+                      type="checkbox" 
+                      id="gatilhoWarning" 
+                      class="gatilho-toggle"
+                      checked
+                    />
+                    <span class="checkbox-custom"></span>
+                    <div class="gatilho-info">
+                      <div class="gatilho-badge warning">⚠️ MODERADO</div>
+                      <strong>Alertas Moderados</strong>
+                      <p>Variações entre 2-5% no PIB, mudanças na Selic entre 0.5-1%, flutuações demográficas</p>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Gatilho: INFO -->
+                <div class="gatilho-item">
+                  <label class="gatilho-label">
+                    <input 
+                      type="checkbox" 
+                      id="gatilhoInfo" 
+                      class="gatilho-toggle"
+                    />
+                    <span class="checkbox-custom"></span>
+                    <div class="gatilho-info">
+                      <div class="gatilho-badge info">ℹ️ INFORMATIVO</div>
+                      <strong>Alertas Informativos</strong>
+                      <p>Atualizações de dados, novos relatórios publicados, tendências positivas</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="alert alert-warning">
+                <strong>⚠️ Recomendado:</strong> Mantenha pelo menos os alertas CRÍTICOS ativados para não perder informações importantes.
+              </div>
+            </section>
+
+            <!-- PREVIEW -->
+            <section class="modal-section">
+              <h3 class="section-title">👀 Preview da Notificação</h3>
+              <div class="slack-preview">
+                <div class="slack-message">
+                  <div class="slack-message-header">
+                    <img src="https://via.placeholder.com/24" alt="Bot" class="slack-bot-avatar" />
+                    <strong>Evolvere Bot</strong>
+                    <span class="slack-time">Agora</span>
+                  </div>
+                  <div class="slack-message-body">
+                    <div class="slack-alert-badge error">🚨 ALERTA CRÍTICO</div>
+                    <p><strong>Taxa Selic aumentou 1.5%</strong></p>
+                    <p>De 10.75% para 12.25% • Impacto: Alto custo de crédito</p>
+                    <div class="slack-message-footer">
+                      Canal: <strong>#economia</strong> • 22 Nov 2025 às 14:35
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary" onclick="fecharModalSlack()">
+              Cancelar
+            </button>
+            <button type="button" class="btn-primary" onclick="salvarConfiguracaoSlack()">
+              💾 Salvar Configuração
+            </button>
+          </div>
+        </div>
+      </div>
 
     <footer class="site-footer">
       <div class="container footer-inner">
@@ -792,4 +1007,215 @@ function formatarCNPJ(cnpj) {
   cnpj = cnpj.replace(/\D/g, '');
   return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
 }
+
+let configSlackAtual = null;
+
+async function abrirModalSlack() {
+  await carregarConfiguracaoSlack();
+  document.getElementById('modalSlack').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModalSlack() {
+  document.getElementById('modalSlack').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+async function carregarConfiguracaoSlack() {
+  try {
+    const response = await fetch(`http://localhost:3333/usuarios/slack/${usuarioLogado.idUsuario}`);
+    
+    if (response.status === 204 || !response.ok) {
+      configSlackAtual = null;
+      resetarFormSlack();
+      return;
+    }
+
+    const config = await response.json();
+    configSlackAtual = config;
+    
+    console.log('✅ Configuração Slack carregada:', config);
+
+
+    const slackAtivo = config.fkSlack !== null;
+    document.getElementById('slackMasterToggle').checked = slackAtivo;
+    
+    if (slackAtivo && config.slack) {
+      document.getElementById('canalPopulacao').checked = config.slack.maiorPopulacao === 1;
+      document.getElementById('canalSelic').checked = config.slack.aumentoSelic === 1;
+      document.getElementById('canalPib').checked = config.slack.crescimentoPib === 1;
+      
+      document.getElementById('gatilhoError').checked = config.slack.alertaError === 1;
+      document.getElementById('gatilhoWarning').checked = config.slack.alertaWarning === 1;
+      document.getElementById('gatilhoInfo').checked = config.slack.alertaInfo === 1;
+    }
+
+    toggleSlackMaster();
+    
+  } catch (erro) {
+    console.error('❌ Erro ao carregar configuração Slack:', erro);
+    resetarFormSlack();
+  }
+}
+
+function resetarFormSlack() {
+  document.getElementById('slackMasterToggle').checked = false;
+  document.getElementById('canalPopulacao').checked = false;
+  document.getElementById('canalSelic').checked = false;
+  document.getElementById('canalPib').checked = false;
+  document.getElementById('gatilhoError').checked = true;
+  document.getElementById('gatilhoWarning').checked = true;
+  document.getElementById('gatilhoInfo').checked = false;
+  toggleSlackMaster();
+}
+
+function toggleSlackMaster() {
+  const isActive = document.getElementById('slackMasterToggle').checked;
+  const statusText = document.getElementById('slackStatusText');
+  const canaisSection = document.getElementById('slackCanaisSection');
+  const gatilhosSection = document.getElementById('slackGatilhosSection');
+
+  if (isActive) {
+    statusText.textContent = '✅ Notificações Slack ATIVADAS - Configure os canais e gatilhos abaixo';
+    statusText.style.color = 'var(--accent)';
+    statusText.style.fontWeight = '600';
+    canaisSection.classList.remove('disabled');
+    gatilhosSection.classList.remove('disabled');
+    
+
+    document.querySelectorAll('.canal-toggle').forEach(cb => cb.disabled = false);
+    document.querySelectorAll('.gatilho-toggle').forEach(cb => cb.disabled = false);
+    
+  } else {
+    statusText.textContent = 'Ative para receber notificações automatizadas sobre mudanças nos indicadores econômicos';
+    statusText.style.color = 'var(--text-secondary)';
+    statusText.style.fontWeight = 'normal';
+    canaisSection.classList.add('disabled');
+    gatilhosSection.classList.add('disabled');
+    
+
+    document.querySelectorAll('.canal-toggle').forEach(cb => cb.disabled = true);
+    document.querySelectorAll('.gatilho-toggle').forEach(cb => cb.disabled = true);
+  }
+}
+
+function validarCanais() {
+  const populacao = document.getElementById('canalPopulacao').checked;
+  const selic = document.getElementById('canalSelic').checked;
+  const pib = document.getElementById('canalPib').checked;
+  
+  const algumCanalAtivo = populacao || selic || pib;
+  const slackToggle = document.getElementById('slackMasterToggle');
+
+  if (!algumCanalAtivo && slackToggle.checked) {
+    slackToggle.checked = false;
+    toggleSlackMaster();
+    alert('⚠️ Nenhum canal selecionado. O Slack foi desativado automaticamente.');
+  }
+
+  if (algumCanalAtivo && !slackToggle.checked) {
+    slackToggle.checked = true;
+    toggleSlackMaster();
+  }
+}
+
+async function salvarConfiguracaoSlack() {
+  const slackAtivo = document.getElementById('slackMasterToggle').checked;
+
+  if (!slackAtivo) {
+    if (confirm('⚠️ Tem certeza que deseja DESATIVAR as notificações do Slack?')) {
+      await desativarSlack();
+    }
+    return;
+  }
+
+  const populacao = document.getElementById('canalPopulacao').checked;
+  const selic = document.getElementById('canalSelic').checked;
+  const pib = document.getElementById('canalPib').checked;
+
+  if (!populacao && !selic && !pib) {
+    alert('⚠️ Selecione pelo menos um canal para receber notificações!');
+    return;
+  }
+
+  const error = document.getElementById('gatilhoError').checked;
+  const warning = document.getElementById('gatilhoWarning').checked;
+  const info = document.getElementById('gatilhoInfo').checked;
+
+  if (!error && !warning && !info) {
+    alert('⚠️ Selecione pelo menos um tipo de gatilho!');
+    return;
+  }
+
+  const configuracao = {
+    idUsuarioServer: usuarioLogado.idUsuario,
+    maiorPopulacaoServer: populacao ? 1 : 0,
+    aumentoSelicServer: selic ? 1 : 0,
+    crescimentoPibServer: pib ? 1 : 0,
+    alertaErrorServer: error ? 1 : 0,
+    alertaWarningServer: warning ? 1 : 0,
+    alertaInfoServer: info ? 1 : 0
+  };
+
+  console.log('📤 Enviando configuração Slack:', configuracao);
+
+  try {
+    const url = configSlackAtual 
+      ? `http://localhost:3333/usuarios/slack/atualizar/${configSlackAtual.fkSlack}`
+      : 'http://localhost:3333/usuarios/slack/criar';
+
+    const response = await fetch(url, {
+      method: configSlackAtual ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(configuracao)
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao salvar configuração');
+    }
+
+    const data = await response.json();
+    console.log('✅ Configuração salva:', data);
+
+    alert('✅ Configurações do Slack salvas com sucesso!');
+    fecharModalSlack();
+    
+  } catch (erro) {
+    console.error('❌ Erro ao salvar:', erro);
+    alert('❌ Erro ao salvar configurações. Tente novamente.');
+  }
+}
+
+async function desativarSlack() {
+  try {
+    const response = await fetch(`http://localhost:3333/usuarios/slack/desativar/${usuarioLogado.idUsuario}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao desativar Slack');
+    }
+
+    console.log('✅ Slack desativado');
+    alert('✅ Notificações do Slack desativadas!');
+    fecharModalSlack();
+    
+  } catch (erro) {
+    console.error('❌ Erro ao desativar:', erro);
+    alert('❌ Erro ao desativar. Tente novamente.');
+  }
+}
+
+
+document.getElementById('modalSlack')?.addEventListener('click', function(e) {
+  if (e.target === this) fecharModalSlack();
+});
+
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && document.getElementById('modalSlack')?.classList.contains('active')) {
+    fecharModalSlack();
+  }
+});
 </script>
