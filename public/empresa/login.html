@@ -1,137 +1,152 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evolvere Invest - Portal Empresarial</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/login.css" />
-  <link rel="icon" href="../assets/icon/favicon.png" />
-</head>
-<body class="portal-empresa">
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="logo">
-        <a href="../index.html">
-          <img src="../imgs/Logo-projeto.png" alt="Evolvere Logo" />
-        </a>
-        <div class="brand-txt">
-          <h1>Evolvere Invest</h1>
-          <small>Portal Empresarial</small>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evolvere Invest - Portal Empresarial</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+    <link rel="icon" href="../assets/icon/favicon.png" />
+  </head>
+  <body class="portal-empresa">
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="logo">
+          <a href="../index.html">
+            <img src="../imgs/Logo-projeto.png" alt="Evolvere Logo" />
+          </a>
+          <div class="brand-txt">
+            <h1>Evolvere Invest</h1>
+            <small>Portal Empresarial</small>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="container">
-    <div class="auth-wrapper">
-      <div class="auth-card">
-        <div class="form-col">
-          <h2>Acesso Empresarial</h2>
-          <p>Gerencie usuários, configure permissões e acesse dashboards corporativos</p>
+    <main class="container">
+      <div class="auth-wrapper">
+        <div class="auth-card">
+          <div class="form-col">
+            <h2>Acesso Empresarial</h2>
+            <p>
+              Gerencie usuários, configure permissões e acesse dashboards
+              corporativos
+            </p>
 
-          <form onsubmit="return entrar()">
-            <div class="form-group">
-              <label for="email">E-mail Corporativo</label>
-              <input
-                id="input_email"
-                type="email"
-                placeholder="gestor@suaempresa.com"
-                required
-                autofocus
-              />
+            <form onsubmit="return entrar()">
+              <div class="form-group">
+                <label for="email">E-mail Corporativo</label>
+                <input
+                  id="input_email"
+                  type="email"
+                  placeholder="gestor@suaempresa.com"
+                  required
+                  autofocus
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="senha">Senha</label>
+                <input
+                  id="input_senha"
+                  type="password"
+                  placeholder="Digite sua senha"
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn-primary" id="btnLogin">
+                Acessar Painel
+              </button>
+            </form>
+          </div>
+
+          <aside class="meta-col">
+            <div class="meta-box">
+              <h3>💼 Painel de Gestão</h3>
+              <p>
+                Gerencie usuários da sua empresa, configure permissões e
+                acompanhe métricas de uso.
+              </p>
             </div>
-
-            <div class="form-group">
-              <label for="senha">Senha</label>
-              <input
-                id="input_senha"
-                type="password"
-                placeholder="Digite sua senha"
-                required
-              />
+            <div class="meta-box">
+              <ul>
+                <li>Cadastro e remoção de usuários</li>
+                <li>Controle de acessos e licenças</li>
+                <li>Dashboards personalizados</li>
+              </ul>
             </div>
-
-            <button type="submit" class="btn-primary" id="btnLogin">
-              Acessar Painel
-            </button>
-          </form>
+          </aside>
         </div>
-
-        <aside class="meta-col">
-          <div class="meta-box">
-            <h3>💼 Painel de Gestão</h3>
-            <p>Gerencie usuários da sua empresa, configure permissões e acompanhe métricas de uso.</p>
-          </div>
-          <div class="meta-box">
-            <ul>
-              <li>Cadastro e remoção de usuários</li>
-              <li>Controle de acessos e licenças</li>
-              <li>Dashboards personalizados</li>
-            </ul>
-          </div>
-        </aside>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2025 Evolvere Invest — Protótipo educativo</p>
-      <p>Contato: equipe@evolvereinvest.net</p>
-    </div>
-  </footer>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>&copy; 2025 Evolvere Invest — Protótipo educativo</p>
+        <p>Contato: equipe@evolvereinvest.net</p>
+      </div>
+    </footer>
 
-  <script>
-function entrar() {
-  const email = document.getElementById('input_email').value.trim();
-  const senha = document.getElementById('input_senha').value.trim();
-  const btnLogin = document.getElementById('btnLogin');
+    <script>
+      function entrar() {
+        const email = document.getElementById("input_email").value.trim();
+        const senha = document.getElementById("input_senha").value.trim();
+        const btnLogin = document.getElementById("btnLogin");
 
-  if (!email || !senha) {
-    alert("⚠️ Por favor, preencha todos os campos!");
-    return false;
-  }
+        if (!email || !senha) {
+          alert("⚠️ Por favor, preencha todos os campos!");
+          return false;
+        }
 
+        btnLogin.classList.add("loading");
+        btnLogin.textContent = "Entrando...";
+        btnLogin.disabled = true;
 
-  btnLogin.classList.add('loading');
-  btnLogin.textContent = 'Entrando...';
-  btnLogin.disabled = true;
+        fetch("/empresa/autenticarEmpresa", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            emailServer: email,
+            senhaServer: senha,
+          }),
+        })
+          .then((response) => {
+            console.log("Status da resposta:", response.status);
 
-  fetch("/usuarios/autenticar", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      emailServer: email,
-      senhaServer: senha,
-      tipoEsperadoServer: "empresa" 
-    }),
-  })
-  .then(response => {
-    if (!response.ok) {
-      return response.json().then(data => {
-        throw new Error(data.erro || 'Email ou senha inválidos');
-      });
-    }
-    return response.json();
-  })
-  .then(usuario => {
-    sessionStorage.setItem("USUARIO_LOGADO", JSON.stringify(usuario));
-    btnLogin.textContent = '✓ Sucesso!';
-    
-    setTimeout(() => {
-      window.location.href = "../dashboardCliente.html";
-    }, 800);
-  })
-  .catch(erro => {
-    btnLogin.classList.remove('loading');
-    btnLogin.textContent = 'Entrar';
-    btnLogin.disabled = false;
-    alert(`❌ ${erro.message}`);
-  });
+            if (!response.ok) {
+              return response.json().then((data) => {
+                throw new Error(data.erro || "Erro ao realizar login");
+              });
+            }
+            return response.json();
+          })
+          .then((empresa) => {
+            console.log("✅ Login bem-sucedido!");
+            console.log("🏢 Dados da empresa:", empresa);
 
-  return false;
-}
-  </script>
-</body>
+            sessionStorage.setItem("EMPRESA_LOGADA", JSON.stringify(empresa));
+
+            console.log("💾 Dados salvos no sessionStorage");
+
+            btnLogin.textContent = "✓ Sucesso!";
+
+            setTimeout(() => {
+              window.location.href = "../configADM.html";
+            }, 800);
+          })
+          .catch((erro) => {
+            console.error("❌ Erro no login:", erro);
+
+            btnLogin.classList.remove("loading");
+            btnLogin.textContent = "Entrar";
+            btnLogin.disabled = false;
+
+            alert(`❌ ${erro.message}`);
+          });
+
+        return false;
+      }
+    </script>
+  </body>
 </html>

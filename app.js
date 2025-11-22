@@ -1,8 +1,7 @@
 // var ambiente_processo = 'producao';
-var ambiente_processo = 'desenvolvimento';
+var ambiente_processo = "desenvolvimento";
 
-var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
-
+var caminho_env = ambiente_processo === "producao" ? ".env" : ".env.dev";
 
 require("dotenv").config({ path: caminho_env });
 
@@ -20,8 +19,7 @@ var avisosRouter = require("./src/routes/avisos");
 var filtrosRouter = require("./src/routes/filtros");
 var dadosRouter = require("./src/routes/dados");
 var monitoramentoRouter = require("./src/routes/monitoramento");
-var empresaRouter = require("./src/routes/empresa")
-
+var empresaRouter = require("./src/routes/empresa");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -35,34 +33,33 @@ app.use("/avisos", avisosRouter);
 app.use("/filtros", filtrosRouter);
 app.use("/dados", dadosRouter);
 app.use("/monitoramento", monitoramentoRouter);
-app.use("/empresas", empresaRouter)
+app.use("/empresa", empresaRouter);
 
-process.on('uncaughtException', function (erro) {
-    console.error('ERRO NÃO TRATADO');
-    console.error('Erro:', erro);
-    console.error('Stack:', erro.stack);
-    console.error(' O servidor CONTINUARÁ rodando, mas corrija este erro!');
+process.on("uncaughtException", function (erro) {
+  console.error("ERRO NÃO TRATADO");
+  console.error("Erro:", erro);
+  console.error("Stack:", erro.stack);
+  console.error(" O servidor CONTINUARÁ rodando, mas corrija este erro!");
 });
 
-process.on('unhandledRejection', function (motivo, promise) {
-    console.error('PROMISE REJEITADA NÃO TRATADA');
-    console.error('Motivo:', motivo);
-    console.error('Promise:', promise);
-    console.error('O servidor CONTINUARÁ rodando, mas corrija este erro');
+process.on("unhandledRejection", function (motivo, promise) {
+  console.error("PROMISE REJEITADA NÃO TRATADA");
+  console.error("Motivo:", motivo);
+  console.error("Promise:", promise);
+  console.error("O servidor CONTINUARÁ rodando, mas corrija este erro");
 });
 
 app.use(function (req, res, next) {
-    res.status(404).send('Rota não encontrada:' + req.url);
+  res.status(404).send("Rota não encontrada:" + req.url);
 });
 
 app.use(function (err, req, res, next) {
-    console.error('Erro capturado pelo middleware:', err);
-    res.status(500).send('Erro interno do servidor');
+  console.error("Erro capturado pelo middleware:", err);
+  res.status(500).send("Erro interno do servidor");
 });
 
-
 app.listen(PORTA_APP, function () {
-    console.log(`
+  console.log(`
     ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
     ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
     ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   

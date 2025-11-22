@@ -1,35 +1,81 @@
-var empresaModel = require("../models/empresaModel");
+const empresaModel = require("../models/empresaModel");
+
+function autenticarEmpresa(req, res) {
+  const email = req.body.emailServer;
+  const senha = req.body.senhaServer;
+
+  console.log("📧 Tentativa de login:", email);
+
+  if (!email) {
+    res.status(400).json({ erro: "Email está undefined!" });
+    return;
+  } else if (!senha) {
+    res.status(400).json({ erro: "Senha está undefined!" });
+    return;
+  }
+
+  empresaModel
+    .autenticarEmpresa(email, senha)
+    .then(function (resultadoAutenticar) {
+      console.log(`📊 Resultados encontrados: ${resultadoAutenticar.length}`);
+
+      if (resultadoAutenticar.length === 0) {
+        console.log("❌ Credenciais inválidas");
+        res.status(403).json({ erro: "Email e/ou senha inválidos" });
+        return;
+      }
+
+      const empresa = resultadoAutenticar[0];
+
+      if (empresa.statusValido === 0) {
+        console.log("🚫 Licença expirada ou situação inválida");
+        res.status(403).json({
+          erro: "Licença expirada ou empresa bloqueada! Entre em contato com o suporte.",
+        });
+        return;
+      }
+
+      console.log("✅ Autenticação bem-sucedida!");
+
+      res.json({
+        idEmpresa: empresa.idEmpresa,
+        email: empresa.email,
+        dtLicenca: empresa.dtLicenca,
+        situacao: empresa.situacao,
+        statusValido: empresa.statusValido,
+      });
+    })
+    .catch(function (erro) {
+      console.error("❌ ERRO COMPLETO:", erro);
+      console.error("❌ Stack trace:", erro.stack);
+    });
+}
 
 function cadastrarEmpresa(req, res) {
   const cnpj = req.body.cnpjServer;
   const nome = req.body.nomeServer;
   const email = req.body.emailServer;
-  const plano = req.body.planoServer;
-  const limite = req.body.limiteServer;
-  const licenca = req.body.licencaServer;
-  const status = req.body.statusServer;
 
-  if (!cnpj || !nome || !email || !plano || !limite || !licenca) {
+  if (!cnpj || !nome || !email) {
     res.status(400).send("Campos obrigatórios faltando!");
     return;
   }
 
-  // Validar CNPJ (14 dígitos)
   if (cnpj.length !== 14 || isNaN(cnpj)) {
     res.status(400).send("CNPJ inválido!");
     return;
   }
 
   empresaModel
-    .cadastrarEmpresa(cnpj, nome, email, plano, limite, licenca, status)
+    .cadastrarEmpresa(cnpj, nome, email)
     .then(function (resultado) {
       console.log("✅ Empresa cadastrada:", resultado.insertId);
       res.status(201).json(resultado);
     })
     .catch(function (erro) {
       console.error("❌ Erro ao cadastrar empresa:", erro);
-      
-      if (erro.code === 'ER_DUP_ENTRY') {
+
+      if (erro.code === "ER_DUP_ENTRY") {
         res.status(409).send("CNPJ já cadastrado!");
       } else {
         res.status(500).json(erro.sqlMessage || erro.message);
@@ -83,8 +129,9 @@ function atualizarEmpresa(req, res) {
 }
 
 module.exports = {
+  autenticarEmpresa,
   cadastrarEmpresa,
   listarEmpresas,
   verificarVagas,
-  atualizarEmpresa
+  atualizarEmpresa,
 };
