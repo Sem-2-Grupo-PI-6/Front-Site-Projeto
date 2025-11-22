@@ -1,5 +1,4 @@
 DROP DATABASE IF EXISTS sixtech;
-
 create database sixtech;
 use sixtech;
 
@@ -9,69 +8,43 @@ CREATE TABLE tblSistema (
     dtUpdateFiltroSistema TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );
 
-
 CREATE TABLE tblAdmin (
     idAdmin INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(45),
-    token CHAR(4),
+    senha VARCHAR(20),
     dtAdmissao DATE,
     tblSistema_idtblSistema INT,
     FOREIGN KEY (tblSistema_idtblSistema) REFERENCES tblSistema(idtblSistema)
 );
 
--- SELECT * FROM tblInflacao;
-
-
 CREATE TABLE tblEmpresa (
     idEmpresa INT PRIMARY KEY AUTO_INCREMENT,
     cnpj CHAR(14),
     nomeFantasia VARCHAR(45),
-    emailCoorportaiva VARCHAR(45),
-    dtLicenca DATE,
-    sitacaoLicensa ENUM('Ativa', 'Inativa', 'Suspensa', 'Cancelada')
+    emailCoorporativa VARCHAR(45),
+    senha VARCHAR(20),
+    dtLicensa DATE,
+    situacaoLicensa ENUM('Ativa', 'Inativa', 'Suspensa', 'Cancelada')
 );
-
-CREATE TABLE tblSlack (
-      idSlack INT PRIMARY KEY AUTO_INCREMENT,
-    maiorPopulacao TINYINT,
-    aumentoSelic TINYINT,
-    crescimentoPib TINYINT,
-    alertaError TINYINT,
-    alertaWarning TINYINT,
-    alertaInfo TINYINT
-);
-
-CREATE TABLE tblCanalWebhook (
-      idCanalWebhook INT PRIMARY KEY AUTO_INCREMENT,
-    nomeCanal VARCHAR(99),
-    webhook VARCHAR(99)
-);
-
 
 CREATE TABLE tblUsuario (
     idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(45),
     telefone CHAR(11),
     email VARCHAR(45),
-    senha VARCHAR(16),
+    senha VARCHAR(20),
     dtCriacao DATE,
     filtrosPersonalizados JSON,
     Empresa_idEmpresa INT,
-    FOREIGN KEY (Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa),
-	receberNotificacao TINYINT,
-    fkSlack INT,
-    FOREIGN KEY (fkSlack) REFERENCES tblSlack(idSlack)
+    FOREIGN KEY (Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa)
 );
-
-
-
 
 CREATE TABLE filtroUsuario (
     idfiltroUsuario INT PRIMARY KEY AUTO_INCREMENT,
     tblUsuario_idUsuario INT,
     tblUsuario_Empresa_idEmpresa INT,
     nomeFiltro VARCHAR(45),
-    ativo TINYINT(1),
+    ativo TINYINT,
     config JSON,
     dtCreateFiltro TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
     dtUpdateFiltro TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
@@ -95,12 +68,10 @@ CREATE TABLE tblLogSistemaAcesso (
     FOREIGN KEY (tblSistema_idtblSistema) REFERENCES tblSistema(idtblSistema)
 );
 
-
 CREATE TABLE tblZona (
     idZona INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(45)
 );
-
 
 CREATE TABLE tblPopulacao (
     idtblPopulacao INT PRIMARY KEY AUTO_INCREMENT,
@@ -117,7 +88,6 @@ CREATE TABLE tblPopulacao (
     FOREIGN KEY (tblZona_idZona) REFERENCES tblZona(idZona)
 );
 
-
 CREATE TABLE tblPib (
     idPib INT PRIMARY KEY AUTO_INCREMENT,
     trimestre VARCHAR(45),
@@ -127,13 +97,11 @@ CREATE TABLE tblPib (
     FOREIGN KEY (tblZona_idZona) REFERENCES tblZona(idZona)
 );
 
-
 CREATE TABLE tblInflacao (
     idtblInflacao INT PRIMARY KEY AUTO_INCREMENT,
     valorTaxa FLOAT,
     dtApuracao DATE
 );
-
 
 CREATE TABLE tblSelic (
     idtblSelic INT PRIMARY KEY AUTO_INCREMENT,
@@ -203,6 +171,8 @@ CREATE INDEX idx_populacao_zona ON tblPopulacao(tblZona_idZona);
 CREATE INDEX idx_empresa_cnpj ON tblEmpresa(cnpj);
 CREATE INDEX idx_log_data ON tblLogSistemaAcesso(dtAcontecimento);
 CREATE INDEX idx_log_usuario ON tblLogSistemaAcesso(Usuario_idUsuario);
+
+
 select * FROM tblSelic;
 select * FROM tblSelic;
 CREATE TABLE tblMetricasSistema (
@@ -263,17 +233,17 @@ select * from tblUsuario;
       END DESC
     LIMIT 12;
     
-    INSERT INTO tblAdmin (email, token, dtAdmissao, tblSistema_idtblSistema)
+    INSERT INTO tblAdmin (email, senha, dtAdmissao)
 VALUES
-  ('admin@sixtech.com', 'A1B2', '2024-01-15', 1),
-  ('suporte@sixtech.com', 'C3D4', '2024-03-20', 2);
+  ('admin@sixtech.com', 'A1B2', '2024-01-15'),
+  ('suporte@sixtech.com', 'C3D4', '2024-03-20');
 
 /* 3. tblEmpresa */
-INSERT INTO tblEmpresa (cnpj, nomeFantasia, emailCoorportaiva, dtLicenca, sitacaoLicensa)
+INSERT INTO tblEmpresa (cnpj, nomeFantasia, emailCoorporativa, senha, dtLicensa, situacaoLicensa)
 VALUES
-  ('12345678000111', 'Alpha Dados', 'contato@alphadados.com', '2024-02-01', 'Ativa'),
-  ('55566677000122', 'Beta Insights', 'suporte@betainsights.com', '2024-05-10', 'Ativa'),
-  ('99887766000155', 'Gamma Tech', 'admin@gammatech.com', '2024-06-01', 'Suspensa');
+  ('12345678000111', 'Alpha Dados', 'contato@alphadados.com', '12345678', '2024-02-01', 'Ativa'),
+  ('55566677000122', 'Beta Insights', 'suporte@betainsights.com', '12345678', '2024-05-10', 'Ativa'),
+  ('99887766000155', 'Gamma Tech', 'admin@gammatech.com', '12345678', '2024-06-01', 'Suspensa');
 
 /* 4. tblUsuario */
 INSERT INTO tblUsuario (nome, telefone, email, senha, dtCriacao, filtrosPersonalizados, Empresa_idEmpresa)
@@ -371,14 +341,13 @@ VALUES
   (2, 2, 'PIB Construção', 1, JSON_OBJECT('ano','2024','setor','construcaoCivil')),
   (3, 3, 'Inflacao Mensal', 1, JSON_OBJECT('ultimosMeses',6,'tipo','IPCA'));
 
-drop table filtroUsuario;
 /* 13. tblLogSistemaAcesso */
-INSERT INTO tblLogSistemaAcesso (dtAcontecimento, tipoLog, descricaoLog, Usuario_idUsuario, Usuario_Empresa_idEmpresa, Admin_idAdmin, tblSistema_idtblSistema)
+INSERT INTO tblLogSistemaAcesso (dtAcontecimento, tipoLog, descricaoLog, Usuario_idUsuario, Usuario_Empresa_idEmpresa, Admin_idAdmin)
 VALUES
-  ('2024-06-20', 'LOGIN', 'Login efetuado', 1, 1, NULL, 1),
-  ('2024-06-21', 'API_CALL', 'Consulta PIB', 2, 2, NULL, 1),
-  ('2024-06-22', 'CONFIG', 'Admin alterou filtro', NULL, NULL, 1, 1),
-  ('2024-06-23', 'LOGIN_FAIL', 'Senha incorreta', 3, 3, NULL, 2);
+  ('2024-06-20', 'LOGIN', 'Login efetuado', 1, 1, NULL),
+  ('2024-06-21', 'API_CALL', 'Consulta PIB', 2, 2, NULL),
+  ('2024-06-22', 'CONFIG', 'Admin alterou filtro', NULL, NULL, 1),
+  ('2024-06-23', 'LOGIN_FAIL', 'Senha incorreta', 3, 3, NULL);
 
 /* 14. tblLogArquivos (simulando leituras de arquivos de carga) */
 INSERT INTO tblLogArquivos (tipoLog, descricao, tblPibSetor_idtblPibSetor, tblPibRegionalSP_idtblPibRegionalSP, tblSelic_idtblSelic, tblInflacao_idtblInflacao, tblPopulacao_idtblPopulacao, tblZona_idZona, tblPib_idPib)
@@ -432,6 +401,7 @@ VALUES
       END DESC
     LIMIT 36;
     
+    select * from filtroUsuario;
     
         SELECT idfiltroUsuario, nomeFiltro, ativo, CAST(config AS CHAR) as config, dtCreateFiltro, dtUpdateFiltro 
     FROM filtroUsuario 
@@ -450,17 +420,17 @@ VALUES
     
     
     select * from tblInflacao;
-    
-    select * from tblUsuario;
-    
-    use sixtech;
-    
-    
-    DELIMITER $$
--- DROP PROCEDURE IF EXISTS getLoginUsuario $$
+
+
+-- PROCEDURES ->
+
+use sixtech;
+
+-- DROP PROCEDURE IF EXISTS getLoginUsuario;
+DELIMITER $$
 CREATE PROCEDURE getLoginUsuario(
     IN login_email VARCHAR(45),
-    IN login_senha VARCHAR(16))
+    IN login_senha VARCHAR(20))
 BEGIN
     SELECT
         usu.idUsuario,
@@ -483,19 +453,19 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- DROP PROCEDURE IF EXISTS SetCadastroUsuario;
 DELIMITER $$
--- DROP PROCEDURE IF EXISTS SetCadastroUsuario $$
 CREATE PROCEDURE SetCadastroUsuario(
     IN cad_nome VARCHAR(99),
     IN cad_email VARCHAR(99),
-	IN cad_senha VARCHAR(99)
+	IN cad_senha VARCHAR(20)
 )
 BEGIN
     INSERT INTO tblUsuario (nome, email, senha) VALUES (cad_nome, cad_email, cad_senha);
 END$$
 DELIMITER ;
 
-DROP PROCEDURE setCadastrarEmpresa;
+-- DROP PROCEDURE IF EXISTS setCadastrarEmpresa;
 DELIMITER $$
 CREATE PROCEDURE setCadastrarEmpresa(
 	IN cadastro_cnpj CHAR(14),
@@ -508,20 +478,20 @@ INSERT INTO tblEmpresa (
       nomeFantasia,
       emailCoorporativa,
       senha,
-      dtLicenca,
+      dtLicensa,
       situacaoLicensa)
     VALUES (
       cadastro_cnpj,
       cadastro_nomeFantasia,
       cadastro_emailCoorporativa,
       'SenhaPadrao',
-      DATE_ADD(NOW(), INTERVAL 12 MONTH),
+      DATE_ADD(CURDATE(), INTERVAL 12 MONTH),
       'Ativa'
     );
 END $$
 DELIMITER ;
 
-DROP PROCEDURE getAutenticarEmpresa;
+-- DROP PROCEDURE IF EXISTS getAutenticarEmpresa;
 DELIMITER $$
 CREATE PROCEDURE getAutenticarEmpresa(
 		IN login_email VARCHAR(45),
@@ -531,10 +501,10 @@ BEGIN
     SELECT 
         idEmpresa, 
         emailCoorporativa AS email,
-        dtLicenca, 
+        dtLicensa, 
         situacaoLicensa AS situacao,
         CASE 
-            WHEN (CURRENT_DATE() < dtLicenca) AND (situacaoLicensa = 'Ativa') THEN 1
+            WHEN (CURRENT_DATE() < dtLicensa) AND (situacaoLicensa = 'Ativa') THEN 1
             ELSE 0 
         END AS statusValido
     FROM tblEmpresa
@@ -542,15 +512,41 @@ BEGIN
 END $$
 DELIMITER ;
 
-DROP PROCEDURE getAutenticarAdmin;
+-- DROP PROCEDURE IF EXISTS getAutenticarAdmin;
 DELIMITER $$
 CREATE PROCEDURE getAutenticarAdmin(
 	IN login_email VARCHAR(45),
-    in login_token CHAR(4)
+    in login_senha CHAR(4)
 )
 BEGIN
 	SELECT idAdmin, email, dtAdmissao FROM tblAdmin
     WHERE email = login_email AND
-		token = login_token;
+		senha = login_senha;
 END $$
 DELIMITER ;
+
+-- DROP PROCEDURE IF EXISTS setCadastrarAdmin;
+DELIMITER $$
+CREATE PROCEDURE setCadastrarAdmin(
+	IN cadastro_email VARCHAR (45),
+    IN cadastro_senha CHAR(4)
+)
+BEGIN
+	INSERT INTO tblAdmin (email, senha, dtadmissao) 
+    VALUES (
+    cadastro_email,
+    cadastro_senha,
+    CURDATE()
+);
+END $$
+DELIMITER ;
+
+select * from tblUsuario;
+select * from tblEmpresa;
+select * from tblAdmin;
+
+-- CALL getAutenticarAdmin ('admin@sixtech.com', 'A1B2');
+-- CALL setCadastrarAdmin ('teste2insert@insert.com', '4321');
+-- CALL setCadastrarEmpresa('79541450000141', 'cadastro 2 empresa', 'empresateste@empresa.com');
+-- CALL getAutenticarEmpresa('suporte@betainsights.com', '12345678');
+-- CALL getLoginUsuario('joao@alphadados.com', 'senha123');
