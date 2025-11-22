@@ -1,87 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evolvere Invest - Painel Administrativo</title>
-  <link rel="stylesheet" href="../css/styles.css" />
-  <link rel="stylesheet" href="../css/login.css" />
-  <link rel="icon" href="../assets/icon/favicon.png" />
-</head>
-<body class="portal-admin">
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="logo">
-        <a href="../index.html">
-          <img src="../imgs/Logo-projeto.png" alt="Evolvere Logo" />
-        </a>
-        <div class="brand-txt">
-          <h1>Evolvere Invest</h1>
-          <small>Painel Administrativo</small>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evolvere Invest - Painel Administrativo</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+    <link rel="icon" href="../assets/icon/favicon.png" />
+  </head>
+  <body class="portal-admin">
+    <header class="site-header">
+      <div class="container header-inner">
+        <div class="logo">
+          <a href="../index.html">
+            <img src="../imgs/Logo-projeto.png" alt="Evolvere Logo" />
+          </a>
+          <div class="brand-txt">
+            <h1>Evolvere Invest</h1>
+            <small>Painel Administrativo</small>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main class="container">
-    <div class="auth-wrapper">
-      <div class="auth-card">
-        <div class="form-col">
-          <h2>Acesso Administrativo</h2>
-          <p>Área restrita para administradores do sistema</p>
+    <main class="container">
+      <div class="auth-wrapper">
+        <div class="auth-card">
+          <div class="form-col">
+            <h2>Acesso Administrativo</h2>
+            <p>Área restrita para administradores do sistema</p>
 
-          <form onsubmit="return entrar()">
-            <div class="form-group">
-              <label for="email">E-mail Administrativo</label>
-              <input
-                id="input_email"
-                type="email"
-                placeholder="admin@admin.net"
-                required
-                autofocus
-              />
+            <form onsubmit="return entrar()">
+              <div class="form-group">
+                <label for="email">E-mail Administrativo</label>
+                <input
+                  id="input_email"
+                  type="email"
+                  placeholder="admin@admin.net"
+                  required
+                  autofocus
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="senha">Senha</label>
+                <input
+                  id="input_senha"
+                  type="password"
+                  placeholder="Digite sua senha"
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn-primary" id="btnLogin">
+                Acessar Sistema
+              </button>
+            </form>
+          </div>
+
+          <aside class="meta-col">
+            <div class="meta-box">
+              <h3>🔐 Painel Master</h3>
+              <p>
+                Gerencie empresas, usuários, métricas do sistema e configurações
+                globais.
+              </p>
             </div>
-
-            <div class="form-group">
-              <label for="senha">Senha</label>
-              <input
-                id="input_senha"
-                type="password"
-                placeholder="Digite sua senha"
-                required
-              />
+            <div class="meta-box">
+              <ul>
+                <li>Cadastro e gestão de empresas</li>
+                <li>Monitoramento de métricas</li>
+                <li>Configurações do sistema</li>
+                <li>Logs e auditoria</li>
+              </ul>
             </div>
-
-            <button type="submit" class="btn-primary" id="btnLogin">
-              Acessar Sistema
-            </button>
-          </form>
+          </aside>
         </div>
-
-        <aside class="meta-col">
-          <div class="meta-box">
-            <h3>🔐 Painel Master</h3>
-            <p>Gerencie empresas, usuários, métricas do sistema e configurações globais.</p>
-          </div>
-          <div class="meta-box">
-            <ul>
-              <li>Cadastro e gestão de empresas</li>
-              <li>Monitoramento de métricas</li>
-              <li>Configurações do sistema</li>
-              <li>Logs e auditoria</li>
-            </ul>
-          </div>
-        </aside>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>&copy; 2025 Evolvere Invest — Painel Administrativo</p>
-      <p>Contato: admin@evolvereinvest.net</p>
-    </div>
-  </footer>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>&copy; 2025 Evolvere Invest — Painel Administrativo</p>
+        <p>Contato: admin@evolvereinvest.net</p>
+      </div>
+    </footer>
 
   <script>
       function entrar() {
