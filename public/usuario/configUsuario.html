@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Evolvere Invest - Minha Conta</title>
-    <link rel="stylesheet" href="./css/styles.css" />
-    <link rel="stylesheet" href="./css/configUsuario.css" />
-    <link rel="icon" href="./assets/icon/favicon.png" />
-    <script src="./js/monitoramento.js"></script>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/configUsuario.css" />
+    <link rel="icon" href="../assets/icon/favicon.png" />
+    <script src="../js/monitoramento.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
   </head>
   <body>
@@ -15,7 +15,7 @@
       <div class="container header-inner">
         <div class="logo">
           <a href="index.html">
-            <img src="./imgs/Logo-projeto.png" alt="Evolvere Logo" />
+            <img src="../imgs/Logo-projeto.png" alt="Evolvere Logo" />
           </a>
           <div class="brand-txt">
             <h1>Evolvere Invest</h1>
@@ -35,7 +35,6 @@
     </header>
 
     <main class="container main-content">
-      <!-- CABEÇALHO DO PERFIL -->
       <section class="profile-hero">
         <div class="profile-hero-content">
           <div class="profile-avatar-hero">SC</div>
@@ -46,18 +45,6 @@
           </div>
         </div>
         <div class="profile-stats">
-          <div class="stat-item">
-            <span class="stat-value">23</span>
-            <span class="stat-label">Consultas Hoje</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">342</span>
-            <span class="stat-label">Total no Mês</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">42</span>
-            <span class="stat-label">Dias de Uso</span>
-          </div>
         </div>
       </section>
 
@@ -75,10 +62,6 @@
           <button class="tab-btn" data-tab="preferences">
             <span class="tab-icon">⚙️</span>
             <span>Preferências</span>
-          </button>
-          <button class="tab-btn" data-tab="activity">
-            <span class="tab-icon">📋</span>
-            <span>Atividade</span>
           </button>
         </div>
 
@@ -120,16 +103,6 @@
                 <div class="form-group">
                   <label for="profile-phone">Telefone</label>
                   <input type="tel" id="profile-phone" placeholder="(11) 99999-9999" />
-                </div>
-                <div class="form-group">
-                  <label for="profile-sector">Setor de Atuação</label>
-                  <select id="profile-sector">
-                    <option value="">Selecione...</option>
-                    <option value="construcao" selected>Construção Civil</option>
-                    <option value="imobiliaria">Imobiliária</option>
-                    <option value="incorporadora">Incorporadora</option>
-                    <option value="outro">Outro</option>
-                  </select>
                 </div>
               </div>
 
@@ -182,8 +155,8 @@
   <div class="password-input-wrapper">
     <input type="password" id="security-current-password" placeholder="Digite sua senha atual" required />
     <button type="button" class="btn-toggle-password" onclick="togglePassword('security-current-password')">
-      <img src="./imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
-      <img src="./imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
+      <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
+      <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
     </button>
   </div>
 </div>
@@ -194,8 +167,8 @@
     <div class="password-input-wrapper">
       <input type="password" id="security-new-password" placeholder="Mínimo 8 caracteres" required />
       <button type="button" class="btn-toggle-password" onclick="togglePassword('security-new-password')">
-        <img src="./imgs/eye-open.png" alt="Mostrar senha" class="icon-eye" />
-        <img src="./imgs/eye-closed.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
+        <img src="../imgs/eye-open.png" alt="Mostrar senha" class="icon-eye" />
+        <img src="../imgs/eye-closed.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
       </button>
     </div>
     <small class="form-hint">Use letras, números e símbolos</small>
@@ -205,8 +178,8 @@
     <div class="password-input-wrapper">
       <input type="password" id="security-confirm-password" placeholder="Repita a nova senha" required />
       <button type="button" class="btn-toggle-password" onclick="togglePassword('security-confirm-password')">
-        <img src="./imgs/eye-open.png" alt="Mostrar senha" class="icon-eye" />
-        <img src="./imgs/eye-closed.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
+        <img src="../imgs/eye-open.png" alt="Mostrar senha" class="icon-eye" />
+        <img src="../imgs/eye-closed.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
       </button>
     </div>
   </div>
@@ -234,37 +207,6 @@
             </form>
           </div>
 
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h2>🔐 Sessões Ativas</h2>
-                <p>Dispositivos conectados à sua conta</p>
-              </div>
-            </div>
-
-            <div class="sessions-list">
-              <div class="session-item current">
-                <div class="session-icon">💻</div>
-                <div class="session-info">
-                  <strong>Windows 11 - Chrome</strong>
-                  <p>São Paulo, SP • IP: 192.168.1.100</p>
-                  <span class="session-time">Sessão atual • Ativo agora</span>
-                </div>
-                <span class="badge-current">Atual</span>
-              </div>
-
-              <div class="session-item">
-                <div class="session-icon">📱</div>
-                <div class="session-info">
-                  <strong>iPhone 13 - Safari</strong>
-                  <p>São Paulo, SP • IP: 192.168.1.105</p>
-                  <span class="session-time">Último acesso: Há 2 horas</span>
-                </div>
-                <button class="btn-revoke">Desconectar</button>
-              </div>
-            </div>
-
-            <button class="btn-danger-outline">🚪 Desconectar Todos os Dispositivos</button>
           </div>
         </div>
 
@@ -326,47 +268,6 @@
                   </label>
                 </div>
               </div>
-
-              <h3 class="section-title">🎨 Interface</h3>
-
-              <div class="form-group">
-                <label for="pref-theme">Tema da Interface</label>
-                <select id="pref-theme">
-                  <option value="light" selected>Claro</option>
-                  <option value="dark">Escuro</option>
-                  <option value="auto">Automático (Sistema)</option>
-                </select>
-                <small class="form-hint">O tema escuro será aplicado em breve</small>
-              </div>
-
-              <h3 class="section-title">📊 Dashboard</h3>
-
-              <div class="form-group">
-                <label for="pref-region">Região de Interesse Principal</label>
-                <select id="pref-region">
-                  <option value="">Todas as regiões</option>
-                  <option value="capital" selected>São Paulo - Capital</option>
-                  <option value="abc">ABC Paulista</option>
-                  <option value="campinas">Campinas</option>
-                  <option value="santos">Baixada Santista</option>
-                  <option value="vale">Vale do Paraíba</option>
-                  <option value="interior">Interior</option>
-                </select>
-              </div>
-
-              <div class="toggle-group">
-                <div class="toggle-item">
-                  <div class="toggle-info">
-                    <strong>Atualização Automática</strong>
-                    <p>Atualizar gráficos automaticamente a cada 5 minutos</p>
-                  </div>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-
               <div class="form-actions">
                 <button type="button" class="btn-secondary">Restaurar Padrões</button>
                 <button type="submit" class="btn-primary">💾 Salvar Preferências</button>
@@ -375,7 +276,6 @@
           </div>
         </div>
 
-        <!-- TAB 4: ATIVIDADE -->
         <div class="tab-content" id="tab-activity">
           <div class="card">
             <div class="card-header">
@@ -538,44 +438,32 @@
 </html>
 
 <script>
-    // ===== TABS SYSTEM =====
+let usuarioLogado = JSON.parse(sessionStorage.getItem('usuarioLogado')) || { idUsuario: 2 }; 
+
 document.addEventListener('DOMContentLoaded', function() {
+  carregarDadosUsuario();
+
   const tabButtons = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
 
   tabButtons.forEach(button => {
     button.addEventListener('click', () => {
       const targetTab = button.getAttribute('data-tab');
-
-      // Remove active class
       tabButtons.forEach(btn => btn.classList.remove('active'));
       tabContents.forEach(content => content.classList.remove('active'));
-
-      // Add active class
       button.classList.add('active');
       document.getElementById(`tab-${targetTab}`).classList.add('active');
     });
   });
 
-  // ===== PROFILE FORM =====
   const profileForm = document.querySelector('#tab-profile form');
   if (profileForm) {
     profileForm.addEventListener('submit', function(e) {
       e.preventDefault();
-
-      const name = document.getElementById('profile-name').value;
-      const company = document.getElementById('profile-company').value;
-
-      if (!name || !company) {
-        alert('⚠️ Por favor, preencha os campos obrigatórios!');
-        return;
-      }
-
-      alert('✅ Perfil atualizado com sucesso!');
+      atualizarPerfil();
     });
   }
 
-  // ===== SECURITY FORM WITH PASSWORD VALIDATION =====
   const securityForm = document.querySelector('#tab-security form');
   const newPasswordInput = document.getElementById('security-new-password');
 
@@ -588,151 +476,244 @@ document.addEventListener('DOMContentLoaded', function() {
   if (securityForm) {
     securityForm.addEventListener('submit', function(e) {
       e.preventDefault();
-
-      const currentPassword = document.getElementById('security-current-password').value;
-      const newPassword = document.getElementById('security-new-password').value;
-      const confirmPassword = document.getElementById('security-confirm-password').value;
-
-      if (!currentPassword || !newPassword || !confirmPassword) {
-        alert('⚠️ Por favor, preencha todos os campos!');
-        return;
-      }
-
-      if (newPassword.length < 8) {
-        alert('⚠️ A nova senha deve ter no mínimo 8 caracteres!');
-        return;
-      }
-
-      if (newPassword !== confirmPassword) {
-        alert('⚠️ As senhas não coincidem!');
-        return;
-      }
-
-      if (!isPasswordValid(newPassword)) {
-        alert('⚠️ A senha não atende todos os requisitos de segurança!');
-        return;
-      }
-
-      if (confirm('⚠️ Após alterar sua senha, você será desconectado. Deseja continuar?')) {
-        alert('✅ Senha alterada com sucesso! Redirecionando para login...');
-        // Aqui você faria o logout e redirecionamento
-      }
+      alterarSenha();
     });
   }
 
-  // ===== PASSWORD VALIDATION =====
-  function validatePassword(password) {
-    const requirements = {
-      length: password.length >= 8,
-      uppercase: /[A-Z]/.test(password),
-      lowercase: /[a-z]/.test(password),
-      number: /[0-9]/.test(password),
-      special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
-    };
-
-    updateRequirement('req-length', requirements.length);
-    updateRequirement('req-uppercase', requirements.uppercase);
-    updateRequirement('req-lowercase', requirements.lowercase);
-    updateRequirement('req-number', requirements.number);
-    updateRequirement('req-special', requirements.special);
-  }
-
-  function updateRequirement(id, isValid) {
-    const element = document.getElementById(id);
-    if (element) {
-      if (isValid) {
-        element.classList.add('valid');
-      } else {
-        element.classList.remove('valid');
-      }
-    }
-  }
-
-  function isPasswordValid(password) {
-    return password.length >= 8 &&
-           /[A-Z]/.test(password) &&
-           /[a-z]/.test(password) &&
-           /[0-9]/.test(password) &&
-           /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  }
-
-  // ===== PREFERENCES FORM =====
   const preferencesForm = document.querySelector('#tab-preferences form');
   if (preferencesForm) {
     preferencesForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      alert('✅ Preferências salvas com sucesso!');
-    });
-  }
-
-  // ===== REVOKE SESSION =====
-  const revokeButtons = document.querySelectorAll('.btn-revoke');
-  revokeButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      if (confirm('⚠️ Tem certeza que deseja desconectar este dispositivo?')) {
-        const sessionItem = this.closest('.session-item');
-        sessionItem.remove();
-        alert('✅ Dispositivo desconectado com sucesso!');
-      }
-    });
-  });
-
-  // ===== REVOKE ALL SESSIONS =====
-  const revokeAllBtn = document.querySelector('.btn-danger-outline');
-  if (revokeAllBtn) {
-    revokeAllBtn.addEventListener('click', function() {
-      if (confirm('⚠️ Tem certeza que deseja desconectar TODOS os dispositivos?\n\nVocê precisará fazer login novamente em todos eles.')) {
-        alert('✅ Todos os dispositivos foram desconectados!\n\nVocê será redirecionado para a página de login...');
-        // Aqui você faria o logout completo
-      }
-    });
-  }
-
-  // ===== CANCEL BUTTONS =====
-  const cancelButtons = document.querySelectorAll('.btn-secondary');
-  cancelButtons.forEach(button => {
-    if (button.textContent.includes('Cancelar')) {
-      button.addEventListener('click', function() {
-        const form = this.closest('form');
-        if (form) {
-          if (confirm('⚠️ Tem certeza que deseja cancelar? Todas as alterações serão perdidas.')) {
-            form.reset();
-          }
-        }
-      });
-    }
-  });
-
-  // ===== ACTIVITY FILTER =====
-  const activityFilter = document.querySelector('#tab-activity .filter-select');
-  if (activityFilter) {
-    activityFilter.addEventListener('change', function() {
-      const filterValue = this.value;
-      const activities = document.querySelectorAll('.activity-item');
-
-      activities.forEach(activity => {
-        if (filterValue === 'all') {
-          activity.style.display = 'flex';
-        } else {
-          // Aqui você pode implementar filtros específicos baseados em classes
-          activity.style.display = 'flex';
-        }
-      });
+      salvarPreferencias();
     });
   }
 });
 
-// ===== TOGGLE PASSWORD VISIBILITY =====
+async function carregarDadosUsuario() {
+  try {
+    const response = await fetch(`http://localhost:3333/usuarios/obterDados/${usuarioLogado.idUsuario}`);
+    
+    if (!response.ok) {
+      console.error('Erro ao carregar dados do usuário');
+      return;
+    }
+
+    const dados = await response.json();
+    console.log('✅ Dados carregados:', dados);
+
+    document.getElementById('profile-name').value = dados.nome || '';
+    document.getElementById('profile-email').value = dados.email || '';
+    document.getElementById('profile-company').value = dados.nomeFantasia || '';
+    document.getElementById('profile-cnpj').value = formatarCNPJ(dados.cnpj) || '';
+    document.getElementById('profile-phone').value = dados.telefone || '';
+    
+
+    const iniciais = dados.nome ? dados.nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'SC';
+    document.querySelector('.profile-avatar-hero').textContent = iniciais;
+    document.querySelector('.profile-hero-info h1').textContent = dados.nomeFantasia || 'Empresa';
+    document.querySelector('.profile-email').textContent = dados.email || '';
+
+  } catch (erro) {
+    console.error('❌ Erro ao carregar dados:', erro);
+  }
+}
+
+async function atualizarPerfil() {
+  const nome = document.getElementById('profile-name').value.trim();
+  const telefone = document.getElementById('profile-phone').value.replace(/\D/g, '');
+
+  if (!nome) {
+    alert('⚠️ Preencha o nome!');
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:3333/usuarios/atualizarPerfil', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        idUsuarioServer: usuarioLogado.idUsuario,
+        nomeServer: nome,
+        telefoneServer: telefone
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao atualizar perfil');
+    }
+
+    const data = await response.json();
+    alert('✅ ' + data.mensagem);
+    carregarDadosUsuario();
+
+  } catch (erro) {
+    console.error('❌ Erro:', erro);
+    alert('❌ Erro ao atualizar perfil');
+  }
+}
+
+async function salvarPreferencias() {
+  const receberNotificacao = document.querySelector('#tab-preferences .toggle-item:nth-child(1) input[type="checkbox"]').checked;
+
+  try {
+    const response = await fetch('http://localhost:3333/usuarios/atualizarPreferencias', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        idUsuarioServer: usuarioLogado.idUsuario,
+        receberNotificacaoServer: receberNotificacao
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao salvar preferências');
+    }
+
+    const data = await response.json();
+    alert('✅ ' + data.mensagem);
+
+  } catch (erro) {
+    console.error('❌ Erro:', erro);
+    alert('❌ Erro ao salvar preferências');
+  }
+}
+
+async function alterarSenha() {
+  const senhaAtual = document.getElementById('security-current-password').value;
+  const novaSenha = document.getElementById('security-new-password').value;
+  const confirmarSenha = document.getElementById('security-confirm-password').value;
+
+  if (!senhaAtual || !novaSenha || !confirmarSenha) {
+    alert('⚠️ Preencha todos os campos!');
+    return;
+  }
+
+  if (novaSenha.length < 8) {
+    alert('⚠️ A nova senha deve ter no mínimo 8 caracteres!');
+    return;
+  }
+
+  if (novaSenha !== confirmarSenha) {
+    alert('⚠️ As senhas não coincidem!');
+    return;
+  }
+
+  if (!isPasswordValid(novaSenha)) {
+    alert('⚠️ A senha não atende todos os requisitos de segurança!');
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:3333/usuarios/alterarSenha', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        idUsuarioServer: usuarioLogado.idUsuario,
+        senhaAtualServer: senhaAtual,
+        novaSenhaServer: novaSenha
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert('❌ ' + (data.erro || 'Erro ao alterar senha'));
+      return;
+    }
+
+    if (confirm('✅ Senha alterada com sucesso!\n\nVocê será desconectado. Faça login novamente.')) {
+      sessionStorage.clear();
+      window.location.href = 'login.html';
+    }
+
+  } catch (erro) {
+    console.error('❌ Erro:', erro);
+    alert('❌ Erro ao alterar senha');
+  }
+}
+
+async function salvarPreferencias() {
+  const notificacoes = document.querySelector('#tab-preferences input[type="checkbox"]').checked;
+
+  try {
+    const response = await fetch('http://localhost:3333/usuarios/atualizarPreferencias', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        idUsuarioServer: usuarioLogado.idUsuario,
+        notificacoesServer: notificacoes
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao salvar preferências');
+    }
+
+    const data = await response.json();
+    alert('✅ ' + data.mensagem);
+
+  } catch (erro) {
+    console.error('❌ Erro:', erro);
+    alert('❌ Erro ao salvar preferências');
+  }
+}
+
+
+function validatePassword(password) {
+  const requirements = {
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+  };
+
+  updateRequirement('req-length', requirements.length);
+  updateRequirement('req-uppercase', requirements.uppercase);
+  updateRequirement('req-lowercase', requirements.lowercase);
+  updateRequirement('req-number', requirements.number);
+  updateRequirement('req-special', requirements.special);
+}
+
+function updateRequirement(id, isValid) {
+  const element = document.getElementById(id);
+  if (element) {
+    if (isValid) {
+      element.classList.add('valid');
+    } else {
+      element.classList.remove('valid');
+    }
+  }
+}
+
+function isPasswordValid(password) {
+  return password.length >= 8 &&
+         /[A-Z]/.test(password) &&
+         /[a-z]/.test(password) &&
+         /[0-9]/.test(password) &&
+         /[!@#$%^&*(),.?":{}|<>]/.test(password);
+}
+
 function togglePassword(inputId) {
   const input = document.getElementById(inputId);
   const button = input.nextElementSibling;
+  const iconEye = button.querySelector('.icon-eye');
+  const iconEyeOff = button.querySelector('.icon-eye-off');
 
   if (input.type === 'password') {
     input.type = 'text';
-    button.textContent = '🙈';
+    iconEye.style.display = 'none';
+    iconEyeOff.style.display = 'block';
   } else {
     input.type = 'password';
-    button.textContent = '👁️';
+    iconEye.style.display = 'block';
+    iconEyeOff.style.display = 'none';
   }
+}
+
+function formatarCNPJ(cnpj) {
+  if (!cnpj) return '';
+  cnpj = cnpj.replace(/\D/g, '');
+  return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
 }
 </script>

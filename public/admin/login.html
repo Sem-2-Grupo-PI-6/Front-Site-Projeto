@@ -84,55 +84,53 @@
   </footer>
 
   <script>
-    function entrar() {
-      const email = document.getElementById('input_email').value.trim();
-      const senha = document.getElementById('input_senha').value.trim();
-      const btnLogin = document.getElementById('btnLogin');
+      function entrar() {
+        const email = document.getElementById("input_email").value.trim();
+        const senha = document.getElementById("input_senha").value.trim();
+        const btnLogin = document.getElementById("btnLogin");
 
-      if (!email || !senha) {
-        alert("⚠️ Por favor, preencha todos os campos!");
+        if (!email || !senha) {
+          alert("⚠️ Por favor, preencha todos os campos!");
+          return false;
+        }
+
+        btnLogin.classList.add("loading");
+        btnLogin.textContent = "Entrando...";
+        btnLogin.disabled = true;
+
+        fetch("/admin/adminAutenticar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            emailServer: email,
+            senhaServer: senha,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              return response.json().then((data) => {
+                throw new Error(data.erro || "Email ou senha inválidos");
+              });
+            }
+            return response.json();
+          })
+          .then((admin) => {
+            sessionStorage.setItem("ADMIN_LOGADO", JSON.stringify(admin));
+            btnLogin.textContent = "✓ Sucesso!";
+
+            setTimeout(() => {
+              window.location.href = "./dashboardAdmin.html";
+            }, 800);
+          })
+          .catch((erro) => {
+            btnLogin.classList.remove("loading");
+            btnLogin.textContent = "Acessar Sistema";
+            btnLogin.disabled = false;
+            alert(`❌ ${erro.message}`);
+          });
+
         return false;
       }
-
-      btnLogin.classList.add('loading');
-      btnLogin.textContent = 'Entrando...';
-      btnLogin.disabled = true;
-
-      fetch("/usuarios/autenticar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          emailServer: email,
-          senhaServer: senha,
-          tipoEsperadoServer: "admin" 
-        }),
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(data => {
-            throw new Error(data.erro || 'Email ou senha inválidos');
-          });
-        }
-        return response.json();
-      })
-      .then(usuario => {
-        sessionStorage.setItem("USUARIO_LOGADO", JSON.stringify(usuario));
-        btnLogin.textContent = '✓ Sucesso!';
-        
-        setTimeout(() => {
-
-          window.location.href = "../dashboardAdmin.html";
-        }, 800);
-      })
-      .catch(erro => {
-        btnLogin.classList.remove('loading');
-        btnLogin.textContent = 'Acessar Sistema';
-        btnLogin.disabled = false;
-        alert(`❌ ${erro.message}`);
-      });
-
-      return false;
-    }
-  </script>
+    </script>
 </body>
 </html>

@@ -31,6 +31,22 @@ CREATE TABLE tblEmpresa (
     sitacaoLicensa ENUM('Ativa', 'Inativa', 'Suspensa', 'Cancelada')
 );
 
+CREATE TABLE tblSlack (
+      idSlack INT PRIMARY KEY AUTO_INCREMENT,
+    maiorPopulacao TINYINT,
+    aumentoSelic TINYINT,
+    crescimentoPib TINYINT,
+    alertaError TINYINT,
+    alertaWarning TINYINT,
+    alertaInfo TINYINT
+);
+
+CREATE TABLE tblCanalWebhook (
+      idCanalWebhook INT PRIMARY KEY AUTO_INCREMENT,
+    nomeCanal VARCHAR(99),
+    webhook VARCHAR(99)
+);
+
 
 CREATE TABLE tblUsuario (
     idUsuario INT PRIMARY KEY AUTO_INCREMENT,
@@ -41,8 +57,13 @@ CREATE TABLE tblUsuario (
     dtCriacao DATE,
     filtrosPersonalizados JSON,
     Empresa_idEmpresa INT,
-    FOREIGN KEY (Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa)
+    FOREIGN KEY (Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa),
+	receberNotificacao TINYINT,
+    fkSlack INT,
+    FOREIGN KEY (fkSlack) REFERENCES tblSlack(idSlack)
 );
+
+
 
 
 CREATE TABLE filtroUsuario (
@@ -429,3 +450,107 @@ VALUES
     
     
     select * from tblInflacao;
+    
+    select * from tblUsuario;
+    
+    use sixtech;
+    
+    
+    DELIMITER $$
+-- DROP PROCEDURE IF EXISTS getLoginUsuario $$
+CREATE PROCEDURE getLoginUsuario(
+    IN login_email VARCHAR(45),
+    IN login_senha VARCHAR(16))
+BEGIN
+    SELECT
+        usu.idUsuario,
+        usu.nome,
+        usu.email,
+        emp.nomeFantasia,
+        emp.situacaoLicensa,
+        CASE
+            WHEN emp.idEmpresa IS NOT NULL
+                 AND usu.Empresa_idEmpresa = emp.idEmpresa
+                 AND emp.situacaoLicensa = 'Ativa'
+            THEN TRUE
+            ELSE FALSE
+        END AS usuario_pertence_a_empresa_ativa
+    FROM tblUsuario AS usu
+    JOIN tblEmpresa AS emp
+        ON usu.Empresa_idEmpresa = emp.idEmpresa
+    WHERE usu.email = login_email
+      AND usu.senha = login_senha;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+-- DROP PROCEDURE IF EXISTS SetCadastroUsuario $$
+CREATE PROCEDURE SetCadastroUsuario(
+    IN cad_nome VARCHAR(99),
+    IN cad_email VARCHAR(99),
+	IN cad_senha VARCHAR(99)
+)
+BEGIN
+    INSERT INTO tblUsuario (nome, email, senha) VALUES (cad_nome, cad_email, cad_senha);
+END$$
+DELIMITER ;
+
+DROP PROCEDURE setCadastrarEmpresa;
+DELIMITER $$
+CREATE PROCEDURE setCadastrarEmpresa(
+	IN cadastro_cnpj CHAR(14),
+    IN cadastro_nomeFantasia VARCHAR(45),
+    IN cadastro_emailCoorporativa VARCHAR(45)
+)
+BEGIN
+INSERT INTO tblEmpresa (
+      cnpj,
+      nomeFantasia,
+      emailCoorporativa,
+      senha,
+      dtLicenca,
+      situacaoLicensa)
+    VALUES (
+      cadastro_cnpj,
+      cadastro_nomeFantasia,
+      cadastro_emailCoorporativa,
+      'SenhaPadrao',
+      DATE_ADD(NOW(), INTERVAL 12 MONTH),
+      'Ativa'
+    );
+END $$
+DELIMITER ;
+
+DROP PROCEDURE getAutenticarEmpresa;
+DELIMITER $$
+CREATE PROCEDURE getAutenticarEmpresa(
+		IN login_email VARCHAR(45),
+        IN login_senha VARCHAR(20)
+)
+BEGIN
+    SELECT 
+        idEmpresa, 
+        emailCoorporativa AS email,
+        dtLicenca, 
+        situacaoLicensa AS situacao,
+        CASE 
+            WHEN (CURRENT_DATE() < dtLicenca) AND (situacaoLicensa = 'Ativa') THEN 1
+            ELSE 0 
+        END AS statusValido
+    FROM tblEmpresa
+    WHERE emailCoorporativa = login_email AND senha = login_senha;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE getAutenticarAdmin;
+DELIMITER $$
+CREATE PROCEDURE getAutenticarAdmin(
+	IN login_email VARCHAR(45),
+    in login_token CHAR(4)
+)
+BEGIN
+	SELECT idAdmin, email, dtAdmissao FROM tblAdmin
+    WHERE email = login_email AND
+		token = login_token;
+END $$
+DELIMITER ;
