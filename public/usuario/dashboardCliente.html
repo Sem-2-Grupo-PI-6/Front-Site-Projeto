@@ -700,7 +700,7 @@
       function logout() {
         if (confirm("⚠️ Tem certeza que deseja sair?")) {
           sessionStorage.removeItem("USUARIO_LOGADO");
-          window.location.href = "index.html";
+          window.location.href = "../index.html";
         }
       }
 
@@ -1403,9 +1403,15 @@
                 <div class="filtro-info">
                   <div class="filtro-header">
                     <span class="filtro-nome">${filtro.nomeFiltro}</span>
-                    ${filtro.ativo ? '<span class="badge-ativo">✓ Ativo</span>' : ""}
+                    ${
+                      filtro.ativo
+                        ? '<span class="badge-ativo">✓ Ativo</span>'
+                        : ""
+                    }
                   </div>
-                  <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
+                  <span class="filtro-detalhes">${getResumoFiltro(
+                    config
+                  )}</span>
                 </div>
                 <div class="filtro-actions">
             ${

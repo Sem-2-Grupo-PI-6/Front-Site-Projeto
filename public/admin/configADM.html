@@ -33,7 +33,7 @@
               <a href="configAdmin.html" class="active">⚙️ Configurações</a>
             </li>
             <li class="divider">|</li>
-            <li><a href="#" class="btn-link">Sair</a></li>
+            <li><a onclick="logout()" class="btn-link">Sair</a></li>
           </ul>
         </nav>
       </div>
@@ -770,4 +770,11 @@
       }
     });
   });
+
+  function logout() {
+    if (confirm("⚠️ Tem certeza que deseja sair?")) {
+      sessionStorage.clear();
+      window.location.href = "./login.html";
+    }
+  }
 </script>

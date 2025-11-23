@@ -30,7 +30,7 @@
               <a href="configUsuario.html" class="active">👤 Minha Conta</a>
             </li>
             <li class="divider">|</li>
-            <li><a href="#" class="btn-link">Sair</a></li>
+            <li><a onclick="logout()" class="btn-link">Sair</a></li>
           </ul>
         </nav>
       </div>
@@ -779,6 +779,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 })
+
+function logout() {
+        if (confirm("⚠️ Tem certeza que deseja sair?")) {
+          sessionStorage.removeItem("USUARIO_LOGADO");
+          window.location.href = "../index.html";
+        }
+      }
 
 async function carregarDadosUsuario() {
   try {
