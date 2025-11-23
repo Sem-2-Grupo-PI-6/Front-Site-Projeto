@@ -18,15 +18,6 @@ function cadastrarUsuario(nome, email, senha, idEmpresa) {
   return database.executar(instrucaoSql, [nome, email, senha, idEmpresa]);
 }
 
-function cadastrarEmpresa(cnpj, nome, email) {
-  console.log("ACESSEI O EMPRESA MODEL - function cadastrarEmpresa()");
-
-  var instrucaoSql = `CALL setCadastrarEmpresa(?, ?, ?)`;
-
-  console.log("Executando SQL:\n", instrucaoSql);
-  return database.executar(instrucaoSql, [cnpj, nome, email]);
-}
-
 function listarEmpresas() {
   console.log("ACESSEI O EMPRESA MODEL - function listarEmpresas()");
 
@@ -82,7 +73,6 @@ function atualizarEmpresa(id, dados) {
 
 module.exports = {
   autenticarEmpresa,
-  cadastrarEmpresa,
   cadastrarUsuario,
   listarEmpresas,
   verificarVagas,

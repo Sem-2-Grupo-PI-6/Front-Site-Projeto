@@ -10,10 +10,6 @@ router.post("/cadastrarUsuario", function (req, res) {
   empresaController.cadastrarUsuario(req, res);
 });
 
-router.post("/cadastrar", function (req, res) {
-  empresaController.cadastrarEmpresa(req, res);
-});
-
 router.get("/listar", function (req, res) {
   empresaController.listarEmpresas(req, res);
 });

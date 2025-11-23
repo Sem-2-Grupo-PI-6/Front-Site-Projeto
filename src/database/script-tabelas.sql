@@ -458,10 +458,12 @@ DELIMITER $$
 CREATE PROCEDURE SetCadastroUsuario(
     IN cad_nome VARCHAR(99),
     IN cad_email VARCHAR(99),
-	IN cad_senha VARCHAR(20)
+    IN cad_senha CHAR(20),
+    IN cad_empresa INT
 )
 BEGIN
-    INSERT INTO tblUsuario (nome, email, senha) VALUES (cad_nome, cad_email, cad_senha);
+    INSERT INTO tblUsuario (nome, email, senha, dtCriacao, Empresa_idEmpresa) 
+    VALUES (cad_nome, cad_email, cad_senha, curdate(), cad_empresa);
 END$$
 DELIMITER ;
 
@@ -540,6 +542,11 @@ BEGIN
 );
 END $$
 DELIMITER ;
+
+/*
+insert into tblUsuario (nome, telefone, email, senha, dtCriacao, filtrosPersonalizados, Empresa_idEmpresa)
+VALUES ('Rodrigo', '11999999999', 'rodrigo@teste.com', '12345678', '2025-11-23', '[{"nome": "PIB Sudeste", "periodo": "2023"}]', 5);
+*/
 
 select * from tblUsuario;
 select * from tblEmpresa;

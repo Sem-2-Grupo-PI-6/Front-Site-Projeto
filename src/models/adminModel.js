@@ -9,6 +9,16 @@ function adminAutenticar(email, token) {
   return database.executar(instrucaoSql, [email, token]);
 }
 
+function cadastrarEmpresa(cnpj, nome, email) {
+  console.log("ACESSEI O EMPRESA MODEL - function cadastrarEmpresa()");
+
+  var instrucaoSql = `CALL setCadastrarEmpresa(?, ?, ?)`;
+
+  console.log("Executando SQL:\n", instrucaoSql);
+  return database.executar(instrucaoSql, [cnpj, nome, email]);
+}
+
 module.exports = {
   adminAutenticar,
+  cadastrarEmpresa,
 };

@@ -1104,7 +1104,7 @@
 
           console.log("📤 Enviando dados da empresa:", { cnpj, nome, email });
 
-          fetch("http://localhost:3333/empresas/cadastrar", {
+          fetch("/admin/cadastrarEmpresa", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1123,9 +1123,7 @@
             })
             .then((data) => {
               console.log("✅ Empresa cadastrada:", data);
-              alert(
-                `✅ Empresa "${nome}" cadastrada com sucesso!\n\nID: ${data.insertId}`
-              );
+              alert(`✅ Empresa "${nome}" cadastrada com sucesso!`);
               fecharModalEmpresa();
               setTimeout(atualizarMetricasAdmin, 1000);
             })

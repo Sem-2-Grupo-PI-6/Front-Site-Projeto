@@ -46,6 +46,39 @@ function adminAutenticar(req, res) {
     });
 }
 
+function cadastrarEmpresa(req, res) {
+  const cnpj = req.body.cnpjServer;
+  const nome = req.body.nomeServer;
+  const email = req.body.emailServer;
+
+  if (!cnpj || !nome || !email) {
+    res.status(400).send("Campos obrigatórios faltando!");
+    return;
+  }
+
+  if (cnpj.length !== 14 || isNaN(cnpj)) {
+    res.status(400).send("CNPJ inválido!");
+    return;
+  }
+
+  adminModel
+    .cadastrarEmpresa(cnpj, nome, email)
+    .then(function (resultado) {
+      console.log("✅ Empresa cadastrada:", resultado.insertId);
+      res.status(201).json(resultado);
+    })
+    .catch(function (erro) {
+      console.error("❌ Erro ao cadastrar empresa:", erro);
+
+      if (erro.code === "ER_DUP_ENTRY") {
+        res.status(409).send("CNPJ já cadastrado!");
+      } else {
+        res.status(500).json(erro.sqlMessage || erro.message);
+      }
+    });
+}
+
 module.exports = {
   adminAutenticar,
+  cadastrarEmpresa,
 };
