@@ -9,12 +9,13 @@ function autenticar(email, senha) {
   return database.executar(instrucaoSql, [email, senha]);
 }
 
-function cadastrar(nome, email, senha) {
+function cadastrar(nome, email, senha, idEmpresa) {
   console.log("ACESSEI O USUARIO MODEL - function cadastrar()");
-  var instrucaoSql = `CALL SetCadastroUsuario(?, ?, ?)`;
+
+  var instrucaoSql = `CALL SetCadastroUsuario(?, ?, ?, ?)`;
 
   console.log("Executando SQL:\n", instrucaoSql);
-  return database.executar(instrucaoSql, [nome, email, senha]);
+  return database.executar(instrucaoSql, [nome, email, senha, idEmpresa]);
 }
 
 function atualizarUltimoAcesso(idUsuario) {
@@ -33,7 +34,10 @@ function atualizarUltimoAcesso(idUsuario) {
 }
 
 function atualizarPerfil(idUsuario, nome, telefone) {
-  console.log("ACESSEI O USUARIO MODEL - function atualizarPerfil():", idUsuario);
+  console.log(
+    "ACESSEI O USUARIO MODEL - function atualizarPerfil():",
+    idUsuario
+  );
 
   var instrucaoSql = `
     UPDATE tblUsuario 
@@ -61,7 +65,10 @@ function alterarSenha(idUsuario, senhaAtual, novaSenha) {
 }
 
 function atualizarPreferencias(idUsuario, receberNotificacao) {
-  console.log("ACESSEI O USUARIO MODEL - function atualizarPreferencias():", idUsuario);
+  console.log(
+    "ACESSEI O USUARIO MODEL - function atualizarPreferencias():",
+    idUsuario
+  );
 
   var instrucaoSql = `
     UPDATE tblUsuario 
@@ -74,7 +81,10 @@ function atualizarPreferencias(idUsuario, receberNotificacao) {
 }
 
 function obterDadosUsuario(idUsuario) {
-  console.log("ACESSEI O USUARIO MODEL - function obterDadosUsuario():", idUsuario);
+  console.log(
+    "ACESSEI O USUARIO MODEL - function obterDadosUsuario():",
+    idUsuario
+  );
 
   var instrucaoSql = `
     SELECT 
@@ -104,20 +114,27 @@ function obterSlack(idUsuario) {
     LEFT JOIN tblSlack s ON u.fkSlack = s.idSlack
     WHERE u.idUsuario = ${idUsuario};
   `;
-  
+
   return database.executar(instrucaoSql);
 }
 
-function criarSlack(idUsuario, maiorPopulacao, aumentoSelic, crescimentoPib, 
-                    alertaError, alertaWarning, alertaInfo) {
+function criarSlack(
+  idUsuario,
+  maiorPopulacao,
+  aumentoSelic,
+  crescimentoPib,
+  alertaError,
+  alertaWarning,
+  alertaInfo
+) {
   var instrucaoSql = `
     INSERT INTO tblSlack (maiorPopulacao, aumentoSelic, crescimentoPib, 
                           alertaError, alertaWarning, alertaInfo)
     VALUES (${maiorPopulacao}, ${aumentoSelic}, ${crescimentoPib},
             ${alertaError}, ${alertaWarning}, ${alertaInfo});
   `;
-  
-  return database.executar(instrucaoSql).then(resultado => {
+
+  return database.executar(instrucaoSql).then((resultado) => {
     const idSlack = resultado.insertId;
 
     const updateSql = `
@@ -125,13 +142,20 @@ function criarSlack(idUsuario, maiorPopulacao, aumentoSelic, crescimentoPib,
       SET fkSlack = ${idSlack}
       WHERE idUsuario = ${idUsuario};
     `;
-    
+
     return database.executar(updateSql).then(() => resultado);
   });
 }
 
-function atualizarSlack(idSlack, maiorPopulacao, aumentoSelic, crescimentoPib,
-                        alertaError, alertaWarning, alertaInfo) {
+function atualizarSlack(
+  idSlack,
+  maiorPopulacao,
+  aumentoSelic,
+  crescimentoPib,
+  alertaError,
+  alertaWarning,
+  alertaInfo
+) {
   var instrucaoSql = `
     UPDATE tblSlack
     SET maiorPopulacao = ${maiorPopulacao},
@@ -142,7 +166,7 @@ function atualizarSlack(idSlack, maiorPopulacao, aumentoSelic, crescimentoPib,
         alertaInfo = ${alertaInfo}
     WHERE idSlack = ${idSlack};
   `;
-  
+
   return database.executar(instrucaoSql);
 }
 
@@ -152,7 +176,7 @@ function desativarSlack(idUsuario) {
     SET fkSlack = NULL
     WHERE idUsuario = ${idUsuario};
   `;
-  
+
   return database.executar(instrucaoSql);
 }
 
@@ -167,5 +191,5 @@ module.exports = {
   obterSlack,
   criarSlack,
   atualizarSlack,
-  desativarSlack
+  desativarSlack,
 };

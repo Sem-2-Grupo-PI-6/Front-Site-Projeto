@@ -66,14 +66,14 @@ function cadastrar(req, res) {
   var nome = req.body.nomeServer;
   var email = req.body.emailServer;
   var senha = req.body.senhaServer;
+  var idEmpresa = req.body.idEmpresaServer;
 
-  if (!nome || !email || !senha) {
-    res.status(400).send("Campos obrigatórios faltando!");
-    return;
+  if (!nome || !email || !senha || !idEmpresa) {
+    return res.status(400).json({ erro: "Campos obrigatórios faltando!" });
   }
 
   usuarioModel
-    .cadastrar(nome, email, senha)
+    .cadastrar(nome, email, senha, idEmpresa)
     .then(function (resultado) {
       console.log("✅ Cadastro realizado com sucesso!");
       res.json(resultado);
@@ -82,8 +82,9 @@ function cadastrar(req, res) {
       console.error("ERRO NO CADASTRO:", erro);
 
       if (erro.code === "ER_DUP_ENTRY") {
-        res.status(500).send("Erro interno ao realizar cadastro");
+        return res.status(409).json({ erro: "Este email já está cadastrado." });
       }
+      res.status(500).json({ erro: "Erro interno ao realizar cadastro." });
     });
 }
 
@@ -201,52 +202,78 @@ function obterConfiguracaoSlack(req, res) {
 
   usuarioModel
     .obterSlack(idUsuario)
-    .then(resultado => {
+    .then((resultado) => {
       if (resultado.length === 0) {
         res.status(204).send();
         return;
       }
       res.json(resultado[0]);
     })
-    .catch(erro => {
-      console.error('Erro ao obter Slack:', erro);
-      res.status(500).json({ erro:'Erro ao buscar configuração Slack' });
+    .catch((erro) => {
+      console.error("Erro ao obter Slack:", erro);
+      res.status(500).json({ erro: "Erro ao buscar configuração Slack" });
     });
 }
 
 function criarConfiguracaoSlack(req, res) {
-  const { idUsuarioServer, maiorPopulacaoServer, aumentoSelicServer, 
-          crescimentoPibServer, alertaErrorServer, alertaWarningServer, 
-          alertaInfoServer } = req.body;
+  const {
+    idUsuarioServer,
+    maiorPopulacaoServer,
+    aumentoSelicServer,
+    crescimentoPibServer,
+    alertaErrorServer,
+    alertaWarningServer,
+    alertaInfoServer,
+  } = req.body;
 
   usuarioModel
-    .criarSlack(idUsuarioServer, maiorPopulacaoServer, aumentoSelicServer,
-                crescimentoPibServer, alertaErrorServer, alertaWarningServer, alertaInfoServer)
-    .then(resultado => {
-      console.log('Slack criado!');
+    .criarSlack(
+      idUsuarioServer,
+      maiorPopulacaoServer,
+      aumentoSelicServer,
+      crescimentoPibServer,
+      alertaErrorServer,
+      alertaWarningServer,
+      alertaInfoServer
+    )
+    .then((resultado) => {
+      console.log("Slack criado!");
       res.json(resultado);
     })
-    .catch(erro => {
-      console.error('Erro ao criar Slack:', erro);
-      res.status(500).json({ erro: 'Erro ao criar configuração Slack' });
+    .catch((erro) => {
+      console.error("Erro ao criar Slack:", erro);
+      res.status(500).json({ erro: "Erro ao criar configuração Slack" });
     });
 }
 
 function atualizarConfiguracaoSlack(req, res) {
   const idSlack = req.params.idSlack;
-  const { maiorPopulacaoServer, aumentoSelicServer, crescimentoPibServer,
-          alertaErrorServer, alertaWarningServer, alertaInfoServer } = req.body;
+  const {
+    maiorPopulacaoServer,
+    aumentoSelicServer,
+    crescimentoPibServer,
+    alertaErrorServer,
+    alertaWarningServer,
+    alertaInfoServer,
+  } = req.body;
 
   usuarioModel
-    .atualizarSlack(idSlack, maiorPopulacaoServer, aumentoSelicServer,
-                    crescimentoPibServer, alertaErrorServer, alertaWarningServer, alertaInfoServer)
-    .then(resultado => {
-      console.log('Slack atualizado!');
-      res.json({ mensagem: 'Configuração atualizada com sucesso!' });
+    .atualizarSlack(
+      idSlack,
+      maiorPopulacaoServer,
+      aumentoSelicServer,
+      crescimentoPibServer,
+      alertaErrorServer,
+      alertaWarningServer,
+      alertaInfoServer
+    )
+    .then((resultado) => {
+      console.log("Slack atualizado!");
+      res.json({ mensagem: "Configuração atualizada com sucesso!" });
     })
-    .catch(erro => {
-      console.error('Erro ao atualizar Slack:', erro);
-      res.status(500).json({ erro: 'Erro ao atualizar configuração Slack' });
+    .catch((erro) => {
+      console.error("Erro ao atualizar Slack:", erro);
+      res.status(500).json({ erro: "Erro ao atualizar configuração Slack" });
     });
 }
 
@@ -255,13 +282,13 @@ function desativarSlack(req, res) {
 
   usuarioModel
     .desativarSlack(idUsuario)
-    .then(resultado => {
-      console.log('Slack desativado!');
-      res.json({ mensagem: 'Slack desativado com sucesso!' });
+    .then((resultado) => {
+      console.log("Slack desativado!");
+      res.json({ mensagem: "Slack desativado com sucesso!" });
     })
-    .catch(erro => {
-      console.error('Erro ao desativar Slack:', erro);
-      res.status(500).json({ erro: 'Erro ao desativar Slack' });
+    .catch((erro) => {
+      console.error("Erro ao desativar Slack:", erro);
+      res.status(500).json({ erro: "Erro ao desativar Slack" });
     });
 }
 
@@ -275,5 +302,5 @@ module.exports = {
   obterConfiguracaoSlack,
   criarConfiguracaoSlack,
   atualizarConfiguracaoSlack,
-  desativarSlack
+  desativarSlack,
 };

@@ -378,16 +378,27 @@
         });
 
         const createUserForm = document.querySelector("#tab-create form");
+
         if (createUserForm) {
           createUserForm.addEventListener("submit", function (e) {
             e.preventDefault();
+
+            const empresaSession = sessionStorage.getItem("EMPRESA_LOGADA");
+
+            if (!empresaSession) {
+              alert("⚠️ Erro: Nenhuma empresa identificada na sessão!");
+              return;
+            }
+
+            const empresa = JSON.parse(empresaSession);
+            const idEmpresa = empresa.idEmpresa;
 
             const name = document.getElementById("create-name").value;
             const email = document.getElementById("create-email").value;
             const password = document.getElementById("create-password").value;
             const confirm = document.getElementById("create-confirm").value;
 
-            if (!name || !email || !password) {
+            if (!name || !email || !password || !confirm) {
               alert("⚠️ Por favor, preencha todos os campos obrigatórios!");
               return;
             }
@@ -402,8 +413,45 @@
               return;
             }
 
-            alert(`✅ Usuário ${name} criado com sucesso!`);
-            createUserForm.reset();
+            const btnSubmit = createUserForm.querySelector(
+              "button[type='submit']"
+            );
+            const originalText = btnSubmit.innerText;
+            btnSubmit.innerText = "Cadastrando...";
+            btnSubmit.disabled = true;
+
+            fetch("/usuarios/cadastrar", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                nomeServer: name,
+                emailServer: email,
+                senhaServer: password,
+                idEmpresaServer: idEmpresa,
+              }),
+            })
+              .then((response) => {
+                if (!response.ok) {
+                  return response.json().then((data) => {
+                    throw new Error(data.erro || "Erro ao cadastrar");
+                  });
+                }
+                return response.json();
+              })
+              .then((data) => {
+                alert("✅ Usuário cadastrado com sucesso !");
+                createUserForm.reset();
+              })
+              .catch((erro) => {
+                console.error(erro);
+                alert(`❌ ${erro.message}`);
+              })
+              .finally(() => {
+                btnSubmit.innerText = originalText;
+                btnSubmit.disabled = false;
+              });
           });
         }
 
