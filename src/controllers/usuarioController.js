@@ -62,32 +62,6 @@ function autenticar(req, res) {
     });
 }
 
-function cadastrar(req, res) {
-  var nome = req.body.nomeServer;
-  var email = req.body.emailServer;
-  var senha = req.body.senhaServer;
-  var idEmpresa = req.body.idEmpresaServer;
-
-  if (!nome || !email || !senha || !idEmpresa) {
-    return res.status(400).json({ erro: "Campos obrigatórios faltando!" });
-  }
-
-  usuarioModel
-    .cadastrar(nome, email, senha, idEmpresa)
-    .then(function (resultado) {
-      console.log("✅ Cadastro realizado com sucesso!");
-      res.json(resultado);
-    })
-    .catch(function (erro) {
-      console.error("ERRO NO CADASTRO:", erro);
-
-      if (erro.code === "ER_DUP_ENTRY") {
-        return res.status(409).json({ erro: "Este email já está cadastrado." });
-      }
-      res.status(500).json({ erro: "Erro interno ao realizar cadastro." });
-    });
-}
-
 function obterDados(req, res) {
   const idUsuario = req.params.idUsuario;
 
@@ -294,7 +268,6 @@ function desativarSlack(req, res) {
 
 module.exports = {
   autenticar,
-  cadastrar,
   obterDados,
   atualizarPerfil,
   alterarSenha,

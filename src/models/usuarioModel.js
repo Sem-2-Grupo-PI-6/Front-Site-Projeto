@@ -9,15 +9,6 @@ function autenticar(email, senha) {
   return database.executar(instrucaoSql, [email, senha]);
 }
 
-function cadastrar(nome, email, senha, idEmpresa) {
-  console.log("ACESSEI O USUARIO MODEL - function cadastrar()");
-
-  var instrucaoSql = `CALL SetCadastroUsuario(?, ?, ?, ?)`;
-
-  console.log("Executando SQL:\n", instrucaoSql);
-  return database.executar(instrucaoSql, [nome, email, senha, idEmpresa]);
-}
-
 function atualizarUltimoAcesso(idUsuario) {
   console.log(
     "ACESSEI O USUARIO MODEL - function atualizarUltimoAcesso():",
@@ -182,7 +173,6 @@ function desativarSlack(idUsuario) {
 
 module.exports = {
   autenticar,
-  cadastrar,
   atualizarUltimoAcesso,
   atualizarPerfil,
   alterarSenha,

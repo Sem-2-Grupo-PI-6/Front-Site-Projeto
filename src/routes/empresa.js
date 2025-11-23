@@ -6,6 +6,10 @@ router.post("/autenticarEmpresa", function (req, res) {
   empresaController.autenticarEmpresa(req, res);
 });
 
+router.post("/cadastrarUsuario", function (req, res) {
+  empresaController.cadastrarUsuario(req, res);
+});
+
 router.post("/cadastrar", function (req, res) {
   empresaController.cadastrarEmpresa(req, res);
 });
