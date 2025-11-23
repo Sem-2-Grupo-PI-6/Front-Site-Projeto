@@ -52,6 +52,23 @@ CREATE TABLE filtroUsuario (
     FOREIGN KEY (tblUsuario_Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa)
 );
 
+CREATE TABLE tblSlack (
+idSlack INT PRIMARY KEY AUTO_INCREMENT,
+    maiorPopulacao TINYINT,
+    aumentoSelic TINYINT,
+    crescimentoPib TINYINT,
+    alertaError TINYINT,
+    alertaWarning TINYINT,
+    alertaInfo TINYINT
+);
+
+CREATE TABLE tblCanalWebhook (
+    idCanalWebhook INT PRIMARY KEY AUTO_INCREMENT,
+    nomeCanal VARCHAR(99),
+    webhook VARCHAR(99)
+);
+
+
 
 CREATE TABLE tblLogSistemaAcesso (
     idLogSistema INT PRIMARY KEY AUTO_INCREMENT,
