@@ -10,11 +10,56 @@ function listarFiltros(req, res) {
       .listarFiltros(idUser)
       .then(function (resultado) {
         if (resultado.length > 0) {
-          // Parse do JSON config para cada filtro
-          const filtrosComConfig = resultado.map(filtro => ({
-            ...filtro,
-            config: JSON.parse(filtro.config)
-          }));
+          const filtrosComConfig = resultado.map(filtro => {
+            let configParsed;
+            
+            // LOG para debug
+            console.log('📦 Config recebido do banco:', filtro.config);
+            console.log('📦 Tipo:', typeof filtro.config);
+            
+            try {
+              if (!filtro.config || filtro.config === '') {
+                throw new Error('Config vazio');
+              }
+              
+              configParsed = typeof filtro.config === 'string' 
+                ? JSON.parse(filtro.config) 
+                : filtro.config;
+                
+              // Validar estrutura
+              if (!configParsed.kpis || !configParsed.graficos) {
+                throw new Error('Estrutura inválida');
+              }
+              
+            } catch (erro) {
+              console.error('❌ Erro ao parsear config do filtro:', filtro.idfiltroUsuario, erro);
+              // Config padrão
+              configParsed = {
+                kpis: {
+                  economico: { enabled: true, value: "pib-sp" },
+                  setor: { enabled: true, value: "construcao" },
+                  financeiro: { enabled: true, value: "selic" },
+                  demo: { enabled: true, value: "faixa-etaria" }
+                },
+                graficos: {
+                  pib: { enabled: true, regioes: ["grande-sp", "interior", "litoral"] },
+                  setor: { enabled: true, setores: ["construcao", "imobiliario", "servicos"] },
+                  atratividade: { enabled: true, regioes: ["zona-sul", "zona-leste", "abc", "campinas", "santos", "ribeirao"] }
+                }
+              };
+            }
+            
+            return {
+              idfiltroUsuario: filtro.idfiltroUsuario,
+              nomeFiltro: filtro.nomeFiltro,
+              ativo: filtro.ativo,
+              dtCreateFiltro: filtro.dtCreateFiltro,
+              dtUpdateFiltro: filtro.dtUpdateFiltro,
+              config: configParsed
+            };
+          });
+          
+          console.log('✅ Filtros processados:', filtrosComConfig.length);
           res.status(200).json(filtrosComConfig);
         } else {
           res.status(204).send("Nenhum filtro encontrado!");
@@ -38,10 +83,35 @@ function buscarFiltroAtivo(req, res) {
       .buscarFiltroAtivo(idUser)
       .then(function (resultado) {
         if (resultado.length > 0) {
+          let configParsed;
+          
+          console.log('📦 Config ativo recebido:', resultado[0].config);
+          
+          try {
+            if (!resultado[0].config || resultado[0].config === '') {
+              throw new Error('Config vazio');
+            }
+            
+            configParsed = typeof resultado[0].config === 'string' 
+              ? JSON.parse(resultado[0].config) 
+              : resultado[0].config;
+              
+            if (!configParsed.kpis || !configParsed.graficos) {
+              throw new Error('Estrutura inválida');
+            }
+            
+          } catch (erro) {
+            console.error('❌ Erro ao parsear config do filtro ativo:', erro);
+            configParsed = null;
+          }
+
           const filtroAtivo = {
-            ...resultado[0],
-            config: JSON.parse(resultado[0].config)
+            idfiltroUsuario: resultado[0].idfiltroUsuario,
+            nomeFiltro: resultado[0].nomeFiltro,
+            ativo: resultado[0].ativo,
+            config: configParsed
           };
+          
           res.status(200).json(filtroAtivo);
         } else {
           res.status(204).send("Nenhum filtro ativo encontrado!");

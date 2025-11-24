@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Evolvere Invest - Configurações Admin</title>
-    <link rel="stylesheet" href="./css/styles.css" />
-    <link rel="stylesheet" href="./css/configAdmin.css" />
-    <link rel="icon" href="./assets/icon/favicon.png" />
-    <script src="./js/monitoramento.js"></script>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/configAdmin.css" />
+    <link rel="icon" href="../assets/icon/favicon.png" />
+    <script src="../js/monitoramento.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Orbitron:wght@400;700&display=swap"
       rel="stylesheet"
@@ -549,7 +549,6 @@
 </html>
 
 <script>
-  // ===== TABS SYSTEM =====
   document.addEventListener("DOMContentLoaded", function () {
     const tabButtons = document.querySelectorAll(".tab-btn");
     const tabContents = document.querySelectorAll(".tab-content");
@@ -558,19 +557,16 @@
       button.addEventListener("click", () => {
         const targetTab = button.getAttribute("data-tab");
 
-        // Remove active class from all buttons and contents
+
         tabButtons.forEach((btn) => btn.classList.remove("active"));
         tabContents.forEach((content) => content.classList.remove("active"));
 
-        // Add active class to clicked button and corresponding content
         button.classList.add("active");
         document.getElementById(`tab-${targetTab}`).classList.add("active");
       });
     });
 
-    // ===== FORM VALIDATIONS =====
-
-    // Create User Form
+  
     const createUserForm = document.querySelector("#tab-create form");
     if (createUserForm) {
       createUserForm.addEventListener("submit", function (e) {
@@ -582,7 +578,6 @@
         const confirm = document.getElementById("create-confirm").value;
         const type = document.getElementById("create-type").value;
 
-        // Validações
         if (!name || !email || !password || !type) {
           alert("⚠️ Por favor, preencha todos os campos obrigatórios!");
           return;
@@ -598,19 +593,16 @@
           return;
         }
 
-        // Validação de email admin
         if (type === "admin" && !email.endsWith("@admin.net")) {
           alert("⚠️ Administradores devem usar email com domínio @admin.net!");
           return;
         }
 
-        // Simular criação de usuário
         alert(`✅ Usuário ${name} criado com sucesso!`);
         createUserForm.reset();
       });
     }
 
-    // Profile Form
     const profileForm = document.querySelector("#tab-profile form");
     if (profileForm) {
       profileForm.addEventListener("submit", function (e) {
@@ -626,7 +618,6 @@
           "profile-confirm-password"
         ).value;
 
-        // Se está alterando senha
         if (currentPassword || newPassword || confirmPassword) {
           if (!currentPassword) {
             alert("⚠️ Digite sua senha atual!");
@@ -648,7 +639,6 @@
       });
     }
 
-    // Settings Form
     const settingsForm = document.querySelector("#tab-settings form");
     if (settingsForm) {
       settingsForm.addEventListener("submit", function (e) {
@@ -657,7 +647,6 @@
       });
     }
 
-    // ===== SEARCH FUNCTIONALITY =====
     const searchInput = document.querySelector(".search-input");
     const filterSelect = document.querySelector(".filter-select");
     const tableRows = document.querySelectorAll(".users-table tbody tr");
@@ -693,7 +682,6 @@
       filterSelect.addEventListener("change", filterTable);
     }
 
-    // ===== DELETE BUTTON =====
     const deleteButtons = document.querySelectorAll(".btn-delete");
     deleteButtons.forEach((button) => {
       button.addEventListener("click", function () {
@@ -711,7 +699,6 @@
       });
     });
 
-    // ===== EDIT BUTTON =====
     const editButtons = document.querySelectorAll(".btn-edit");
     editButtons.forEach((button) => {
       button.addEventListener("click", function () {

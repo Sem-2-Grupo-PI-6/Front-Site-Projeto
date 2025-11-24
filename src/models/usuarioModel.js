@@ -118,15 +118,35 @@ function criarSlack(
   alertaWarning,
   alertaInfo
 ) {
+  console.log('📝 criarSlack() chamado com:', {
+    idUsuario,
+    maiorPopulacao,
+    aumentoSelic,
+    crescimentoPib,
+    alertaError,
+    alertaWarning,
+    alertaInfo
+  });
+
   var instrucaoSql = `
     INSERT INTO tblSlack (maiorPopulacao, aumentoSelic, crescimentoPib, 
                           alertaError, alertaWarning, alertaInfo)
-    VALUES (${maiorPopulacao}, ${aumentoSelic}, ${crescimentoPib},
-            ${alertaError}, ${alertaWarning}, ${alertaInfo});
+    VALUES (${maiorPopulacao || 0}, ${aumentoSelic || 0}, ${crescimentoPib || 0},
+            ${alertaError || 0}, ${alertaWarning || 0}, ${alertaInfo || 0});
   `;
 
+  console.log('📤 SQL INSERT tblSlack:', instrucaoSql);
+
   return database.executar(instrucaoSql).then((resultado) => {
+    console.log('✅ INSERT tblSlack executado!');
+    console.log('📊 Resultado INSERT:', resultado);
+    console.log('🆔 insertId:', resultado.insertId);
+    
     const idSlack = resultado.insertId;
+
+    if (!idSlack) {
+      throw new Error('insertId não foi retornado!');
+    }
 
     const updateSql = `
       UPDATE tblUsuario 
@@ -134,7 +154,26 @@ function criarSlack(
       WHERE idUsuario = ${idUsuario};
     `;
 
-    return database.executar(updateSql).then(() => resultado);
+    console.log('📤 SQL UPDATE tblUsuario:', updateSql);
+
+    return database.executar(updateSql).then((resultadoUpdate) => {
+      console.log('✅ UPDATE tblUsuario executado!');
+      console.log('📊 Resultado UPDATE:', resultadoUpdate);
+      console.log('📊 Linhas afetadas:', resultadoUpdate.affectedRows);
+      
+      if (resultadoUpdate.affectedRows === 0) {
+        console.warn('⚠️ Nenhuma linha foi atualizada no UPDATE!');
+      }
+      
+      return {
+        insertId: idSlack,
+        affectedRows: resultado.affectedRows,
+        updateAffectedRows: resultadoUpdate.affectedRows
+      };
+    });
+  }).catch((erro) => {
+    console.error('❌ Erro em criarSlack:', erro);
+    throw erro;
   });
 }
 

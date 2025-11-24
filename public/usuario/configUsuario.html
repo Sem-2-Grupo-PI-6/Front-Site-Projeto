@@ -494,13 +494,11 @@
               </div>
             </section>
 
-            <!-- SEÇÃO 2: CANAIS DE NOTIFICAÇÃO -->
             <section class="modal-section" id="slackCanaisSection">
               <h3 class="section-title">📢 Escolha os Canais de Notificação</h3>
               <p class="section-description">Selecione em quais canais você deseja receber alertas específicos</p>
 
               <div class="slack-canais-grid">
-                <!-- Canal: População -->
                 <div class="slack-canal-card">
                   <div class="canal-header">
                     <div class="canal-icon">👥</div>
@@ -515,13 +513,12 @@
                     </label>
                   </div>
                   <div class="canal-content">
-                    <h4>Mudanças Demográficas</h4>
-                    <p>Alertas sobre crescimento populacional, densidade demográfica e faixas etárias predominantes nas regiões</p>
+                    <h4>Crescimento Populacional</h4>
+                    <p>Alertas sobre crescimento populacional, das regiões de São Paulo</p>
                     <span class="canal-badge">Canal: #demografia</span>
                   </div>
                 </div>
 
-                <!-- Canal: Selic -->
                 <div class="slack-canal-card">
                   <div class="canal-header">
                     <div class="canal-icon">💰</div>
@@ -542,7 +539,6 @@
                   </div>
                 </div>
 
-                <!-- Canal: PIB -->
                 <div class="slack-canal-card">
                   <div class="canal-header">
                     <div class="canal-icon">📊</div>
@@ -569,13 +565,11 @@
               </div>
             </section>
 
-            <!-- SEÇÃO 3: GATILHOS DE ALERTA -->
             <section class="modal-section" id="slackGatilhosSection">
               <h3 class="section-title">🔔 Defina os Gatilhos de Alerta</h3>
               <p class="section-description">Escolha a criticidade dos alertas que deseja receber</p>
 
               <div class="gatilhos-group">
-                <!-- Gatilho: ERROR -->
                 <div class="gatilho-item">
                   <label class="gatilho-label">
                     <input 
@@ -593,7 +587,6 @@
                   </label>
                 </div>
 
-                <!-- Gatilho: WARNING -->
                 <div class="gatilho-item">
                   <label class="gatilho-label">
                     <input 
@@ -611,7 +604,6 @@
                   </label>
                 </div>
 
-                <!-- Gatilho: INFO -->
                 <div class="gatilho-item">
                   <label class="gatilho-label">
                     <input 
@@ -634,7 +626,6 @@
               </div>
             </section>
 
-            <!-- PREVIEW -->
             <section class="modal-section">
               <h3 class="section-title">👀 Preview da Notificação</h3>
               <div class="slack-preview">
@@ -1083,6 +1074,8 @@ function validarCanais() {
 async function salvarConfiguracaoSlack() {
   const slackAtivo = document.getElementById('slackMasterToggle').checked;
 
+  console.log('🔍 Slack Ativo?', slackAtivo);
+
   if (!slackAtivo) {
     if (confirm('⚠️ Tem certeza que deseja DESATIVAR as notificações do Slack?')) {
       await desativarSlack();
@@ -1094,6 +1087,8 @@ async function salvarConfiguracaoSlack() {
   const selic = document.getElementById('canalSelic').checked;
   const pib = document.getElementById('canalPib').checked;
 
+  console.log('📢 Canais selecionados:', { populacao, selic, pib });
+
   if (!populacao && !selic && !pib) {
     alert('⚠️ Selecione pelo menos um canal para receber notificações!');
     return;
@@ -1102,6 +1097,8 @@ async function salvarConfiguracaoSlack() {
   const error = document.getElementById('gatilhoError').checked;
   const warning = document.getElementById('gatilhoWarning').checked;
   const info = document.getElementById('gatilhoInfo').checked;
+
+  console.log('🔔 Gatilhos selecionados:', { error, warning, info });
 
   if (!error && !warning && !info) {
     alert('⚠️ Selecione pelo menos um tipo de gatilho!');
@@ -1118,35 +1115,43 @@ async function salvarConfiguracaoSlack() {
     alertaInfoServer: info ? 1 : 0
   };
 
-  console.log('📤 Enviando configuração Slack:', configuracao);
+  console.log('📤 Configuração a ser enviada:', configuracao);
+  console.log('📤 JSON.stringify:', JSON.stringify(configuracao));
 
   try {
-    const url = configSlackAtual 
+    const url = configSlackAtual && configSlackAtual.fkSlack
       ? `http://localhost:3333/usuarios/slack/atualizar/${configSlackAtual.fkSlack}`
       : 'http://localhost:3333/usuarios/slack/criar';
 
+    console.log('🌐 URL da requisição:', url);
+    console.log('🔧 Método:', configSlackAtual && configSlackAtual.fkSlack ? 'PUT' : 'POST');
+
     const response = await fetch(url, {
-      method: configSlackAtual ? 'PUT' : 'POST',
+      method: configSlackAtual && configSlackAtual.fkSlack ? 'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(configuracao)
     });
 
+    console.log('📥 Response status:', response.status);
+    console.log('📥 Response ok?', response.ok);
+
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Erro na resposta:', errorText);
       throw new Error('Erro ao salvar configuração');
     }
 
     const data = await response.json();
-    console.log('✅ Configuração salva:', data);
+    console.log('✅ Resposta do servidor:', data);
 
     alert('✅ Configurações do Slack salvas com sucesso!');
     fecharModalSlack();
     
   } catch (erro) {
     console.error('❌ Erro ao salvar:', erro);
-    alert('❌ Erro ao salvar configurações. Tente novamente.');
+    alert('❌ Erro ao salvar configurações. Verifique o console.');
   }
 }
-
 async function desativarSlack() {
   try {
     const response = await fetch(`http://localhost:3333/usuarios/slack/desativar/${usuarioLogado.idUsuario}`, {

@@ -190,6 +190,8 @@ function obterConfiguracaoSlack(req, res) {
 }
 
 function criarConfiguracaoSlack(req, res) {
+  console.log('📥 BODY RECEBIDO:', req.body);
+  
   const {
     idUsuarioServer,
     maiorPopulacaoServer,
@@ -199,6 +201,22 @@ function criarConfiguracaoSlack(req, res) {
     alertaWarningServer,
     alertaInfoServer,
   } = req.body;
+
+  console.log('📊 Dados extraídos:', {
+    idUsuarioServer,
+    maiorPopulacaoServer,
+    aumentoSelicServer,
+    crescimentoPibServer,
+    alertaErrorServer,
+    alertaWarningServer,
+    alertaInfoServer,
+  });
+
+  if (!idUsuarioServer) {
+    console.error('❌ idUsuarioServer está undefined!');
+    res.status(400).json({ erro: 'ID do usuário não informado' });
+    return;
+  }
 
   usuarioModel
     .criarSlack(
@@ -211,15 +229,19 @@ function criarConfiguracaoSlack(req, res) {
       alertaInfoServer
     )
     .then((resultado) => {
-      console.log("Slack criado!");
-      res.json(resultado);
+      console.log('✅ Slack criado com sucesso!');
+      console.log('📊 Resultado final:', resultado);
+      res.json({ 
+        mensagem: 'Configuração Slack criada com sucesso!',
+        idSlack: resultado.insertId,
+        resultado 
+      });
     })
     .catch((erro) => {
-      console.error("Erro ao criar Slack:", erro);
-      res.status(500).json({ erro: "Erro ao criar configuração Slack" });
+      console.error('❌ Erro ao criar Slack:', erro);
+      res.status(500).json({ erro: 'Erro ao criar configuração Slack', detalhes: erro.message });
     });
 }
-
 function atualizarConfiguracaoSlack(req, res) {
   const idSlack = req.params.idSlack;
   const {

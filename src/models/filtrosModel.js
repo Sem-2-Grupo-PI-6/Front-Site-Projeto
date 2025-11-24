@@ -1,6 +1,5 @@
 var database = require("../database/config");
 
-// Listar todos os filtros do usuário
 function listarFiltros(idUser) {
   console.log("ACESSEI O FILTROS MODEL - function listarFiltros():", idUser);
   
@@ -15,7 +14,6 @@ function listarFiltros(idUser) {
   return database.executar(instrucaoSql);
 }
 
-// Buscar filtro ativo do usuário
 function buscarFiltroAtivo(idUser) {
   console.log("ACESSEI O FILTROS MODEL - function buscarFiltroAtivo():", idUser);
   
@@ -30,7 +28,6 @@ function buscarFiltroAtivo(idUser) {
   return database.executar(instrucaoSql);
 }
 
-// Criar novo filtro
 function criarFiltro(idUser, nome, config) {
   console.log("ACESSEI O FILTROS MODEL - function criarFiltro():", idUser, nome);
   
@@ -45,23 +42,21 @@ function criarFiltro(idUser, nome, config) {
   return database.executar(instrucaoSql);
 }
 
-// Atualizar filtro
 function atualizarFiltro(id, idUser, nome, config) {
   console.log("ACESSEI O FILTROS MODEL - function atualizarFiltro():", id, idUser, nome);
   
   const configJson = JSON.stringify(config);
   
   var instrucaoSql = `
-    UPDATE filtrosUsuario 
+    UPDATE filtroUsuario 
     SET nomeFiltro = '${nome}', config = '${configJson}' 
-    WHERE idfiltroUsuario  = ${id} AND tblUsuario_idUsuario = ${idUser};
+    WHERE idfiltroUsuario = ${id} AND tblUsuario_idUsuario = ${idUser};
   `;
   
   console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.executar(instrucaoSql);
 }
 
-// Ativar filtro (desativa outros do mesmo usuário)
 function ativarFiltro(id, idUser) {
   console.log("ACESSEI O FILTROS MODEL - function ativarFiltro():", id, idUser);
 
@@ -71,7 +66,6 @@ function ativarFiltro(id, idUser) {
     WHERE tblUsuario_idUsuario = ${idUser};
   `;
   
-
   var instrucaoSql2 = `
     UPDATE filtroUsuario 
     SET ativo = TRUE 
@@ -84,7 +78,6 @@ function ativarFiltro(id, idUser) {
     .then(() => database.executar(instrucaoSql2));
 }
 
-// Deletar filtro
 function deletarFiltro(id, idUser) {
   console.log("ACESSEI O FILTROS MODEL - function deletarFiltro():", id, idUser);
   
