@@ -36,8 +36,12 @@ CREATE TABLE tblUsuario (
     dtCriacao DATE,
     filtrosPersonalizados JSON,
     Empresa_idEmpresa INT,
-    FOREIGN KEY (Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa)
+    fkSlack INT,
+    receberNotificacao TINYINT,
+    FOREIGN KEY (Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa),
+    FOREIGN KEY (fkSlack) REFERENCES tblSlack(idSlack)
 );
+
 
 CREATE TABLE filtroUsuario (
     idfiltroUsuario INT PRIMARY KEY AUTO_INCREMENT,
@@ -574,3 +578,11 @@ select * from tblAdmin;
 -- CALL setCadastrarEmpresa('79541450000141', 'cadastro 2 empresa', 'empresateste@empresa.com');
 -- CALL getAutenticarEmpresa('suporte@betainsights.com', '12345678');
 -- CALL getLoginUsuario('joao@alphadados.com', 'senha123');
+
+
+    SELECT 
+      u.fkSlack,
+      s.*
+    FROM tblUsuario u
+    LEFT JOIN tblSlack s ON u.fkSlack = s.idSlack
+    WHERE u.idUsuario = 1;
