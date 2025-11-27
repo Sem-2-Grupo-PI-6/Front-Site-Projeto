@@ -25,7 +25,6 @@
         <nav aria-label="Primary">
           <h2>Menu Principal</h2>
           <ul>
-            <li><a href="#">📊 Dashboard</a></li>
             <li>
               <a href="#" onclick="abrirGerenciarFiltros(); return false;"
                 >🗺️ Meus Filtros</a
@@ -984,116 +983,143 @@
         console.log("✅ Dashboard atualizada com sucesso!");
       }
 
-      async function atualizarKPIs(config, dadosBanco) {
-        const kpiCards = document.querySelectorAll(".kpi-card");
 
-        if (config.kpis.economico.enabled) {
-          kpiCards[0].style.display = "flex";
-          kpiCards[0].querySelector(".kpi-label").textContent =
-            labelsKPIs[config.kpis.economico.value];
+async function atualizarKPIs(config, dadosBanco) {
+  const kpiCards = document.querySelectorAll(".kpi-card");
 
-          if (dadosBanco.pib && dadosBanco.pib.length > 0) {
-            const pibMedio =
-              dadosBanco.pib.reduce(
-                (acc, item) => acc + parseFloat(item.valor),
-                0
-              ) / dadosBanco.pib.length;
-            kpiCards[0].querySelector(
-              ".kpi-value"
-            ).innerHTML = `+${pibMedio.toFixed(
-              1
-            )}<span class="kpi-unit">%</span>`;
-          }
-        } else {
-          kpiCards[0].style.display = "none";
-        }
+  if (config.kpis.economico. enabled) {
+    kpiCards[0].style.display = "flex";
+    kpiCards[0].querySelector(".kpi-label").textContent =
+      labelsKPIs[config.kpis. economico.value];
 
-        if (config.kpis.setor.enabled) {
-          kpiCards[1].style.display = "flex";
-          kpiCards[1].querySelector(".kpi-label").textContent =
-            labelsKPIs[config.kpis.setor.value];
+    if (dadosBanco.pib && dadosBanco. pib.length > 0) {
+      const pibMedio =
+        dadosBanco.pib. reduce(
+          (acc, item) => acc + parseFloat(item.valor || 0),
+          0
+        ) / dadosBanco.pib. length;
+      kpiCards[0]. querySelector(
+        ".kpi-value"
+      ).innerHTML = `+${pibMedio.toFixed(1)}<span class="kpi-unit">%</span>`;
+    }
+  } else {
+    kpiCards[0]. style.display = "none";
+  }
 
-          if (
-            config.kpis.setor.value === "construcao" &&
-            dadosBanco.pibConstrucao &&
-            dadosBanco.pibConstrucao.length > 0
-          ) {
-            const ultimoPib = dadosBanco.pibConstrucao[0];
-            kpiCards[1].querySelector(".kpi-value").innerHTML = `+${parseFloat(
-              ultimoPib.valorPib
-            ).toFixed(1)}<span class="kpi-unit">%</span>`;
-          }
-        } else {
-          kpiCards[1].style.display = "none";
-        }
+  if (config.kpis. setor.enabled) {
+    kpiCards[1].style.display = "flex";
+    kpiCards[1].querySelector(".kpi-label").textContent =
+      labelsKPIs[config.kpis.setor.value];
 
-        if (config.kpis.financeiro.enabled) {
-          kpiCards[2].style.display = "flex";
-          kpiCards[2].querySelector(".kpi-label").textContent =
-            labelsKPIs[config.kpis.financeiro.value];
+    if (config.kpis. setor.value === "construcao" && dadosBanco.construcaoAtual) {
+      const valor = parseFloat(dadosBanco.construcaoAtual.valorPib || 0);
+      kpiCards[1].querySelector(".kpi-value"). innerHTML = `+${valor.toFixed(1)}<span class="kpi-unit">%</span>`;
+    } else if (config.kpis.setor.value === "servicos" && dadosBanco.servicosAtual) {
+      const valor = parseFloat(dadosBanco.servicosAtual.valorServico || 0);
+      kpiCards[1].querySelector(".kpi-value").innerHTML = `+${valor.toFixed(1)}<span class="kpi-unit">%</span>`;
+    }
+  } else {
+    kpiCards[1].style.display = "none";
+  }
 
-          if (config.kpis.financeiro.value === "selic" && dadosBanco.selic) {
-            kpiCards[2].querySelector(".kpi-value").innerHTML = `${parseFloat(
-              dadosBanco.selic.taxaSelic
-            ).toFixed(2)}<span class="kpi-unit">%</span>`;
-            kpiCards[2].querySelector(".kpi-description").textContent =
-              "Taxa básica de juros";
-          } else if (
-            config.kpis.financeiro.value === "inflacao" &&
-            dadosBanco.inflacao
-          ) {
-            kpiCards[2].querySelector(".kpi-value").innerHTML = `${parseFloat(
-              dadosBanco.inflacao.taxaInflacao
-            ).toFixed(1)}<span class="kpi-unit">%</span>`;
-            kpiCards[2].querySelector(".kpi-description").textContent =
-              "Dentro da meta do BC";
-          }
-        } else {
-          kpiCards[2].style.display = "none";
-        }
+  if (config.kpis.financeiro.enabled) {
+    kpiCards[2].style. display = "flex";
+    kpiCards[2].querySelector(".kpi-label"). textContent =
+      labelsKPIs[config.kpis.financeiro. value];
 
-        if (config.kpis.demo.enabled) {
-          kpiCards[3].style.display = "flex";
-          kpiCards[3].querySelector(".kpi-label").textContent =
-            labelsKPIs[config.kpis.demo.value];
+    if (config.kpis.financeiro. value === "selic" && dadosBanco.selic) {
+      const valor = parseFloat(dadosBanco.selic.valorTaxa || 0);
+      kpiCards[2].querySelector(".kpi-value"). innerHTML = `${valor.toFixed(2)}<span class="kpi-unit">%</span>`;
+      kpiCards[2].querySelector(".kpi-description").textContent = "Taxa básica de juros";
+    } else if (config.kpis.financeiro. value === "inflacao" && dadosBanco.inflacao) {
+      const valor = parseFloat(dadosBanco.inflacao.valorTaxa || 0);
+      kpiCards[2].querySelector(".kpi-value"). innerHTML = `${valor.toFixed(2)}<span class="kpi-unit">%</span>`;
+      kpiCards[2].querySelector(".kpi-description"). textContent = "Dentro da meta do BC";
+    }
+  } else {
+    kpiCards[2].style.display = "none";
+  }
 
-          const primeiraZona = config.graficos.pib.regioes[0];
-          const idZona = zonasMapeamento[primeiraZona];
+  if (config.kpis.demo.enabled) {
+    kpiCards[3].style.display = "flex";
+    kpiCards[3].querySelector(".kpi-label").textContent =
+      labelsKPIs[config.kpis.demo.value];
 
-          if (idZona) {
-            const demografia = await buscarDemografia(idZona);
+    const primeiraZona = config.graficos.pib.regioes[0];
+    const idZona = zonasMapeamento[primeiraZona];
 
-            if (demografia) {
-              if (config.kpis.demo.value === "faixa-etaria") {
-                kpiCards[3].querySelector(
-                  ".kpi-value"
-                ).innerHTML = `${Math.round(
-                  demografia.idadeMedia
-                )}<span class="kpi-unit">Anos</span>`;
-                kpiCards[3].querySelector(".kpi-description").textContent =
-                  "Idade média";
-              } else if (config.kpis.demo.value === "densidade") {
-                kpiCards[3].querySelector(
-                  ".kpi-value"
-                ).innerHTML = `${parseFloat(
-                  demografia.densidadeDemografico
-                ).toFixed(1)}<span class="kpi-unit">k/km²</span>`;
-                kpiCards[3].querySelector(".kpi-description").textContent =
-                  "Habitantes por km²";
-              } else if (config.kpis.demo.value === "renda-media") {
-                kpiCards[3].querySelector(
-                  ".kpi-value"
-                ).innerHTML = `R$ 4,2<span class="kpi-unit">mil</span>`;
-                kpiCards[3].querySelector(".kpi-description").textContent =
-                  "Renda média mensal";
-              }
-            }
-          }
-        } else {
-          kpiCards[3].style.display = "none";
+    if (idZona) {
+      const demografia = await buscarDemografia(idZona);
+
+      if (demografia) {
+        if (config.kpis. demo.value === "faixa-etaria") {
+          const idade = parseFloat(demografia.idadeMedia || 0);
+          kpiCards[3]. querySelector(".kpi-value").innerHTML = `${Math.round(idade)}<span class="kpi-unit">Anos</span>`;
+          kpiCards[3].querySelector(".kpi-description").textContent = "Idade média";
+        } else if (config.kpis.demo.value === "densidade") {
+          const densidade = parseFloat(demografia.densidadeDemografico || 0);
+          kpiCards[3].querySelector(".kpi-value").innerHTML = `${densidade.toFixed(1)}<span class="kpi-unit">hab/km²</span>`;
+          kpiCards[3]. querySelector(".kpi-description").textContent = "Densidade demográfica";
+        } else if (config.kpis.demo.value === "renda-media") {
+          kpiCards[3]. querySelector(".kpi-value").innerHTML = `R$ 4,2<span class="kpi-unit">mil</span>`;
+          kpiCards[3].querySelector(".kpi-description").textContent = "Renda média mensal";
         }
       }
+    }
+  } else {
+    kpiCards[3].style.display = "none";
+  }
+}
 
+async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
+  const coresSetores = {
+    construcao: "#0e6930",
+    imobiliario: "#f59e0b",
+    servicos: "#16a34a",
+  };
+
+  const datasets = setores.map((setor) => {
+    let dados = [4.2, 4.5, 4.8, 5.1, 5.3, 5.5, 5.7, 5.4, 5.6, 5.8, 6.0, 6.2];
+
+    if (setor === "construcao" && dadosBanco.pibConstrucao && dadosBanco. pibConstrucao.length > 0) {
+      dados = dadosBanco.pibConstrucao.map((item) => parseFloat(item.valorPib || 0));
+      while (dados.length < 12) {
+        dados.push(dados[dados.length - 1] || 0);
+      }
+      dados = dados.slice(0, 12);
+    } else if (setor === "servicos" && dadosBanco.pibServicos && dadosBanco.pibServicos.length > 0) {
+      dados = dadosBanco.pibServicos.map((item) => parseFloat(item.valorServico || 0));
+      while (dados.length < 12) {
+        dados.push(dados[dados.length - 1] || 0);
+      }
+      dados = dados.slice(0, 12);
+    }
+
+    return {
+      label: labelsSetores[setor],
+      data: dados,
+      backgroundColor: coresSetores[setor],
+      borderRadius: 6,
+      borderSkipped: false,
+    };
+  });
+
+  valorAdicionadoChartInstance. data.datasets = datasets;
+
+  const legendContainer = document.querySelector(".chart-card:nth-child(2) .chart-legend");
+  legendContainer.innerHTML = setores
+    .map(
+      (setor) => `
+    <span class="legend-item">
+      <span class="dot" style="background: ${coresSetores[setor]}"></span>
+      ${labelsSetores[setor]}
+    </span>
+  `
+    )
+    .join("");
+
+  valorAdicionadoChartInstance. update();
+}
       async function atualizarGraficoPIBComBanco(regioes, dadosBanco) {
         const cores = [
           "#0e6930",

@@ -5,15 +5,15 @@ function buscarPibParaGrafico(idsZonas) {
   
   var instrucaoSql = `
     SELECT 
-      p.trimestre, 
-      p.ano, 
+      p. trimestre, 
+      p. ano, 
       p.pibGeral as valor,
       z.nome as zona_nome,
       z.idZona as zona_id
     FROM tblPib p
-    INNER JOIN tblZona z ON p.idPib = z.idZona
-    WHERE z.idZona IN (${idsZonas.join(',')})
-    ORDER BY p.ano DESC, 
+    INNER JOIN tblZona z ON p. tblZona_idZona = z. idZona
+    WHERE z.idZona IN (${idsZonas. join(',')})
+    ORDER BY p. ano DESC, 
       CASE p.trimestre
         WHEN '4º' THEN 4
         WHEN '3º' THEN 3
@@ -28,7 +28,7 @@ function buscarPibParaGrafico(idsZonas) {
 }
 
 function buscarPibAtual() {
-  console.log("ACESSEI O DADOS MODEL - function buscarPibAtual()");
+  console. log("ACESSEI O DADOS MODEL - function buscarPibAtual()");
   
   var instrucaoSql = `
     SELECT trimestre, ano, pibGeral
@@ -49,18 +49,18 @@ function buscarPibAtual() {
 }
 
 function buscarConstrucaoCivilParaGrafico() {
-  console.log("ACESSEI O DADOS MODEL - function buscarConstrucaoCivilParaGrafico()");
+  console. log("ACESSEI O DADOS MODEL - function buscarConstrucaoCivilParaGrafico()");
   
   var instrucaoSql = `
-    SELECT trimestre, ano, construcaoCivil
+    SELECT trimestre, ano, construcaoCivil as valorPib
     FROM tblPibSetor
-    ORDER BY ano DESC, 
+    ORDER BY ano ASC, 
       CASE trimestre
-        WHEN '4º' THEN 4
-        WHEN '3º' THEN 3
-        WHEN '2º' THEN 2
         WHEN '1º' THEN 1
-      END DESC
+        WHEN '2º' THEN 2
+        WHEN '3º' THEN 3
+        WHEN '4º' THEN 4
+      END ASC
     LIMIT 12;
   `;
   
@@ -72,7 +72,7 @@ function buscarConstrucaoCivilAtual() {
   console.log("ACESSEI O DADOS MODEL - function buscarConstrucaoCivilAtual()");
   
   var instrucaoSql = `
-    SELECT trimestre, ano, construcaoCivil
+    SELECT trimestre, ano, construcaoCivil as valorPib
     FROM tblPibSetor
     ORDER BY ano DESC, 
       CASE trimestre
@@ -88,20 +88,19 @@ function buscarConstrucaoCivilAtual() {
   return database.executar(instrucaoSql);
 }
 
-// ===== SERVIÇOS =====
 function buscarServicosParaGrafico() {
   console.log("ACESSEI O DADOS MODEL - function buscarServicosParaGrafico()");
   
   var instrucaoSql = `
-    SELECT trimestre, ano, servico
+    SELECT trimestre, ano, servico as valorServico
     FROM tblPibSetor
-    ORDER BY ano DESC, 
+    ORDER BY ano ASC, 
       CASE trimestre
-        WHEN '4º' THEN 4
-        WHEN '3º' THEN 3
-        WHEN '2º' THEN 2
         WHEN '1º' THEN 1
-      END DESC
+        WHEN '2º' THEN 2
+        WHEN '3º' THEN 3
+        WHEN '4º' THEN 4
+      END ASC
     LIMIT 12;
   `;
   
@@ -110,10 +109,10 @@ function buscarServicosParaGrafico() {
 }
 
 function buscarServicosAtual() {
-  console.log("ACESSEI O DADOS MODEL - function buscarServicosAtual()");
+  console. log("ACESSEI O DADOS MODEL - function buscarServicosAtual()");
   
   var instrucaoSql = `
-    SELECT trimestre, ano, servico
+    SELECT trimestre, ano, servico as valorServico
     FROM tblPibSetor
     ORDER BY ano DESC, 
       CASE trimestre
@@ -125,13 +124,12 @@ function buscarServicosAtual() {
     LIMIT 1;
   `;
   
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
+  console. log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database. executar(instrucaoSql);
 }
 
-// ===== PIB REGIONAL SP (ANUAL) =====
 function buscarPibRegionalSP() {
-  console.log("ACESSEI O DADOS MODEL - function buscarPibRegionalSP()");
+  console. log("ACESSEI O DADOS MODEL - function buscarPibRegionalSP()");
   
   var instrucaoSql = `
     SELECT ano, pibSP
@@ -139,8 +137,8 @@ function buscarPibRegionalSP() {
     ORDER BY ano ASC;
   `;
   
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
+  console. log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database. executar(instrucaoSql);
 }
 
 function buscarPibRegionalSPAtual() {
@@ -157,7 +155,6 @@ function buscarPibRegionalSPAtual() {
   return database.executar(instrucaoSql);
 }
 
-// ===== SELIC =====
 function buscarSelicAtual() {
   console.log("ACESSEI O DADOS MODEL - function buscarSelicAtual()");
   
@@ -172,7 +169,6 @@ function buscarSelicAtual() {
   return database.executar(instrucaoSql);
 }
 
-// ===== INFLAÇÃO =====
 function buscarInflacaoAtual() {
   console.log("ACESSEI O DADOS MODEL - function buscarInflacaoAtual()");
   
@@ -187,7 +183,6 @@ function buscarInflacaoAtual() {
   return database.executar(instrucaoSql);
 }
 
-// ===== DEMOGRAFIA =====
 function buscarDemografiaPorZona(idZona) {
   console.log("ACESSEI O DADOS MODEL - function buscarDemografiaPorZona():", idZona);
   
@@ -215,7 +210,7 @@ function buscarPopulacaoMultiplasZonas(idsZonas) {
   console.log("ACESSEI O DADOS MODEL - function buscarPopulacaoMultiplasZonas():", idsZonas);
   
   var instrucaoSql = `
-   SELECT 
+    SELECT 
       p.idtblPopulacao,
       p.municipio,
       p.qtdPopulacao,
@@ -224,18 +219,17 @@ function buscarPopulacaoMultiplasZonas(idsZonas) {
       z.nome as zona_nome,
       z.idZona as tblZona_idZona
     FROM tblPopulacao p
-    INNER JOIN tblZona z ON p.tblZona_idZona = z.idZona
-    WHERE z.idZona IN (${idsZonas.join(',')})
-    ORDER BY p.ano DESC;
+    INNER JOIN tblZona z ON p.tblZona_idZona = z. idZona
+    WHERE z.idZona IN (${idsZonas. join(',')})
+    ORDER BY p. ano DESC;
   `;
   
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
+  console. log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database. executar(instrucaoSql);
 }
 
-// ===== ZONAS =====
 function buscarTodasZonas() {
-  console.log("ACESSEI O DADOS MODEL - function buscarTodasZonas()");
+  console. log("ACESSEI O DADOS MODEL - function buscarTodasZonas()");
   
   var instrucaoSql = `
     SELECT idZona, nome
@@ -243,11 +237,10 @@ function buscarTodasZonas() {
     ORDER BY nome;
   `;
   
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
+  console. log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database. executar(instrucaoSql);
 }
 
-// ===== ATRATIVIDADE =====
 function buscarScoreAtratividade(idsZonas) {
   console.log("ACESSEI O DADOS MODEL - function buscarScoreAtratividade():", idsZonas);
   
@@ -255,18 +248,18 @@ function buscarScoreAtratividade(idsZonas) {
     SELECT 
       z.idZona,
       z.nome,
-      AVG(pop.qtdpopulacao) as populacao_media,
+      AVG(pop. qtdpopulacao) as populacao_media,
       AVG(pop.densidadeDemo) as densidade_media,
       AVG(pop.idadeMedia) as idade_media,
       (
-        (AVG(pop.qtdPopulacao) / 10000) * 0.3 + 
-        (AVG(pop.densidadeDemo) / 100) * 0.4 + 
-        ((50 - ABS(AVG(pop.idadeMedia) - 30)) / 50 * 100) * 0.3
+        (COALESCE(AVG(pop.qtdPopulacao), 0) / 10000) * 0.3 + 
+        (COALESCE(AVG(pop.densidadeDemo), 0) / 100) * 0.4 + 
+        ((50 - ABS(COALESCE(AVG(pop.idadeMedia), 30) - 30)) / 50 * 100) * 0.3
       ) as score
     FROM tblZona z
-    LEFT JOIN tblPopulacao pop ON z.idZona = pop.idZona
+    LEFT JOIN tblPopulacao pop ON z.idZona = pop.tblZona_idZona
     WHERE z.idZona IN (${idsZonas.join(',')})
-    GROUP BY z.idZona, z.nome
+    GROUP BY z.idZona, z. nome
     ORDER BY score DESC;
   `;
   
