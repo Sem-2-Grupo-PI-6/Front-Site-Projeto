@@ -453,667 +453,686 @@
       </div>
     </div>
 
-    <script>
-      let chartUsuarios = null;
-      let chartEmpresas = null;
+<script>
+  let chartUsuarios = null;
+  let chartEmpresas = null;
 
-      // ========== INICIALIZAÇÃO ==========
-      document.addEventListener("DOMContentLoaded", function () {
-        console.log("🚀 Iniciando Dashboard Admin...");
+  const CORES_GRAFICOS = {
+    primarias: [
+      "#059669",
+      "#10b981",
+      "#047857",
+      "#34d399",
+      "#065f46",
+      "#6ee7b7",
+    ],
+    secundarias: [
+      "#0d9488",
+      "#14b8a6",
+      "#0f766e",
+      "#2dd4bf",
+      "#115e59",
+      "#5eead4",
+    ],
+    fundos: [
+      "rgba(5, 150, 105, 0.15)",
+      "rgba(16, 185, 129, 0.15)",
+      "rgba(4, 120, 87, 0.15)",
+      "rgba(52, 211, 153, 0.15)",
+      "rgba(6, 95, 70, 0.15)",
+      "rgba(110, 231, 183, 0.15)",
+    ],
+  };
 
-        try {
-          // Timestamp
-          atualizarTimestamp();
-          setInterval(atualizarTimestamp, 60000);
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 Iniciando Dashboard Admin...");
 
-          // Métricas
-          atualizarMetricasAdmin();
-          setInterval(atualizarMetricasAdmin, 5000);
+    try {
+      atualizarTimestamp();
+      setInterval(atualizarTimestamp, 60000);
 
-          // Gráficos
-          inicializarGraficos();
+      carregarMetricasPrincipais();
+      carregarCrescimentoUsuarios();
+      carregarTop5Empresas();
+      carregarAtividadesRecentes();
 
-          // Event listeners para botões
-          const btnNovoUsuario = document.getElementById("btnNovoUsuario");
-          if (btnNovoUsuario) {
-            btnNovoUsuario.addEventListener("click", abrirModalNovoUsuario);
-            console.log("✅ Botão Novo Usuário configurado");
-          }
+      atualizarMetricasAdmin();
+      setInterval(atualizarMetricasAdmin, 30000);
 
-          const btnNovaEmpresa = document.getElementById("btnNovaEmpresa");
-          if (btnNovaEmpresa) {
-            btnNovaEmpresa.addEventListener("click", abrirModalNovaEmpresa);
-            console.log("✅ Botão Nova Empresa configurado");
-          }
+      setInterval(() => {
+        carregarMetricasPrincipais();
+        carregarTop5Empresas();
+        carregarAtividadesRecentes();
+      }, 300000);
 
-          // Fechar modais clicando fora
-          document
-            .getElementById("modalNovoUsuario")
-            ?.addEventListener("click", function (e) {
-              if (e.target === this) fecharModalUsuario();
-            });
+      configurarEventListeners();
 
-          document
-            .getElementById("modalNovaEmpresa")
-            ?.addEventListener("click", function (e) {
-              if (e.target === this) fecharModalEmpresa();
-            });
+      console.log("Dashboard inicializado com sucesso!");
+    } catch (erro) {
+      console.error("Erro na inicialização:", erro);
+    }
+  });
 
-          // Fechar modais com ESC
-          document.addEventListener("keydown", function (e) {
-            if (e.key === "Escape") {
-              if (
-                document
-                  .getElementById("modalNovoUsuario")
-                  ?.classList.contains("active")
-              ) {
-                fecharModalUsuario();
-              }
-              if (
-                document
-                  .getElementById("modalNovaEmpresa")
-                  ?.classList.contains("active")
-              ) {
-                fecharModalEmpresa();
-              }
-            }
-          });
+  function configurarEventListeners() {
+    const btnNovoUsuario = document.getElementById("btnNovoUsuario");
+    if (btnNovoUsuario) {
+      btnNovoUsuario.addEventListener("click", abrirModalNovoUsuario);
+    }
 
-          console.log("✅ Dashboard inicializado com sucesso!");
-        } catch (erro) {
-          console.error("❌ Erro na inicialização:", erro);
+    const btnNovaEmpresa = document.getElementById("btnNovaEmpresa");
+    if (btnNovaEmpresa) {
+      btnNovaEmpresa.addEventListener("click", abrirModalNovaEmpresa);
+    }
+
+    document.getElementById("modalNovoUsuario")?. addEventListener("click", function (e) {
+      if (e.target === this) fecharModalUsuario();
+    });
+
+    document.getElementById("modalNovaEmpresa")?. addEventListener("click", function (e) {
+      if (e. target === this) fecharModalEmpresa();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        if (document.getElementById("modalNovoUsuario")?.classList.contains("active")) {
+          fecharModalUsuario();
         }
-      });
+        if (document.getElementById("modalNovaEmpresa")?.classList.contains("active")) {
+          fecharModalEmpresa();
+        }
+      }
+    });
+  }
 
-      // ========== FUNÇÕES GERAIS ==========
 
-      function atualizarTimestamp() {
-        try {
-          const agora = new Date();
-          const horas = String(agora.getHours()).padStart(2, "0");
-          const minutos = String(agora.getMinutes()).padStart(2, "0");
-          const elemento = document.getElementById("ultima-atualizacao");
-          if (elemento) {
-            elemento.textContent = `Hoje, ${horas}:${minutos}`;
-          }
-        } catch (erro) {
-          console.error("❌ Erro ao atualizar timestamp:", erro);
+  async function carregarMetricasPrincipais() {
+    try {
+      const response = await fetch("/admin/dashboard/usuarios");
+      
+      if (!response. ok) {
+        console.warn("Erro ao buscar métricas de usuários");
+        return;
+      }
+
+      const dados = await response. json();
+      console.log("Métricas carregadas:", dados);
+
+      const metricaUsuarios = document.getElementById("metrica-usuarios");
+      if (metricaUsuarios) {
+        metricaUsuarios.textContent = dados.totalAtivos || 0;
+      }
+
+      const totalEmpresas = document.getElementById("total-empresas");
+      if (totalEmpresas) {
+        totalEmpresas. textContent = `${dados.empresasAtivas || 0} empresas ativas`;
+      }
+
+    } catch (erro) {
+      console. error("Erro ao carregar métricas:", erro);
+    }
+  }
+
+
+  async function carregarCrescimentoUsuarios() {
+    try {
+      const response = await fetch("/admin/dashboard/crescimento");
+      
+      if (!response.ok) {
+        console. warn("Erro ao buscar crescimento de usuários");
+        inicializarGraficoUsuariosPadrao();
+        return;
+      }
+
+      const dados = await response.json();
+      console.log("Dados de crescimento:", dados);
+
+      inicializarGraficoUsuarios(dados);
+
+    } catch (erro) {
+      console.error("Erro ao carregar crescimento:", erro);
+      inicializarGraficoUsuariosPadrao();
+    }
+  }
+
+  function inicializarGraficoUsuarios(dados) {
+    const canvas = document.getElementById("usuariosChart");
+    if (!canvas) return;
+
+    if (chartUsuarios) {
+      chartUsuarios.destroy();
+    }
+
+    const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+    let labels = [];
+    let novosUsuarios = [];
+    let acumulado = [];
+
+    if (dados.crescimento && dados.crescimento. length > 0) {
+      labels = dados.crescimento.map(item => item.mesAbrev || meses[new Date(item.mes + '-01').getMonth()]);
+      novosUsuarios = dados.crescimento.map(item => item. novosUsuarios);
+      acumulado = dados.crescimento.map(item => item.acumulado);
+    } else {
+
+      labels = meses;
+      novosUsuarios = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      acumulado = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    }
+
+    const defaultOptions = getDefaultChartOptions();
+
+    chartUsuarios = new Chart(canvas, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Novos Usuários",
+            data: novosUsuarios,
+            borderColor: CORES_GRAFICOS.primarias[0],
+            backgroundColor: CORES_GRAFICOS. fundos[0],
+            tension: 0.4,
+            fill: true,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointBackgroundColor: CORES_GRAFICOS. primarias[0],
+            pointBorderColor: "#fff",
+            pointBorderWidth: 2,
+          },
+          {
+            label: "Total Acumulado",
+            data: acumulado,
+            borderColor: CORES_GRAFICOS.primarias[1],
+            backgroundColor: CORES_GRAFICOS. fundos[1],
+            tension: 0.4,
+            fill: true,
+            borderWidth: 2.5,
+            pointRadius: 3,
+            pointHoverRadius: 5,
+            pointBackgroundColor: CORES_GRAFICOS. primarias[1],
+            yAxisID: "y1",
+          },
+        ],
+      },
+      options: {
+        ... defaultOptions,
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
+            border: { display: false }
+          },
+          y: {
+            grid: { color: "rgba(5, 150, 105, 0. 1)", drawBorder: false },
+            ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
+            border: { display: false },
+            title: { display: true, text: "Novos", color: "#6b7280", font: { size: 10, weight: "600" } },
+          },
+          y1: {
+            grid: { drawOnChartArea: false },
+            ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
+            border: { display: false },
+            position: "right",
+            title: { display: true, text: "Total", color: "#6b7280", font: { size: 10, weight: "600" } },
+          },
+        },
+      },
+    });
+  }
+
+  function inicializarGraficoUsuariosPadrao() {
+    inicializarGraficoUsuarios({ crescimento: [], comparativo: {} });
+  }
+
+  async function carregarTop5Empresas() {
+    try {
+      const response = await fetch("/admin/dashboard/top-empresas");
+      
+      if (!response.ok) {
+        console.warn("⚠️ Erro ao buscar top empresas");
+        inicializarGraficoEmpresasPadrao();
+        return;
+      }
+
+      const dados = await response.json();
+      console.log("Top 5 empresas:", dados);
+
+      inicializarGraficoEmpresas(dados);
+
+    } catch (erro) {
+      console.error("Erro ao carregar top empresas:", erro);
+      inicializarGraficoEmpresasPadrao();
+    }
+  }
+
+  function inicializarGraficoEmpresas(dados) {
+    const canvas = document.getElementById("empresasChart");
+    if (!canvas) return;
+
+    if (chartEmpresas) {
+      chartEmpresas.destroy();
+    }
+
+    let labels = [];
+    let valores = [];
+
+    if (dados && dados.length > 0) {
+      labels = dados.map(item => item.nomeFantasia);
+      valores = dados.map(item => item.totalAcessos || item.totalUsuarios);
+    } else {
+      labels = ["Sem dados"];
+      valores = [0];
+    }
+
+    const defaultOptions = getDefaultChartOptions();
+
+    chartEmpresas = new Chart(canvas, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Atividade",
+            data: valores,
+            backgroundColor: CORES_GRAFICOS.primarias. slice(0, labels.length),
+            borderRadius: 8,
+            borderSkipped: false,
+          },
+        ],
+      },
+      options: {
+        ... defaultOptions,
+        indexAxis: "y",
+        scales: {
+          x: {
+            grid: { color: "rgba(5, 150, 105, 0. 1)", drawBorder: false },
+            ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
+            border: { display: false }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
+            border: { display: false }
+          },
+        },
+      },
+    });
+  }
+
+  function inicializarGraficoEmpresasPadrao() {
+    inicializarGraficoEmpresas([]);
+  }
+
+  async function carregarAtividadesRecentes() {
+    try {
+      const response = await fetch("/admin/dashboard/atividades? limite=5");
+      
+      if (!response.ok) {
+        console.warn("Erro ao buscar atividades");
+        return;
+      }
+
+      const dados = await response. json();
+      console.log("Atividades recentes:", dados);
+
+      renderizarAtividades(dados);
+
+    } catch (erro) {
+      console.error("Erro ao carregar atividades:", erro);
+    }
+  }
+
+  function renderizarAtividades(atividades) {
+    const container = document.querySelector(".activity-list");
+    if (! container) return;
+
+    if (! atividades || atividades.length === 0) {
+      container.innerHTML = `
+        <div class="activity-item">
+          <div class="activity-icon info">ℹ</div>
+          <div class="activity-content">
+            <p class="activity-title">Nenhuma atividade recente</p>
+            <p class="activity-meta">O sistema está aguardando ações</p>
+            <p class="activity-time">--</p>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    const icones = {
+      'LOGIN': { icon: '✓', classe: 'success' },
+      'LOGIN_FAIL': { icon: '! ', classe: 'warning' },
+      'CADASTRO': { icon: '👤', classe: 'primary' },
+      'API_CALL': { icon: 'ℹ', classe: 'info' },
+      'CONFIG': { icon: '⚙', classe: 'info' },
+      'ERRO': { icon: '✕', classe: 'danger' },
+      'default': { icon: 'ℹ', classe: 'info' }
+    };
+
+    container.innerHTML = atividades.map(atividade => {
+      const tipoIcone = icones[atividade.tipoLog] || icones['default'];
+      const usuario = atividade. nomeUsuario || atividade.emailAdmin || 'Sistema';
+      const empresa = atividade. nomeEmpresa || '';
+
+      return `
+        <div class="activity-item">
+          <div class="activity-icon ${tipoIcone.classe}">${tipoIcone.icon}</div>
+          <div class="activity-content">
+            <p class="activity-title">${atividade.descricaoLog || atividade.tipoLog}</p>
+            <p class="activity-meta">${usuario}${empresa ? ' • ' + empresa : ''}</p>
+            <p class="activity-time">${atividade.tempoRelativo || 'Recente'}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+
+  function getDefaultChartOptions() {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#065f46",
+          titleColor: "#ecfdf5",
+          bodyColor: "#d1fae5",
+          padding: 12,
+          cornerRadius: 8,
+          displayColors: true,
+          borderColor: "#10b981",
+          borderWidth: 1,
+        },
+      },
+    };
+  }
+
+
+  function atualizarTimestamp() {
+    try {
+      const agora = new Date();
+      const horas = String(agora.getHours()).padStart(2, "0");
+      const minutos = String(agora.getMinutes()).padStart(2, "0");
+      const elemento = document.getElementById("ultima-atualizacao");
+      if (elemento) {
+        elemento.textContent = `Hoje, ${horas}:${minutos}`;
+      }
+    } catch (erro) {
+      console.error("Erro ao atualizar timestamp:", erro);
+    }
+  }
+
+  function logout() {
+    if (confirm("Tem certeza que deseja sair?")) {
+      sessionStorage.clear();
+      window. location.href = "./login. html";
+    }
+  }
+
+  async function atualizarMetricasAdmin() {
+    try {
+      const response = await fetch("/monitoramento/metricas");
+
+      if (!response. ok) {
+        console.warn("⚠️ Erro ao buscar métricas do sistema");
+        return;
+      }
+
+      const dadosBD = await response.json();
+
+      const metricaReq = document.getElementById("metrica-requisicoes");
+      if (metricaReq) {
+        metricaReq.textContent = dadosBD.totalRequisicoes. toLocaleString("pt-BR");
+      }
+
+      const tempoMedio = document.getElementById("tempo-medio");
+      if (tempoMedio) {
+        tempoMedio.textContent = `${dadosBD.tempoMedioResposta}ms/req`;
+      }
+
+      const metricaSync = document.getElementById("metrica-sync");
+      if (metricaSync) {
+        metricaSync.innerHTML = `${parseFloat(dadosBD.taxaSucesso). toFixed(1)}<span class="unit">%</span>`;
+      }
+
+      const trendSync = document.getElementById("trend-sync");
+      if (trendSync) {
+        if (dadosBD.taxaSucesso >= 98) {
+          trendSync.className = "trend positive";
+          trendSync.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
+        } else if (dadosBD.taxaSucesso >= 95) {
+          trendSync.className = "trend neutral";
+          trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
+        } else {
+          trendSync. className = "trend negative";
+          trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
         }
       }
 
-      function logout() {
-        if (confirm("⚠️ Tem certeza que deseja sair?")) {
-          sessionStorage.clear();
-          window.location.href = "./login.html";
+      if (dadosBD.dtUltimaSync) {
+        const ultimaSync = document. getElementById("ultima-sync");
+        if (ultimaSync) {
+          const data = new Date(dadosBD. dtUltimaSync);
+          const horas = String(data.getHours()).padStart(2, "0");
+          const minutos = String(data.getMinutes()).padStart(2, "0");
+          ultimaSync.textContent = `Sync: ${horas}:${minutos}`;
         }
       }
 
-      async function atualizarMetricasAdmin() {
-        try {
-          const response = await fetch(
-            "http://localhost:3333/monitoramento/metricas"
-          );
+      const metricaErro = document.getElementById("metrica-erro");
+      if (metricaErro) {
+        metricaErro. innerHTML = `${parseFloat(dadosBD.taxaErro).toFixed(1)}<span class="unit">%</span>`;
+      }
 
+      const totalErros = document.getElementById("total-erros");
+      if (totalErros) {
+        totalErros.textContent = `${dadosBD.requisicoesErro} erro${dadosBD. requisicoesErro !== 1 ? "s" : ""}`;
+      }
+
+      const trendErro = document.getElementById("trend-erro");
+      if (trendErro) {
+        if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === "0. 00") {
+          trendErro. className = "trend positive";
+          trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
+        } else if (dadosBD.taxaErro < 5) {
+          trendErro.className = "trend neutral";
+          trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
+        } else {
+          trendErro. className = "trend negative";
+          trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
+        }
+      }
+    } catch (erro) {
+      console.error("Erro ao atualizar métricas:", erro);
+    }
+  }
+
+
+  async function abrirModalNovoUsuario() {
+    const modal = document.getElementById("modalNovoUsuario");
+    if (modal) {
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function fecharModalUsuario() {
+    const modal = document. getElementById("modalNovoUsuario");
+    if (modal) {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+      const form = document.getElementById("formNovoUsuario");
+      if (form) form.reset();
+    }
+  }
+
+  function cadastrarUsuarioAdmin(event) {
+    event.preventDefault();
+
+    try {
+      const nome = document.getElementById("usuario-nome")?.value.trim();
+      const email = document.getElementById("usuario-email")?.value.trim();
+      const senha = document. getElementById("usuario-senha")?.value;
+      const confirmarSenha = document.getElementById("usuario-confirmar-senha")?.value;
+
+      if (!email || !senha) {
+        alert("Preencha todos os campos obrigatórios!");
+        return false;
+      }
+
+      if (senha. length < 4) {
+        alert("A senha deve ter no mínimo 4 caracteres!");
+        return false;
+      }
+
+      if (senha !== confirmarSenha) {
+        alert("As senhas não coincidem!");
+        return false;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Email inválido!");
+        return false;
+      }
+
+      fetch("/admin/cadastrarUsuarioAdmin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          emailServer: email,
+          senhaServer: senha,
+        }),
+      })
+        .then((response) => {
+          if (! response.ok) {
+            return response.text().then((text) => {
+              throw new Error(text || "Erro ao cadastrar usuário");
+            });
+          }
+          return response. json();
+        })
+        .then((data) => {
+          console.log("Admin cadastrado:", data);
+          alert(`Administrador cadastrado com sucesso!\n\nEmail: ${email}`);
+          fecharModalUsuario();
+          carregarMetricasPrincipais();
+          carregarAtividadesRecentes();
+        })
+        .catch((erro) => {
+          console.error("Erro ao cadastrar:", erro);
+          if (erro.message. includes("Email já cadastrado") || erro.message. includes("ER_DUP_ENTRY")) {
+            alert("Este email já está cadastrado!");
+          } else {
+            alert("Erro ao cadastrar: " + erro.message);
+          }
+        });
+
+      return false;
+    } catch (erro) {
+      console. error("Erro no cadastro:", erro);
+      alert("Erro inesperado: " + erro.message);
+      return false;
+    }
+  }
+
+  function abrirModalNovaEmpresa() {
+    const modal = document.getElementById("modalNovaEmpresa");
+    if (modal) {
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function fecharModalEmpresa() {
+    const modal = document. getElementById("modalNovaEmpresa");
+    if (modal) {
+      modal. classList.remove("active");
+      document. body.style.overflow = "";
+      const form = document.getElementById("formNovaEmpresa");
+      if (form) form.reset();
+      const resumo = document.getElementById("resumo-plano");
+      if (resumo) resumo.textContent = "Preencha os dados da empresa";
+    }
+  }
+
+  function formatarCNPJ(input) {
+    let valor = input.value. replace(/\D/g, "");
+    if (valor.length <= 14) {
+      valor = valor.replace(/^(\d{2})(\d)/, "$1.$2");
+      valor = valor.replace(/^(\d{2})\. (\d{3})(\d)/, "$1.$2.$3");
+      valor = valor.replace(/\. (\d{3})(\d)/, ".$1/$2");
+      valor = valor.replace(/(\d{4})(\d)/, "$1-$2");
+    }
+    input.value = valor;
+  }
+
+  function cadastrarEmpresa(event) {
+    event.preventDefault();
+
+    try {
+      const cnpj = document. getElementById("empresa-cnpj")?.value.replace(/\D/g, "");
+      const nome = document. getElementById("empresa-nome")?.value.trim();
+      const email = document.getElementById("empresa-email")?. value.trim();
+
+      if (!cnpj || !nome || !email) {
+        alert("⚠️ Preencha todos os campos obrigatórios!");
+        return false;
+      }
+
+      if (cnpj.length !== 14) {
+        alert("⚠️ CNPJ deve ter 14 dígitos!");
+        return false;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert(" Email inválido!");
+        return false;
+      }
+
+      fetch("/admin/cadastrarEmpresa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cnpjServer: cnpj,
+          nomeServer: nome,
+          emailServer: email,
+        }),
+      })
+        .then((response) => {
           if (!response.ok) {
-            console.warn("⚠️ Erro ao buscar métricas do BD");
-            return;
-          }
-
-          const dadosBD = await response.json();
-
-          // Atualizar métricas
-          const metricaReq = document.getElementById("metrica-requisicoes");
-          if (metricaReq) {
-            metricaReq.textContent =
-              dadosBD.totalRequisicoes.toLocaleString("pt-BR");
-          }
-
-          const tempoMedio = document.getElementById("tempo-medio");
-          if (tempoMedio) {
-            tempoMedio.textContent = `${dadosBD.tempoMedioResposta}ms/req`;
-          }
-
-          const metricaSync = document.getElementById("metrica-sync");
-          if (metricaSync) {
-            metricaSync.innerHTML = `${parseFloat(dadosBD.taxaSucesso).toFixed(
-              1
-            )}<span class="unit">%</span>`;
-          }
-
-          const trendSync = document.getElementById("trend-sync");
-          if (trendSync) {
-            if (dadosBD.taxaSucesso >= 98) {
-              trendSync.className = "trend positive";
-              trendSync.innerHTML =
-                '<span class="trend-arrow">↑</span><span class="trend-text">OK</span>';
-            } else if (dadosBD.taxaSucesso >= 95) {
-              trendSync.className = "trend neutral";
-              trendSync.innerHTML =
-                '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
-            } else {
-              trendSync.className = "trend negative";
-              trendSync.innerHTML =
-                '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
-            }
-          }
-
-          if (dadosBD.dtUltimaSync) {
-            const ultimaSync = document.getElementById("ultima-sync");
-            if (ultimaSync) {
-              const data = new Date(dadosBD.dtUltimaSync);
-              const horas = String(data.getHours()).padStart(2, "0");
-              const minutos = String(data.getMinutes()).padStart(2, "0");
-              ultimaSync.textContent = `Sync: ${horas}:${minutos}`;
-            }
-          }
-
-          const metricaErro = document.getElementById("metrica-erro");
-          if (metricaErro) {
-            metricaErro.innerHTML = `${parseFloat(dadosBD.taxaErro).toFixed(
-              1
-            )}<span class="unit">%</span>`;
-          }
-
-          const totalErros = document.getElementById("total-erros");
-          if (totalErros) {
-            totalErros.textContent = `${dadosBD.requisicoesErro} erro${
-              dadosBD.requisicoesErro !== 1 ? "s" : ""
-            }`;
-          }
-
-          const trendErro = document.getElementById("trend-erro");
-          if (trendErro) {
-            if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === "0.00") {
-              trendErro.className = "trend positive";
-              trendErro.innerHTML =
-                '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
-            } else if (dadosBD.taxaErro < 5) {
-              trendErro.className = "trend neutral";
-              trendErro.innerHTML =
-                '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
-            } else {
-              trendErro.className = "trend negative";
-              trendErro.innerHTML =
-                '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
-            }
-          }
-        } catch (erro) {
-          console.error("❌ Erro ao atualizar métricas:", erro);
-        }
-      }
-
-      function inicializarGraficos() {
-        try {
-          const defaultOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                backgroundColor: "rgba(12, 15, 29, 0.95)",
-                borderColor: "rgba(93, 209, 255, 0.5)",
-                borderWidth: 1,
-                titleColor: "#f7f9ff",
-                bodyColor: "#f7f9ff",
-                padding: 10,
-                cornerRadius: 8,
-                displayColors: true,
-              },
-            },
-            scales: {
-              x: {
-                grid: { color: "rgba(93, 209, 255, 0.08)", drawBorder: false },
-                ticks: {
-                  color: "rgba(247, 249, 255, 0.6)",
-                  font: { size: 9, weight: "500" },
-                  maxRotation: 0,
-                  minRotation: 0,
-                },
-              },
-              y: {
-                grid: { color: "rgba(93, 209, 255, 0.08)", drawBorder: false },
-                ticks: {
-                  color: "rgba(247, 249, 255, 0.6)",
-                  font: { size: 9, weight: "500" },
-                },
-              },
-            },
-          };
-
-          const canvasUsuarios = document.getElementById("usuariosChart");
-          if (canvasUsuarios) {
-            chartUsuarios = new Chart(canvasUsuarios, {
-              type: "line",
-              data: {
-                labels: [
-                  "Jan",
-                  "Fev",
-                  "Mar",
-                  "Abr",
-                  "Mai",
-                  "Jun",
-                  "Jul",
-                  "Ago",
-                  "Set",
-                  "Out",
-                  "Nov",
-                  "Dez",
-                ],
-                datasets: [
-                  {
-                    label: "Novos Usuários",
-                    data: [5, 8, 12, 9, 15, 18, 14, 22, 19, 25, 28, 31],
-                    borderColor: "#5dd1ff",
-                    backgroundColor: "rgba(93, 209, 255, 0.15)",
-                    tension: 0.4,
-                    fill: true,
-                    borderWidth: 3,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: "#5dd1ff",
-                  },
-                  {
-                    label: "Total Acumulado",
-                    data: [
-                      45, 53, 65, 74, 89, 107, 121, 143, 162, 187, 215, 246,
-                    ],
-                    borderColor: "#8b5dff",
-                    backgroundColor: "rgba(139, 93, 255, 0.1)",
-                    tension: 0.4,
-                    fill: true,
-                    borderWidth: 2.5,
-                    pointRadius: 3,
-                    pointHoverRadius: 5,
-                    pointBackgroundColor: "#8b5dff",
-                    yAxisID: "y1",
-                  },
-                ],
-              },
-              options: {
-                ...defaultOptions,
-                layout: { padding: { top: 10, right: 10, bottom: 5, left: 5 } },
-                scales: {
-                  x: defaultOptions.scales.x,
-                  y: {
-                    ...defaultOptions.scales.y,
-                    type: "linear",
-                    display: true,
-                    position: "left",
-                    title: {
-                      display: true,
-                      text: "Novos",
-                      color: "rgba(247, 249, 255, 0.6)",
-                      font: { size: 9, weight: "600" },
-                    },
-                  },
-                  y1: {
-                    ...defaultOptions.scales.y,
-                    type: "linear",
-                    display: true,
-                    position: "right",
-                    title: {
-                      display: true,
-                      text: "Total",
-                      color: "rgba(247, 249, 255, 0.6)",
-                      font: { size: 9, weight: "600" },
-                    },
-                    grid: { drawOnChartArea: false },
-                  },
-                },
-              },
+            return response.text().then((text) => {
+              throw new Error(text || "Erro ao cadastrar empresa");
             });
           }
-
-          const canvasEmpresas = document.getElementById("empresasChart");
-          if (canvasEmpresas) {
-            chartEmpresas = new Chart(canvasEmpresas, {
-              type: "bar",
-              data: {
-                labels: [
-                  "Construtora XYZ",
-                  "Investimentos ABC",
-                  "Fundo Delta",
-                  "Imobiliária Sigma",
-                  "Capital Omega",
-                ],
-                datasets: [
-                  {
-                    label: "Consultas",
-                    data: [1420, 1180, 980, 860, 740],
-                    backgroundColor: [
-                      "#5dd1ff",
-                      "#8b5dff",
-                      "#60a5fa",
-                      "#7dd3fc",
-                      "#c084fc",
-                    ],
-                    borderRadius: 8,
-                    borderSkipped: false,
-                  },
-                ],
-              },
-              options: {
-                ...defaultOptions,
-                indexAxis: "y",
-                layout: { padding: { top: 5, right: 10, bottom: 5, left: 5 } },
-                scales: {
-                  x: defaultOptions.scales.x,
-                  y: {
-                    ...defaultOptions.scales.y,
-                    grid: { display: false },
-                    ticks: {
-                      color: "rgba(247, 249, 255, 0.7)",
-                      font: { size: 9, weight: "500" },
-                    },
-                  },
-                },
-              },
-            });
+          return response.json();
+        })
+        .then((data) => {
+          console.log("✅ Empresa cadastrada:", data);
+          alert(`✅ Empresa "${nome}" cadastrada com sucesso! `);
+          fecharModalEmpresa();
+          carregarMetricasPrincipais();
+          carregarTop5Empresas();
+          carregarAtividadesRecentes();
+        })
+        .catch((erro) => {
+          console.error("Erro ao cadastrar empresa:", erro);
+          if (erro.message.includes("CNPJ já cadastrado") || erro.message.includes("ER_DUP_ENTRY")) {
+            alert("Este CNPJ já está cadastrado!");
+          } else {
+            alert("Erro ao cadastrar empresa: " + erro. message);
           }
+        });
 
-          console.log("✅ Gráficos inicializados");
-        } catch (erro) {
-          console.error("❌ Erro ao inicializar gráficos:", erro);
-        }
-      }
-
-      // ========== MODAL NOVO USUÁRIO ==========
-
-      async function abrirModalNovoUsuario() {
-        try {
-          const modal = document.getElementById("modalNovoUsuario");
-          if (modal) {
-            modal.classList.add("active");
-            document.body.style.overflow = "hidden";
-            await carregarEmpresas();
-          }
-        } catch (erro) {
-          console.error("❌ Erro ao abrir modal usuário:", erro);
-        }
-      }
-
-      function fecharModalUsuario() {
-        const modal = document.getElementById("modalNovoUsuario");
-        if (modal) {
-          modal.classList.remove("active");
-          document.body.style.overflow = "";
-          const form = document.getElementById("formNovoUsuario");
-          if (form) form.reset();
-          const resumo = document.getElementById("resumo-usuario");
-          if (resumo)
-            resumo.textContent = "Selecione uma empresa e tipo de acesso";
-        }
-      }
-
-      async function carregarEmpresas() {
-        try {
-          const response = await fetch("http://localhost:3333/empresas/listar");
-
-          if (!response.ok) {
-            console.warn("⚠️ Erro ao buscar empresas");
-            return;
-          }
-
-          const empresas = await response.json();
-          const selectEmpresa = document.getElementById("usuario-empresa");
-
-          if (selectEmpresa) {
-            selectEmpresa.innerHTML =
-              '<option value="">Selecione uma empresa...</option>';
-
-            empresas
-              .filter((emp) => emp.status === "Ativo")
-              .forEach((empresa) => {
-                const option = document.createElement("option");
-                option.value = empresa.idEmpresa;
-                option.textContent = `${empresa.nomeFantasia} (${empresa.cnpj})`;
-                option.dataset.plano = empresa.plano;
-                selectEmpresa.appendChild(option);
-              });
-
-            console.log("✅ Empresas carregadas:", empresas.length);
-          }
-        } catch (erro) {
-          console.error("❌ Erro ao carregar empresas:", erro);
-          alert("⚠️ Erro ao carregar lista de empresas. Tente novamente.");
-        }
-      }
-
-      function atualizarResumoUsuario() {
-        try {
-          const empresaSelect = document.getElementById("usuario-empresa");
-          const tipoAcesso = document.getElementById("usuario-tipo")?.value;
-          const resumo = document.getElementById("resumo-usuario");
-
-          if (!resumo) return;
-
-          if (!empresaSelect?.value || !tipoAcesso) {
-            resumo.textContent = "Selecione uma empresa e tipo de acesso";
-            return;
-          }
-
-          const empresaNome =
-            empresaSelect.options[empresaSelect.selectedIndex].text;
-          const plano =
-            empresaSelect.options[empresaSelect.selectedIndex].dataset.plano;
-
-          const permissoes = {
-            Administrador: "Acesso total + gerenciar usuários",
-            Usuário: "Acesso completo às consultas",
-            Visualizador: "Apenas visualização de relatórios",
-          };
-
-          resumo.innerHTML =
-            `✅ Usuário tipo <strong>${tipoAcesso}</strong> para <strong>${empresaNome}</strong> (Plano ${plano})<br>` +
-            `Permissões: ${permissoes[tipoAcesso] || "Padrão"}`;
-        } catch (erro) {
-          console.error("❌ Erro ao atualizar resumo:", erro);
-        }
-      }
-
-      function cadastrarUsuarioAdmin(event) {
-        event.preventDefault();
-
-        try {
-          const nome = document.getElementById("usuario-nome")?.value.trim();
-          const email = document.getElementById("usuario-email")?.value.trim();
-          const senha = document.getElementById("usuario-senha")?.value;
-          const confirmarSenha = document.getElementById(
-            "usuario-confirmar-senha"
-          )?.value;
-
-          if (!email || !senha) {
-            alert("⚠️ Preencha todos os campos obrigatórios!");
-            return false;
-          }
-
-          if (senha.length < 8) {
-            alert("⚠️ A senha deve ter no mínimo 8 caracteres!");
-            return false;
-          }
-
-          if (senha !== confirmarSenha) {
-            alert("⚠️ As senhas não coincidem!");
-            return false;
-          }
-
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(email)) {
-            alert("⚠️ Email inválido!");
-            return false;
-          }
-
-          console.log("📤 Enviando dados do usuário:", {
-            nome,
-            email,
-          });
-
-          fetch("/admin/cadastrarUsuarioAdmin", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              //nomeServer: nome,
-              emailServer: email,
-              senhaServer: senha,
-            }),
-          })
-            .then((response) => {
-              if (!response.ok) {
-                return response.text().then((text) => {
-                  throw new Error(text || "Erro ao cadastrar usuário");
-                });
-              }
-              return response.json();
-            })
-            .then((data) => {
-              console.log("✅ Usuário cadastrado:", data);
-
-              alert(
-                `✅ Usuário "${nome}" cadastrado com sucesso!\n\n` +
-                  `ID: ${data.insertId}\n` +
-                  `Email: ${email}`
-              );
-
-              document.getElementById("usuario-nome").value = "";
-              document.getElementById("usuario-email").value = "";
-              document.getElementById("usuario-senha").value = "";
-              document.getElementById("usuario-confirmar-senha").value = "";
-
-              setTimeout(atualizarMetricasAdmin, 1000);
-            })
-            .catch((erro) => {
-              console.error("❌ Erro ao cadastrar usuário:", erro);
-
-              if (
-                erro.message.includes("Email já cadastrado") ||
-                erro.message.includes("ER_DUP_ENTRY")
-              ) {
-                alert("❌ Este email já está cadastrado no sistema!");
-              } else if (erro.message.includes("ECONNREFUSED")) {
-                alert(
-                  "❌ Erro de conexão com o servidor. Verifique se o backend está rodando."
-                );
-              } else {
-                alert("❌ Erro ao cadastrar usuário: " + erro.message);
-              }
-            });
-
-          return false;
-        } catch (erro) {
-          console.error("❌ Erro no cadastro:", erro);
-          alert("❌ Erro inesperado: " + erro.message);
-          return false;
-        }
-      }
-
-      // ========== MODAL NOVA EMPRESA ==========
-
-      function abrirModalNovaEmpresa() {
-        const modal = document.getElementById("modalNovaEmpresa");
-        if (modal) {
-          modal.classList.add("active");
-          document.body.style.overflow = "hidden";
-        }
-      }
-
-      function fecharModalEmpresa() {
-        const modal = document.getElementById("modalNovaEmpresa");
-        if (modal) {
-          modal.classList.remove("active");
-          document.body.style.overflow = "";
-          const form = document.getElementById("formNovaEmpresa");
-          if (form) form.reset();
-          const resumo = document.getElementById("resumo-plano");
-          if (resumo) resumo.textContent = "Preencha os dados da empresa";
-        }
-      }
-
-      function formatarCNPJ(input) {
-        let valor = input.value.replace(/\D/g, "");
-
-        if (valor.length <= 14) {
-          valor = valor.replace(/^(\d{2})(\d)/, "$1.$2");
-          valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-          valor = valor.replace(/\.(\d{3})(\d)/, ".$1/$2");
-          valor = valor.replace(/(\d{4})(\d)/, "$1-$2");
-        }
-
-        input.value = valor;
-      }
-
-      function cadastrarEmpresa(event) {
-        event.preventDefault();
-
-        try {
-          const cnpj = document
-            .getElementById("empresa-cnpj")
-            ?.value.replace(/\D/g, "");
-          const nome = document.getElementById("empresa-nome")?.value.trim();
-          const email = document.getElementById("empresa-email")?.value.trim();
-
-          if (!cnpj || !nome || !email) {
-            alert("⚠️ Preencha todos os campos obrigatórios!");
-            return false;
-          }
-
-          if (cnpj.length !== 14) {
-            alert("⚠️ CNPJ deve ter 14 dígitos!");
-            return false;
-          }
-
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(email)) {
-            alert("⚠️ Email inválido!");
-            return false;
-          }
-
-          console.log("📤 Enviando dados da empresa:", { cnpj, nome, email });
-
-          fetch("/admin/cadastrarEmpresa", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              cnpjServer: cnpj,
-              nomeServer: nome,
-              emailServer: email,
-            }),
-          })
-            .then((response) => {
-              if (!response.ok) {
-                return response.text().then((text) => {
-                  throw new Error(text || "Erro ao cadastrar empresa");
-                });
-              }
-              return response.json();
-            })
-            .then((data) => {
-              console.log("✅ Empresa cadastrada:", data);
-              alert(`✅ Empresa "${nome}" cadastrada com sucesso!`);
-              fecharModalEmpresa();
-              setTimeout(atualizarMetricasAdmin, 1000);
-            })
-            .catch((erro) => {
-              console.error("❌ Erro ao cadastrar empresa:", erro);
-              if (
-                erro.message.includes("CNPJ já cadastrado") ||
-                erro.message.includes("ER_DUP_ENTRY")
-              ) {
-                alert("❌ Este CNPJ já está cadastrado no sistema!");
-              } else if (erro.message.includes("ECONNREFUSED")) {
-                alert(
-                  "❌ Erro de conexão com o servidor. Verifique se o backend está rodando."
-                );
-              } else {
-                alert("❌ Erro ao cadastrar empresa: " + erro.message);
-              }
-            });
-
-          return false;
-        } catch (erro) {
-          console.error("❌ Erro no cadastro:", erro);
-          return false;
-        }
-      }
-    </script>
+      return false;
+    } catch (erro) {
+      console. error("Erro no cadastro:", erro);
+      return false;
+    }
+  }
+</script>
   </body>
 </html>
