@@ -299,7 +299,10 @@
         </div>
 
         <div class="modal-body">
-          <form id="formNovoUsuario" onsubmit="return cadastrarUsuario(event)">
+          <form
+            id="formNovoUsuario"
+            onsubmit="return cadastrarUsuarioAdmin(event)"
+          >
             <section class="modal-section">
               <h3 class="section-title">📋 Dados Pessoais</h3>
 
@@ -352,44 +355,6 @@
                 </div>
               </div>
             </section>
-
-            <section class="modal-section">
-              <h3 class="section-title">🏢 Vínculo Empresarial</h3>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="usuario-empresa">Empresa *</label>
-                  <select
-                    id="usuario-empresa"
-                    required
-                    onchange="atualizarResumoUsuario()"
-                  >
-                    <option value="">Selecione uma empresa...</option>
-                  </select>
-                  <small class="form-hint">Empresas ativas no sistema</small>
-                </div>
-
-                <div class="form-group">
-                  <label for="usuario-tipo">Tipo de Acesso *</label>
-                  <select
-                    id="usuario-tipo"
-                    required
-                    onchange="atualizarResumoUsuario()"
-                  >
-                    <option value="">Selecione...</option>
-                    <option value="Administrador">Administrador</option>
-                    <option value="Usuário">Usuário Padrão</option>
-                    <option value="Visualizador">Visualizador</option>
-                  </select>
-                </div>
-              </div>
-            </section>
-
-            <div class="alert alert-info">
-              <strong>ℹ️ Resumo:</strong>
-              <p id="resumo-usuario">Selecione uma empresa e tipo de acesso</p>
-            </div>
-
             <div class="form-actions">
               <button
                 type="button"
@@ -946,7 +911,7 @@
         }
       }
 
-      function cadastrarUsuario(event) {
+      function cadastrarUsuarioAdmin(event) {
         event.preventDefault();
 
         try {
@@ -956,10 +921,8 @@
           const confirmarSenha = document.getElementById(
             "usuario-confirmar-senha"
           )?.value;
-          const empresaId = document.getElementById("usuario-empresa")?.value;
-          const tipoAcesso = document.getElementById("usuario-tipo")?.value;
 
-          if (!nome || !email || !senha || !empresaId || !tipoAcesso) {
+          if (!email || !senha) {
             alert("⚠️ Preencha todos os campos obrigatórios!");
             return false;
           }
@@ -983,19 +946,15 @@
           console.log("📤 Enviando dados do usuário:", {
             nome,
             email,
-            empresaId,
-            tipoAcesso,
           });
 
-          fetch("http://localhost:3333/usuarios/cadastrar", {
+          fetch("/admin/cadastrarUsuarioAdmin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              nomeServer: nome,
+              //nomeServer: nome,
               emailServer: email,
               senhaServer: senha,
-              empresaIdServer: empresaId,
-              tipoAcessoServer: tipoAcesso,
             }),
           })
             .then((response) => {
@@ -1008,18 +967,23 @@
             })
             .then((data) => {
               console.log("✅ Usuário cadastrado:", data);
-              const empresaNome =
-                document.getElementById("usuario-empresa").options[
-                  document.getElementById("usuario-empresa").selectedIndex
-                ].text;
+
               alert(
-                `✅ Usuário "${nome}" cadastrado com sucesso!\n\nID: ${data.insertId}\nEmpresa: ${empresaNome}\nTipo: ${tipoAcesso}\nEmail: ${email}`
+                `✅ Usuário "${nome}" cadastrado com sucesso!\n\n` +
+                  `ID: ${data.insertId}\n` +
+                  `Email: ${email}`
               );
-              fecharModalUsuario();
+
+              document.getElementById("usuario-nome").value = "";
+              document.getElementById("usuario-email").value = "";
+              document.getElementById("usuario-senha").value = "";
+              document.getElementById("usuario-confirmar-senha").value = "";
+
               setTimeout(atualizarMetricasAdmin, 1000);
             })
             .catch((erro) => {
               console.error("❌ Erro ao cadastrar usuário:", erro);
+
               if (
                 erro.message.includes("Email já cadastrado") ||
                 erro.message.includes("ER_DUP_ENTRY")
@@ -1037,6 +1001,7 @@
           return false;
         } catch (erro) {
           console.error("❌ Erro no cadastro:", erro);
+          alert("❌ Erro inesperado: " + erro.message);
           return false;
         }
       }

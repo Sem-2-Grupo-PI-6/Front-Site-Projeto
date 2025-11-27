@@ -10,7 +10,7 @@ function adminAutenticar(email, token) {
 }
 
 function cadastrarEmpresa(cnpj, nome, email) {
-  console.log("ACESSEI O EMPRESA MODEL - function cadastrarEmpresa()");
+  console.log("ACESSEI O ADMIN MODEL - function cadastrarEmpresa()");
 
   var instrucaoSql = `CALL setCadastrarEmpresa(?, ?, ?)`;
 
@@ -18,7 +18,20 @@ function cadastrarEmpresa(cnpj, nome, email) {
   return database.executar(instrucaoSql, [cnpj, nome, email]);
 }
 
+function cadastrarUsuarioAdmin(email, senha) {
+  console.log("ACESSEI O ADMIN MODEL - function cadastrarEmpresa()");
+
+  var instrucaoSql = `
+    INSERT INTO tblAdmin (email, senha) 
+    VALUES ('${email}', '${senha}');
+  `;
+
+  console.log("🔍 Executando SQL:\n", instrucaoSql);
+  return database.executar(instrucaoSql);
+}
+
 module.exports = {
   adminAutenticar,
   cadastrarEmpresa,
+  cadastrarUsuarioAdmin,
 };

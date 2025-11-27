@@ -10,4 +10,8 @@ router.post("/cadastrarEmpresa", function (req, res) {
   adminController.cadastrarEmpresa(req, res);
 });
 
+router.post("/cadastrarUsuarioAdmin", function (req, res) {
+  adminController.cadastrarUsuarioAdmin(req, res);
+});
+
 module.exports = router;

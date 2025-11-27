@@ -78,7 +78,46 @@ function cadastrarEmpresa(req, res) {
     });
 }
 
+function cadastrarUsuarioAdmin(req, res) {
+  //const nome = req.body.nomeServer;
+  const email = req.body.emailServer;
+  const senha = req.body.senhaServer;
+
+  if (!email || !senha) {
+    res.status(400).send("Campos obrigatórios faltando!");
+    return;
+  }
+
+  if (senha.length < 8) {
+    res.status(400).send("A senha deve ter no mínimo 8 caracteres!");
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    res.status(400).send("Email inválido!");
+    return;
+  }
+
+  adminModel
+    .cadastrarUsuarioAdmin(email, senha)
+    .then(function (resultado) {
+      console.log("✅ Usuário cadastrado:", resultado.insertId);
+      res.status(201).json(resultado);
+    })
+    .catch(function (erro) {
+      console.error("❌ Erro ao cadastrar usuário:", erro);
+
+      if (erro.code === "ER_DUP_ENTRY") {
+        res.status(409).send("Email já cadastrado!");
+      } else {
+        res.status(500).json(erro.sqlMessage || erro.message);
+      }
+    });
+}
+
 module.exports = {
   adminAutenticar,
   cadastrarEmpresa,
+  cadastrarUsuarioAdmin,
 };
