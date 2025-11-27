@@ -37,7 +37,7 @@ main {
   overflow: hidden;
 }
 
-/* ===== SIDEBAR COMPACTA ===== */
+
 aside {
   flex: 0 0 260px;
   padding: 1.25rem 1rem;
@@ -308,7 +308,6 @@ section.briefing p {
   margin-bottom: 1.5rem;
 }
 
-/* ===== FILTER GRID ===== */
 .filter-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -389,7 +388,15 @@ section.briefing p {
   box-shadow: 0 0 0 3px rgba(14, 105, 48, 0.1);
 }
 
-/* ===== GRAPH CONFIG ===== */
+.badge-padrao {
+  background: rgba(100, 100, 100, 0. 2);
+  color: #666;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  margin-left: 8px;
+}
+  
 .graph-config {
   display: flex;
   flex-direction: column;
@@ -454,7 +461,6 @@ section.briefing p {
   transform: translateY(-2px);
 }
 
-/* ===== MODAL FOOTER ===== */
 .modal-footer {
   display: flex;
   justify-content: space-between;
@@ -486,7 +492,6 @@ section.briefing p {
   border-color: var(--brand-primary);
 }
 
-/* ===== RESPONSIVE MODAL ===== */
 @media (max-width: 768px) {
   .modal-overlay {
     padding: 1rem;
@@ -693,7 +698,6 @@ section.briefing p {
   font-size: 1.25rem;
 }
 
-/* ===== INPUT NOME DO FILTRO ===== */
 .input-filtro-nome {
   width: 100%;
   padding: 0.85rem 1rem;
@@ -717,7 +721,6 @@ section.briefing p {
   font-weight: 500;
 }
 
-/* ===== TOAST NOTIFICATION ===== */
 .toast-notification {
   position: fixed;
   bottom: 2rem;
@@ -743,7 +746,6 @@ section.briefing p {
   }
 }
 
-/* ===== RESPONSIVE MODAL MINI ===== */
 @media (max-width: 768px) {
   .modal-mini {
     max-width: 95%;
@@ -760,7 +762,6 @@ section.briefing p {
   }
 }
 
-/* ===== WORKSPACE SEM SCROLL ===== */
 section.workspace {
   flex: 1;
   min-width: 0;
@@ -833,7 +834,6 @@ section.workspace {
   background: rgba(14, 105, 48, 0.15);
 }
 
-/* ===== KPI GRID 2x2 COMPACTO ===== */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -975,7 +975,7 @@ section.workspace {
   color: var(--text-soft);
 }
 
-/* ===== CHARTS AREA AJUSTADA ===== */
+
 .charts-area {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1071,7 +1071,6 @@ canvas {
   height: 100% !important;
 }
 
-/* ===== SCROLLBAR (APENAS SE NECESSÁRIO) ===== */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -1089,7 +1088,6 @@ canvas {
   background: rgba(14, 105, 48, 0.5);
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 1600px) {
   .workspace-header h2 {
     font-size: 1.35rem;

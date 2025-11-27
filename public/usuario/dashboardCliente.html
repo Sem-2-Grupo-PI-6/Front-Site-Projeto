@@ -704,7 +704,7 @@
 
       async function carregarZonasDisponiveis() {
         try {
-          const response = await fetch("http://localhost:3333/dados/zonas");
+          const response = await fetch("/dados/zonas");
 
           if (response.ok) {
             zonasDisponiveis = await response.json();
@@ -721,7 +721,7 @@
         try {
           const zonesParam = idsZonas.join(",");
           const response = await fetch(
-            `http://localhost:3333/dados/dashboard?zonas=${zonesParam}`
+            `/dados/dashboard?zonas=${zonesParam}`
           );
 
           if (!response.ok) {
@@ -741,7 +741,7 @@
         try {
           const zonesParam = idsZonas.join(",");
           const response = await fetch(
-            `http://localhost:3333/dados/atratividade?zonas=${zonesParam}`
+            `/dados/atratividade?zonas=${zonesParam}`
           );
 
           if (!response.ok) {
@@ -760,7 +760,7 @@
       async function buscarDemografia(idZona) {
         try {
           const response = await fetch(
-            `http://localhost:3333/dados/demografia/${idZona}`
+            `/dados/demografia/${idZona}`
           );
 
           if (!response.ok) {
@@ -1282,7 +1282,7 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
       async function carregarFiltros() {
         try {
           const response = await fetch(
-            `http://localhost:3333/filtros/listar/${usuarioLogado.idUsuario}`,
+            `/filtros/listar/${usuarioLogado.idUsuario}`,
             {
               method: "GET",
               headers: {
@@ -1312,7 +1312,7 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
         try {
           const configPadrao = getConfigPadrao();
 
-          const response = await fetch("http://localhost:3333/filtros/criar", {
+          const response = await fetch("/filtros/criar", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -1352,7 +1352,7 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
       async function buscarFiltroAtivo() {
         try {
           const response = await fetch(
-            `http://localhost:3333/filtros/ativo/${usuarioLogado.idUsuario}`,
+            `/filtros/ativo/${usuarioLogado.idUsuario}`,
             {
               method: "GET",
               headers: {
@@ -1412,53 +1412,51 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
         document.body.style.overflow = "";
       }
 
-      async function renderizarFiltrosSalvos() {
-        const filtros = await carregarFiltros();
-        const container = document.getElementById("filtrosSalvosList");
+async function renderizarFiltrosSalvos() {
+  const filtros = await carregarFiltros();
+  const container = document.getElementById("filtrosSalvosList");
 
-        container.innerHTML = filtros
-          .map((filtro) => {
-            let config = filtro.config;
-            if (typeof config === "string") {
-              config = JSON.parse(config);
-            }
+  container.innerHTML = filtros
+    .map((filtro) => {
+      let config = filtro.config;
+      if (typeof config === "string") {
+        config = JSON.parse(config);
+      }
 
-            return `
-              <div class="filtro-item ${filtro.ativo ? "ativo" : ""}">
-                <div class="filtro-info">
-                  <div class="filtro-header">
-                    <span class="filtro-nome">${filtro.nomeFiltro}</span>
-                    ${
-                      filtro.ativo
-                        ? '<span class="badge-ativo">✓ Ativo</span>'
-                        : ""
-                    }
-                  </div>
-                  <span class="filtro-detalhes">${getResumoFiltro(
-                    config
-                  )}</span>
-                </div>
-                <div class="filtro-actions">
+      const ehFiltroPadrao = filtro.nomeFiltro. includes("Filtro Padrão");
+
+      return `
+        <div class="filtro-item ${filtro. ativo ? "ativo" : ""}">
+          <div class="filtro-info">
+            <div class="filtro-header">
+              <span class="filtro-nome">${filtro.nomeFiltro}</span>
+              ${filtro.ativo ?  '<span class="badge-ativo">✓ Ativo</span>' : ""}
+              ${ehFiltroPadrao ? '<span class="badge-padrao">🔒 Sistema</span>' : ""}
+            </div>
+            <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
+          </div>
+          <div class="filtro-actions">
             ${
-              !filtro.ativo
-                ? `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro.idfiltroUsuario})" title="Ativar">✓</button>`
+              ! filtro.ativo
+                ? `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro. idfiltroUsuario})" title="Ativar">✓</button>`
                 : ""
             }
-            <button class="btn-action btn-editar" onclick="editarFiltro(${
-              filtro.idfiltroUsuario
-            })" title="Editar">✏️</button>
             ${
-              filtro.nome !== "📌 Filtro Padrão"
+              ! ehFiltroPadrao
+                ? `<button class="btn-action btn-editar" onclick="editarFiltro(${filtro.idfiltroUsuario})" title="Editar">✏️</button>`
+                : ""
+            }
+            ${
+              !ehFiltroPadrao
                 ? `<button class="btn-action btn-deletar" onclick="deletarFiltro(${filtro.idfiltroUsuario})" title="Excluir">🗑️</button>`
                 : ""
             }
           </div>
         </div>
       `;
-          })
-          .join("");
-      }
-
+    })
+    .join("");
+}
       function getResumoFiltro(config) {
         const kpisAtivos = Object.values(config.kpis).filter(
           (k) => k.enabled
@@ -1485,13 +1483,21 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
 
         if (!filtro) return;
 
+
+        if (filtro.nomeFiltro.includes("Filtro Padrão")) {
+          alert("⚠️ O Filtro Padrão não pode ser editado!\n\nCrie um novo filtro personalizado.");
+          return;
+        }
+
         filtroAtualId = id;
-        document.getElementById("filtroNome").value = filtro.nome
+        
+        document.getElementById("filtroNome").value = filtro.nomeFiltro
           .replace(/[📌✏️➕]/g, "")
           .trim();
+        
         document.getElementById("modalTitle").textContent = "✏️ Editar Filtro";
 
-        let config = filtro.config;
+        let config = filtro. config;
         if (typeof config === "string") {
           config = JSON.parse(config);
         }
@@ -1504,7 +1510,7 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
       async function ativarFiltro(id) {
         try {
           const response = await fetch(
-            `http://localhost:3333/filtros/ativar/${id}`,
+            `/filtros/ativar/${id}`,
             {
               method: "PUT",
               headers: {
@@ -1535,47 +1541,51 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
         }
       }
 
-      async function deletarFiltro(id) {
-        const filtros = await carregarFiltros();
-        const filtro = filtros.find((f) => f.idfiltroUsuario === id);
+    async function deletarFiltro(id) {
+      const filtros = await carregarFiltros();
+      const filtro = filtros. find((f) => f.idfiltroUsuario === id);
 
-        if (!filtro) return;
+      if (! filtro) return;
 
-        if (
-          !confirm(
-            `⚠️ Tem certeza que deseja excluir o filtro "${filtro.nome}"?\n\nEsta ação não pode ser desfeita.`
-          )
-        ) {
-          return;
-        }
-
-        try {
-          const response = await fetch(
-            `http://localhost:3333/filtros/deletar/${id}/${usuarioLogado.idUsuario}`,
-            {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error("Erro ao deletar filtro");
-          }
-
-          console.log("✅ Filtro deletado com sucesso!");
-
-          await renderizarFiltrosSalvos();
-          await aplicarFiltroAtivo();
-
-          mostrarToast("✅ Filtro excluído com sucesso!");
-        } catch (erro) {
-          console.error("Erro ao deletar filtro:", erro);
-          alert("❌ Erro ao deletar filtro. Tente novamente.");
-        }
+      if (filtro. nomeFiltro. includes("Filtro Padrão")) {
+        alert("⚠️ O Filtro Padrão não pode ser excluído!\n\nEste filtro é necessário para o funcionamento do sistema.");
+        return;
       }
 
+      if (
+        ! confirm(
+          `⚠️ Tem certeza que deseja excluir o filtro "${filtro.nomeFiltro}"?\n\nEsta ação não pode ser desfeita. `
+        )
+      ) {
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `/filtros/deletar/${id}/${usuarioLogado. idUsuario}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (! response.ok) {
+          throw new Error("Erro ao deletar filtro");
+        }
+
+        console.log("✅ Filtro deletado com sucesso!");
+
+        await renderizarFiltrosSalvos();
+        await aplicarFiltroAtivo();
+
+        mostrarToast("✅ Filtro excluído com sucesso!");
+      } catch (erro) {
+        console.error("Erro ao deletar filtro:", erro);
+        alert(" Erro ao deletar filtro.  Tente novamente.");
+      }
+    }
       async function salvarFiltro() {
         const nome = document.getElementById("filtroNome").value.trim();
 
@@ -1590,7 +1600,7 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
         try {
           if (filtroAtualId) {
             const response = await fetch(
-              `http://localhost:3333/filtros/atualizar/${filtroAtualId}`,
+              `/filtros/atualizar/${filtroAtualId}`,
               {
                 method: "PUT",
                 headers: {
@@ -1612,7 +1622,7 @@ async function atualizarGraficoSetoresComBanco(setores, dadosBanco) {
             mostrarToast("✅ Filtro atualizado!");
           } else {
             const response = await fetch(
-              "http://localhost:3333/filtros/criar",
+              "/filtros/criar",
               {
                 method: "POST",
                 headers: {
