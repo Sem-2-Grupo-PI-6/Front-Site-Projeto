@@ -1,7 +1,7 @@
 
 async function atualizarMetricasAdmin() {
   try {
-    const response = await feach('http://localhost:3333/monitoramento/metricas');
+    const response = await feach('/monitoramento/metricas');
     
     if (!response.ok) {
       console.warn('Erro ao buscar métricas do BD (HTTP ' + response.status + ')');
@@ -17,7 +17,7 @@ async function atualizarMetricasAdmin() {
     
     const dadosBD = await response.json();
     
-    console.log('📊 Métricas do BD (dashboard):', dadosBD);
+    console.log('Métricas do BD para a dash:', dadosBD);
     
     const totalReq = parseInt(dadosBD.totalRequisicoes) || 0;
     document.getElementById('metrica-requisicoes').textContent = totalReq.toLocaleString('pt-BR');

@@ -93,7 +93,7 @@
         const btnLogin = document.getElementById("btnLogin");
 
         if (!email || !senha) {
-          alert("⚠️ Por favor, preencha todos os campos!");
+          alert("Por favor, preencha todos os campos!");
           return false;
         }
 
@@ -129,7 +129,7 @@
             btnLogin.classList.remove("loading");
             btnLogin.textContent = "Acessar Sistema";
             btnLogin.disabled = false;
-            alert(`❌ ${erro.message}`);
+            alert(`${erro.message}`);
           });
 
         return false;

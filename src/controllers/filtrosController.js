@@ -13,9 +13,8 @@ function listarFiltros(req, res) {
           const filtrosComConfig = resultado.map(filtro => {
             let configParsed;
             
-            // LOG para debug
-            console.log('📦 Config recebido do banco:', filtro.config);
-            console.log('📦 Tipo:', typeof filtro.config);
+            console.log('Config recebido do banco:', filtro.config);
+            console.log(' Tipo:', typeof filtro.config);
             
             try {
               if (!filtro.config || filtro.config === '') {
@@ -25,15 +24,14 @@ function listarFiltros(req, res) {
               configParsed = typeof filtro.config === 'string' 
                 ? JSON.parse(filtro.config) 
                 : filtro.config;
-                
-              // Validar estrutura
+
               if (!configParsed.kpis || !configParsed.graficos) {
                 throw new Error('Estrutura inválida');
               }
               
             } catch (erro) {
-              console.error('❌ Erro ao parsear config do filtro:', filtro.idfiltroUsuario, erro);
-              // Config padrão
+              console.error(' Erro ao parsear config do filtro:', filtro.idfiltroUsuario, erro);
+
               configParsed = {
                 kpis: {
                   economico: { enabled: true, value: "pib-sp" },
@@ -59,7 +57,7 @@ function listarFiltros(req, res) {
             };
           });
           
-          console.log('✅ Filtros processados:', filtrosComConfig.length);
+          console.log('Filtros processados:', filtrosComConfig.length);
           res.status(200).json(filtrosComConfig);
         } else {
           res.status(204).send("Nenhum filtro encontrado!");
@@ -85,7 +83,7 @@ function buscarFiltroAtivo(req, res) {
         if (resultado.length > 0) {
           let configParsed;
           
-          console.log('📦 Config ativo recebido:', resultado[0].config);
+          console.log('Config ativo recebido:', resultado[0].config);
           
           try {
             if (!resultado[0].config || resultado[0].config === '') {
@@ -101,7 +99,7 @@ function buscarFiltroAtivo(req, res) {
             }
             
           } catch (erro) {
-            console.error('❌ Erro ao parsear config do filtro ativo:', erro);
+            console.error('Erro ao parsear config do filtro ativo:', erro);
             configParsed = null;
           }
 

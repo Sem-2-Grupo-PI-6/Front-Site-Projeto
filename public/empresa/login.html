@@ -63,7 +63,7 @@
 
           <aside class="meta-col">
             <div class="meta-box">
-              <h3>💼 Painel de Gestão</h3>
+              <h3>💼Painel de Gestão</h3>
               <p>
                 Gerencie usuários da sua empresa, configure permissões e
                 acompanhe métricas de uso.
@@ -122,12 +122,12 @@
             return response.json();
           })
           .then((empresa) => {
-            console.log("✅ Login bem-sucedido!");
-            console.log("🏢 Dados da empresa:", empresa);
+            console.log("Login bem-sucedido!");
+            console.log("Dados da empresa:", empresa);
 
             sessionStorage.setItem("EMPRESA_LOGADA", JSON.stringify(empresa));
 
-            console.log("💾 Dados salvos no sessionStorage");
+            console.log("Dados salvos no sessionStorage");
 
             btnLogin.textContent = "✓ Sucesso!";
 
@@ -136,13 +136,13 @@
             }, 800);
           })
           .catch((erro) => {
-            console.error("❌ Erro no login:", erro);
+            console.error("Erro no login:", erro);
 
             btnLogin.classList.remove("loading");
             btnLogin.textContent = "Entrar";
             btnLogin.disabled = false;
 
-            alert(`❌ ${erro.message}`);
+            alert(`${erro.message}`);
           });
 
         return false;

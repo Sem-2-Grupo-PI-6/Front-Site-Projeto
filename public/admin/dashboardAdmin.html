@@ -285,7 +285,7 @@
       </section>
     </main>
 
-    <!-- MODAL NOVO USUÁRIO -->
+
     <div class="modal-overlay" id="modalNovoUsuario">
       <div class="modal-container modal-usuario">
         <div class="modal-header">
@@ -876,7 +876,7 @@
       const response = await fetch("/monitoramento/metricas");
 
       if (!response. ok) {
-        console.warn("⚠️ Erro ao buscar métricas do sistema");
+        console.warn("Erro ao buscar métricas do sistema");
         return;
       }
 
@@ -1078,12 +1078,12 @@
       const email = document.getElementById("empresa-email")?. value.trim();
 
       if (!cnpj || !nome || !email) {
-        alert("⚠️ Preencha todos os campos obrigatórios!");
+        alert("Preencha todos os campos obrigatórios!");
         return false;
       }
 
       if (cnpj.length !== 14) {
-        alert("⚠️ CNPJ deve ter 14 dígitos!");
+        alert("CNPJ deve ter 14 dígitos!");
         return false;
       }
 
@@ -1111,8 +1111,8 @@
           return response.json();
         })
         .then((data) => {
-          console.log("✅ Empresa cadastrada:", data);
-          alert(`✅ Empresa "${nome}" cadastrada com sucesso! `);
+          console.log("Empresa cadastrada:", data);
+          alert(`Empresa "${nome}" cadastrada com sucesso! `);
           fecharModalEmpresa();
           carregarMetricasPrincipais();
           carregarTop5Empresas();

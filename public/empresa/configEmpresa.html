@@ -37,7 +37,6 @@
     </header>
 
     <main class="container main-content">
-      <!-- TABS DE CONFIGURAÇÃO -->
       <section class="config-tabs">
         <div class="tabs-header">
           <button class="tab-btn active" data-tab="users">
@@ -54,7 +53,6 @@
           </button>
         </div>
 
-        <!-- TAB 1: GERENCIAR USUÁRIOS -->
         <div class="tab-content active" id="tab-users">
           <div class="card">
             <div class="card-header">
@@ -194,7 +192,6 @@
           </div>
         </div>
 
-        <!-- TAB 2: CRIAR USUÁRIO -->
         <div class="tab-content" id="tab-create">
           <div class="card">
             <div class="card-header">
@@ -262,7 +259,6 @@
           </div>
         </div>
 
-        <!-- TAB 3: MINHA EMPRESA -->
         <div class="tab-content" id="tab-profile">
           <div class="card">
             <div class="card-header">
@@ -386,7 +382,7 @@
             const empresaSession = sessionStorage.getItem("EMPRESA_LOGADA");
 
             if (!empresaSession) {
-              alert("⚠️ Erro: Nenhuma empresa identificada na sessão!");
+              alert(" Erro: Nenhuma empresa identificada na sessão!");
               return;
             }
 
@@ -399,17 +395,17 @@
             const confirm = document.getElementById("create-confirm").value;
 
             if (!name || !email || !password || !confirm) {
-              alert("⚠️ Por favor, preencha todos os campos obrigatórios!");
+              alert(" Por favor, preencha todos os campos obrigatórios!");
               return;
             }
 
             if (password.length < 8) {
-              alert("⚠️ A senha deve ter no mínimo 8 caracteres!");
+              alert(" A senha deve ter no mínimo 8 caracteres!");
               return;
             }
 
             if (password !== confirm) {
-              alert("⚠️ As senhas não coincidem!");
+              alert(" As senhas não coincidem!");
               return;
             }
 
@@ -441,12 +437,12 @@
                 return response.json();
               })
               .then((data) => {
-                alert("✅ Usuário cadastrado com sucesso !");
+                alert("Usuário cadastrado com sucesso !");
                 createUserForm.reset();
               })
               .catch((erro) => {
                 console.error(erro);
-                alert(`❌ ${erro.message}`);
+                alert(`${erro.message}`);
               })
               .finally(() => {
                 btnSubmit.innerText = originalText;
@@ -472,22 +468,22 @@
 
             if (currentPassword || newPassword || confirmPassword) {
               if (!currentPassword) {
-                alert("⚠️ Digite sua senha atual!");
+                alert(" Digite sua senha atual!");
                 return;
               }
 
               if (newPassword.length < 8) {
-                alert("⚠️ A nova senha deve ter no mínimo 8 caracteres!");
+                alert(" A nova senha deve ter no mínimo 8 caracteres!");
                 return;
               }
 
               if (newPassword !== confirmPassword) {
-                alert("⚠️ As senhas não coincidem!");
+                alert(" As senhas não coincidem!");
                 return;
               }
             }
 
-            alert("✅ Perfil atualizado com sucesso!");
+            alert(" Perfil atualizado com sucesso!");
           });
         }
 
@@ -535,11 +531,11 @@
 
             if (
               confirm(
-                `⚠️ Tem certeza que deseja excluir o usuário "${userName}"?\n\nEsta ação não pode ser desfeita!`
+                ` Tem certeza que deseja excluir o usuário "${userName}"?\n\nEsta ação não pode ser desfeita!`
               )
             ) {
               row.remove();
-              alert("✅ Usuário excluído com sucesso!");
+              alert(" Usuário excluído com sucesso!");
             }
           });
         });
@@ -559,7 +555,7 @@
               if (
                 form &&
                 confirm(
-                  "⚠️ Tem certeza que deseja cancelar? Todas as alterações serão perdidas."
+                  " Tem certeza que deseja cancelar? Todas as alterações serão perdidas."
                 )
               ) {
                 form.reset();
@@ -570,7 +566,7 @@
       });
 
       function logout() {
-        if (confirm("⚠️ Tem certeza que deseja sair?")) {
+        if (confirm(" Tem certeza que deseja sair?")) {
           sessionStorage.removeItem("EMPRESA_LOGADA");
           window.location.href = "./login.html";
         }

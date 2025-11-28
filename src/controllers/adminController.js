@@ -17,7 +17,7 @@ function adminAutenticar(req, res) {
   adminModel
     .adminAutenticar(email, token)
     .then(function (resultadoAutenticar) {
-      console.log(`📊 Resultados encontrados: ${resultadoAutenticar.length}`);
+      console.log(`Resultados encontrados: ${resultadoAutenticar.length}`);
 
       if (resultadoAutenticar. length === 0) {
         console.log("Credenciais inválidas");
@@ -26,7 +26,7 @@ function adminAutenticar(req, res) {
       }
 
       const admin = resultadoAutenticar[0];
-      console.log("✅ Autenticação bem-sucedida!");
+      console.log("Autenticação bem-sucedida!");
 
       res.json({
         idAdmin: admin.idAdmin,
