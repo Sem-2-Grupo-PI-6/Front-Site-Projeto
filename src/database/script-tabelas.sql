@@ -8,6 +8,8 @@ CREATE TABLE tblSistema (
     dtUpdateFiltroSistema TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );
 
+select * from tblSistema;
+
 CREATE TABLE tblAdmin (
     idAdmin INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(45),
@@ -25,6 +27,22 @@ CREATE TABLE tblEmpresa (
     senha VARCHAR(20),
     dtLicensa DATE,
     situacaoLicensa ENUM('Ativa', 'Inativa', 'Suspensa', 'Cancelada')
+);
+
+CREATE TABLE tblSlack (
+	idSlack INT PRIMARY KEY AUTO_INCREMENT,
+    maiorPopulacao TINYINT,
+    aumentoSelic TINYINT,
+    crescimentoPib TINYINT,
+    alertaError TINYINT,
+    alertaWarning TINYINT,
+    alertaInfo TINYINT
+);
+
+CREATE TABLE tblCanalWebhook (
+    idCanalWebhook INT PRIMARY KEY AUTO_INCREMENT,
+    nomeCanal VARCHAR(99),
+    webhook VARCHAR(99)
 );
 
 CREATE TABLE tblUsuario (
@@ -55,24 +73,6 @@ CREATE TABLE filtroUsuario (
     FOREIGN KEY (tblUsuario_idUsuario) REFERENCES tblUsuario(idUsuario),
     FOREIGN KEY (tblUsuario_Empresa_idEmpresa) REFERENCES tblEmpresa(idEmpresa)
 );
-
-CREATE TABLE tblSlack (
-idSlack INT PRIMARY KEY AUTO_INCREMENT,
-    maiorPopulacao TINYINT,
-    aumentoSelic TINYINT,
-    crescimentoPib TINYINT,
-    alertaError TINYINT,
-    alertaWarning TINYINT,
-    alertaInfo TINYINT
-);
-
-CREATE TABLE tblCanalWebhook (
-    idCanalWebhook INT PRIMARY KEY AUTO_INCREMENT,
-    nomeCanal VARCHAR(99),
-    webhook VARCHAR(99)
-);
-
-
 
 CREATE TABLE tblLogSistemaAcesso (
     idLogSistema INT PRIMARY KEY AUTO_INCREMENT,
@@ -139,7 +139,7 @@ CREATE TABLE tblPibSetor (
     servico FLOAT
 );
 
-
+select * from tblPibSetor;
 CREATE TABLE tblPibRegionalSP (
     idtblPibRegionalSP INT PRIMARY KEY AUTO_INCREMENT,
     ano CHAR(4),
@@ -355,13 +355,6 @@ VALUES
   ('2023', 770.80),
   ('2024', 785.40);
 
-/* 12. filtroUsuario (relacionado a usuários) */
-INSERT INTO filtroUsuario (tblUsuario_idUsuario, tblUsuario_Empresa_idEmpresa, nomeFiltro, ativo, config)
-VALUES
-  (1, 1, 'População Grandes Capitais', 1, JSON_OBJECT('ano','2023','minPopulacao',2000000)),
-  (2, 2, 'PIB Construção', 1, JSON_OBJECT('ano','2024','setor','construcaoCivil')),
-  (3, 3, 'Inflacao Mensal', 1, JSON_OBJECT('ultimosMeses',6,'tipo','IPCA'));
-
 /* 13. tblLogSistemaAcesso */
 INSERT INTO tblLogSistemaAcesso (dtAcontecimento, tipoLog, descricaoLog, Usuario_idUsuario, Usuario_Empresa_idEmpresa, Admin_idAdmin)
 VALUES
@@ -569,7 +562,7 @@ insert into tblUsuario (nome, telefone, email, senha, dtCriacao, filtrosPersonal
 VALUES ('Rodrigo', '11999999999', 'rodrigo@teste.com', '12345678', '2025-11-23', '[{"nome": "PIB Sudeste", "periodo": "2023"}]', 5);
 */
 
-select * from tblUsuario;
+select * from tblUsuari	o;
 select * from tblEmpresa;
 select * from tblAdmin;
 
@@ -586,3 +579,29 @@ select * from tblAdmin;
     FROM tblUsuario u
     LEFT JOIN tblSlack s ON u.fkSlack = s.idSlack
     WHERE u.idUsuario = 1;
+    
+    SELECT 
+    idfiltroUsuario,
+    nomeFiltro,
+    ativo,
+    CAST(config AS CHAR) as config,
+    LENGTH(config) as tamanho
+FROM filtroUsuario
+WHERE tblUsuario_idUsuario = 1;
+
+
+select * from tblSlack;
+
+    SELECT
+      totalRequisicoes,
+      requisicoesOK,
+      requisicoesErro,
+      tempoMedioResposta,
+      taxaSucesso,
+      taxaErro,
+      dtUltimaSync
+    FROM tblMetricasSistema
+    ORDER BY idMetrica DESC
+    LIMIT 1;
+    
+    
