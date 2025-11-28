@@ -167,6 +167,72 @@ function buscarMetricasDashboard() {
   
   return database.executar(instrucaoSql);
 }
+function editarUsuario(idUsuario, nome, email, telefone, idEmpresa) {
+  console.log("ACESSEI O ADMIN MODEL - function editarUsuario()");
+  
+  var instrucaoSql = `
+    UPDATE tblUsuario 
+    SET nome = ?, 
+        email = ?, 
+        telefone = ?,
+        Empresa_idEmpresa = ?
+    WHERE idUsuario = ?
+  `;
+  
+  return database.executar(instrucaoSql, [nome, email, telefone, idEmpresa, idUsuario]);
+}
+
+function excluirUsuario(idUsuario) {
+  console.log("ACESSEI O ADMIN MODEL - function excluirUsuario()");
+  
+  var instrucaoSql = `
+    DELETE FROM tblUsuario 
+    WHERE idUsuario = ?
+  `;
+  
+  return database.executar(instrucaoSql, [idUsuario]);
+}
+
+function buscarUsuarioPorId(idUsuario) {
+  console.log("ACESSEI O ADMIN MODEL - function buscarUsuarioPorId()");
+  
+  var instrucaoSql = `
+    SELECT 
+      u.idUsuario,
+      u.nome,
+      u.email,
+      u. telefone,
+      u.senha,
+      u.dtCriacao,
+      u. Empresa_idEmpresa,
+      u.receberNotificacao,
+      e.nomeFantasia,
+      e.cnpj
+    FROM tblUsuario u
+    LEFT JOIN tblEmpresa e ON u. Empresa_idEmpresa = e.idEmpresa
+    WHERE u.idUsuario = ? 
+  `;
+  
+  return database.executar(instrucaoSql, [idUsuario]);
+}
+
+function listarEmpresas() {
+  console. log("ACESSEI O ADMIN MODEL - function listarEmpresas()");
+  
+  var instrucaoSql = `
+    SELECT 
+      idEmpresa,
+      nomeFantasia,
+      cnpj,
+      situacaoLicensa
+    FROM tblEmpresa
+    WHERE situacaoLicensa = 'Ativa'
+    ORDER BY nomeFantasia ASC
+  `;
+  
+  return database.executar(instrucaoSql);
+}
+
 
 module.exports = {
   adminAutenticar,
@@ -179,5 +245,10 @@ module.exports = {
   buscarAtividadesRecentes,
   buscarComparativoUsuarios,
   registrarLogAtividade,
-  buscarMetricasDashboard
+  buscarMetricasDashboard,
+  listarUsuariosEmpresas,
+  editarUsuario,
+  excluirUsuario,
+  buscarUsuarioPorId,
+  listarEmpresas
 };
