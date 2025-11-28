@@ -95,7 +95,7 @@ function buscarTop5Empresas() {
     FROM tblEmpresa e
     LEFT JOIN tblUsuario u ON e.idEmpresa = u.Empresa_idEmpresa
     WHERE e.situacaoLicensa = 'Ativa'
-    GROUP BY e.idEmpresa, e.nomeFantasia, e situacaoLicensa
+    GROUP BY e.idEmpresa, e.nomeFantasia, e.situacaoLicensa
     ORDER BY totalAcessos DESC, totalUsuarios DESC
     LIMIT 5;
   `;
@@ -142,15 +142,14 @@ function buscarComparativoUsuarios() {
 }
 
 function registrarLogAtividade(tipoLog, descricao, idUsuario, idEmpresa, idAdmin) {
-
   console.log("ACESSEI O ADMIN MODEL - function registrarLogAtividade()");
 
   var instrucaoSql = `
     INSERT INTO tblLogSistemaAcesso (dtAcontecimento, tipoLog, descricaoLog, Usuario_idUsuario, Usuario_Empresa_idEmpresa, Admin_idAdmin)
-    VALUES (NOW(), '${tipoLog}', '${descricao}', ${idUsuario || 'NULL'}, ${idEmpresa || 'NULL'}, ${idAdmin || 'NULL'});
+    VALUES (NOW(), ?, ?, ?, ?, ?)
   `;
 
-  return database.executar(instrucaoSql);
+  return database.executar(instrucaoSql, [tipoLog, descricao, idUsuario || null, idEmpresa || null, idAdmin || null]);
 }
 
 function buscarMetricasDashboard() {

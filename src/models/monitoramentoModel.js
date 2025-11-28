@@ -1,10 +1,8 @@
 var database = require("../database/config");
 
 function buscarMetricas() {
-  console.log("ACESSEI O MONITORAMENTO MODEL - function buscarMetricas()");
-  
   var instrucaoSql = `
-    SELECT 
+    SELECT
       totalRequisicoes,
       requisicoesOK,
       requisicoesErro,
@@ -14,72 +12,62 @@ function buscarMetricas() {
       dtUltimaSync
     FROM tblMetricasSistema
     ORDER BY idMetrica DESC
-    LIMIT 1;
+    LIMIT 1
   `;
-  
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.executar(instrucaoSql);
 }
 
-function atualizarMetricas(totalReq, reqOK, reqErro, tempoMedio) {
-  console.log("ACESSEI O MONITORAMENTO MODEL - function atualizarMetricas()");
-  
-  const taxaSucesso = totalReq > 0 ? ((reqOK / totalReq) * 100).toFixed(2) : 100;
-  const taxaErro = totalReq > 0 ? ((reqErro / totalReq) * 100).toFixed(2) : 0;
-  
-  var instrucaoSql = `
-    UPDATE tblMetricasSistema 
-    SET 
-      totalRequisicoes = ${totalReq},
-      requisicoesOK = ${reqOK},
-      requisicoesErro = ${reqErro},
-      tempoMedioResposta = ${tempoMedio},
-      taxaSucesso = ${taxaSucesso},
-      taxaErro = ${taxaErro},
-      dtUltimaSync = CURRENT_TIMESTAMP
-    WHERE idMetrica = 1;
-  `;
-  
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
-}
-
-function registrarErro(tipo, endpoint, mensagem, tempo) {
-  console.log("ACESSEI O MONITORAMENTO MODEL - function registrarErro()");
-  
+function registrarErro(tipoErro, endpoint, mensagem, tempoResposta) {
   var instrucaoSql = `
     INSERT INTO tblErrosSistema (tipoErro, endpoint, mensagem, tempoResposta)
-    VALUES ('${tipo}', '${endpoint}', '${mensagem}', ${tempo});
+    VALUES (?, ?, ?, ?)
   `;
-  
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
+  return database.executar(instrucaoSql, [tipoErro, endpoint, mensagem, tempoResposta]);
 }
 
-function buscarErrosRecentes(limite = 10) {
-  console.log("ACESSEI O MONITORAMENTO MODEL - function buscarErrosRecentes()");
-  
+function atualizarMetricas(novasRequisicoes, requisicoesOK, requisicoesErro, tempoMedioNovo) {
   var instrucaoSql = `
-    SELECT 
-      tipoErro,
-      endpoint,
-      mensagem,
-      tempoResposta,
-      dtOcorrencia
-    FROM tblErrosSistema
-    ORDER BY dtOcorrencia DESC
-    LIMIT ${limite};
+    UPDATE tblMetricasSistema
+    SET 
+      totalRequisicoes = totalRequisicoes + ?,
+      requisicoesOK = requisicoesOK + ?,
+      requisicoesErro = requisicoesErro + ?,
+      tempoMedioResposta = CASE 
+        WHEN totalRequisicoes = 0 THEN ? 
+        ELSE ROUND((tempoMedioResposta * totalRequisicoes + ?  * ?) / (totalRequisicoes + ?))
+      END,
+      taxaSucesso = CASE 
+        WHEN (totalRequisicoes + ?) = 0 THEN 100.00
+        ELSE ROUND(((requisicoesOK + ?) / (totalRequisicoes + ? )) * 100, 2)
+      END,
+      taxaErro = CASE 
+        WHEN (totalRequisicoes + ?) = 0 THEN 0.00
+        ELSE ROUND(((requisicoesErro + ?) / (totalRequisicoes + ?)) * 100, 2)
+      END,
+      dtUltimaSync = CURRENT_TIMESTAMP
+    WHERE idMetrica = (SELECT id FROM (SELECT idMetrica as id FROM tblMetricasSistema ORDER BY idMetrica DESC LIMIT 1) as t)
   `;
   
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database.executar(instrucaoSql);
+  return database.executar(instrucaoSql, [
+    novasRequisicoes,
+    requisicoesOK,
+    requisicoesErro,
+    tempoMedioNovo,
+    tempoMedioNovo,
+    novasRequisicoes,
+    novasRequisicoes,
+    novasRequisicoes,
+    requisicoesOK,
+    novasRequisicoes,
+    novasRequisicoes,
+    requisicoesErro,
+    novasRequisicoes
+  ]);
 }
 
 function resetarMetricas() {
-  console.log("ACESSEI O MONITORAMENTO MODEL - function resetarMetricas()");
-  
   var instrucaoSql = `
-    UPDATE tblMetricasSistema 
+    UPDATE tblMetricasSistema
     SET 
       totalRequisicoes = 0,
       requisicoesOK = 0,
@@ -88,17 +76,14 @@ function resetarMetricas() {
       taxaSucesso = 100.00,
       taxaErro = 0.00,
       dtResetMetricas = CURRENT_TIMESTAMP
-    WHERE idMetrica = 1;
+    WHERE idMetrica = (SELECT id FROM (SELECT idMetrica as id FROM tblMetricasSistema ORDER BY idMetrica DESC LIMIT 1) as t)
   `;
-  
-  console.log("Executando a instrução SQL: \n" + instrucaoSql);
   return database.executar(instrucaoSql);
 }
 
 module.exports = {
   buscarMetricas,
-  atualizarMetricas,
   registrarErro,
-  buscarErrosRecentes,
+  atualizarMetricas,
   resetarMetricas
 };
