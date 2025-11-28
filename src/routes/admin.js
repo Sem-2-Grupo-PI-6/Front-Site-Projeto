@@ -27,11 +27,31 @@ router.get("/dashboard/crescimento", function (req, res) {
 });
 
 router.get("/dashboard/top-empresas", function (req, res) {
-  adminController. buscarTop5Empresas(req, res);
+  adminController.buscarTop5Empresas(req, res);
 });
 
 router.get("/dashboard/atividades", function (req, res) {
   adminController.buscarAtividadesRecentes(req, res);
+});
+
+router.get("/usuarios/listar", function (req, res) {
+  adminController.listarUsuariosEmpresas(req, res);
+});
+
+router.get("/usuarios/:id", function (req, res) {
+  adminController.buscarUsuarioPorId(req, res);
+});
+
+router.put("/usuarios/:id", function (req, res) {
+  adminController.editarUsuario(req, res);
+});
+
+router.delete("/usuarios/:id", function (req, res) {
+  adminController.excluirUsuario(req, res);
+});
+
+router.get("/empresas/listar", function (req, res) {
+  adminController.listarEmpresas(req, res);
 });
 
 module.exports = router;

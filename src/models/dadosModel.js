@@ -5,15 +5,15 @@ function buscarPibParaGrafico(idsZonas) {
   
   var instrucaoSql = `
     SELECT 
-      p. trimestre, 
-      p. ano, 
+      p.trimestre, 
+      p.ano, 
       p.pibGeral as valor,
       z.nome as zona_nome,
       z.idZona as zona_id
     FROM tblPib p
-    INNER JOIN tblZona z ON p. tblZona_idZona = z. idZona
-    WHERE z.idZona IN (${idsZonas. join(',')})
-    ORDER BY p. ano DESC, 
+    INNER JOIN tblZona z ON p.tblZona_idZona = z.idZona
+    WHERE z.idZona IN (${idsZonas.join(',')})
+    ORDER BY p.ano DESC, 
       CASE p.trimestre
         WHEN '4º' THEN 4
         WHEN '3º' THEN 3
@@ -28,7 +28,7 @@ function buscarPibParaGrafico(idsZonas) {
 }
 
 function buscarPibAtual() {
-  console. log("ACESSEI O DADOS MODEL - function buscarPibAtual()");
+  console.log("ACESSEI O DADOS MODEL - function buscarPibAtual()");
   
   var instrucaoSql = `
     SELECT trimestre, ano, pibGeral
@@ -49,7 +49,7 @@ function buscarPibAtual() {
 }
 
 function buscarConstrucaoCivilParaGrafico() {
-  console. log("ACESSEI O DADOS MODEL - function buscarConstrucaoCivilParaGrafico()");
+  console.log("ACESSEI O DADOS MODEL - function buscarConstrucaoCivilParaGrafico()");
   
   var instrucaoSql = `
     SELECT trimestre, ano, construcaoCivil as valorPib
@@ -109,7 +109,7 @@ function buscarServicosParaGrafico() {
 }
 
 function buscarServicosAtual() {
-  console. log("ACESSEI O DADOS MODEL - function buscarServicosAtual()");
+  console.log("ACESSEI O DADOS MODEL - function buscarServicosAtual()");
   
   var instrucaoSql = `
     SELECT trimestre, ano, servico as valorServico
@@ -124,12 +124,12 @@ function buscarServicosAtual() {
     LIMIT 1;
   `;
   
-  console. log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database. executar(instrucaoSql);
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
 }
 
 function buscarPibRegionalSP() {
-  console. log("ACESSEI O DADOS MODEL - function buscarPibRegionalSP()");
+  console.log("ACESSEI O DADOS MODEL - function buscarPibRegionalSP()");
   
   var instrucaoSql = `
     SELECT ano, pibSP
@@ -137,8 +137,8 @@ function buscarPibRegionalSP() {
     ORDER BY ano ASC;
   `;
   
-  console. log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database. executar(instrucaoSql);
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
 }
 
 function buscarPibRegionalSPAtual() {
@@ -219,17 +219,17 @@ function buscarPopulacaoMultiplasZonas(idsZonas) {
       z.nome as zona_nome,
       z.idZona as tblZona_idZona
     FROM tblPopulacao p
-    INNER JOIN tblZona z ON p.tblZona_idZona = z. idZona
-    WHERE z.idZona IN (${idsZonas. join(',')})
-    ORDER BY p. ano DESC;
+    INNER JOIN tblZona z ON p.tblZona_idZona = z.idZona
+    WHERE z.idZona IN (${idsZonas.join(',')})
+    ORDER BY p.ano DESC;
   `;
   
-  console. log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database. executar(instrucaoSql);
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
 }
 
 function buscarTodasZonas() {
-  console. log("ACESSEI O DADOS MODEL - function buscarTodasZonas()");
+  console.log("ACESSEI O DADOS MODEL - function buscarTodasZonas()");
   
   var instrucaoSql = `
     SELECT idZona, nome
@@ -237,8 +237,8 @@ function buscarTodasZonas() {
     ORDER BY nome;
   `;
   
-  console. log("Executando a instrução SQL: \n" + instrucaoSql);
-  return database. executar(instrucaoSql);
+  console.log("Executando a instrução SQL: \n" + instrucaoSql);
+  return database.executar(instrucaoSql);
 }
 
 function buscarScoreAtratividade(idsZonas) {
@@ -248,7 +248,7 @@ function buscarScoreAtratividade(idsZonas) {
     SELECT 
       z.idZona,
       z.nome,
-      AVG(pop. qtdpopulacao) as populacao_media,
+      AVG(pop.qtdpopulacao) as populacao_media,
       AVG(pop.densidadeDemo) as densidade_media,
       AVG(pop.idadeMedia) as idade_media,
       (
@@ -259,7 +259,7 @@ function buscarScoreAtratividade(idsZonas) {
     FROM tblZona z
     LEFT JOIN tblPopulacao pop ON z.idZona = pop.tblZona_idZona
     WHERE z.idZona IN (${idsZonas.join(',')})
-    GROUP BY z.idZona, z. nome
+    GROUP BY z.idZona, z.nome
     ORDER BY score DESC;
   `;
   

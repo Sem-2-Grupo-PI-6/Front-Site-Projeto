@@ -372,7 +372,6 @@
       </div>
     </div>
 
-    <!-- MODAL NOVA EMPRESA -->
     <div class="modal-overlay" id="modalNovaEmpresa">
       <div class="modal-container modal-empresa">
         <div class="modal-header">
@@ -524,12 +523,12 @@
       btnNovaEmpresa.addEventListener("click", abrirModalNovaEmpresa);
     }
 
-    document.getElementById("modalNovoUsuario")?. addEventListener("click", function (e) {
+    document.getElementById("modalNovoUsuario")?.addEventListener("click", function (e) {
       if (e.target === this) fecharModalUsuario();
     });
 
-    document.getElementById("modalNovaEmpresa")?. addEventListener("click", function (e) {
-      if (e. target === this) fecharModalEmpresa();
+    document.getElementById("modalNovaEmpresa")?.addEventListener("click", function (e) {
+      if (e.target === this) fecharModalEmpresa();
     });
 
     document.addEventListener("keydown", function (e) {
@@ -549,12 +548,12 @@
     try {
       const response = await fetch("/admin/dashboard/usuarios");
       
-      if (!response. ok) {
+      if (!response.ok) {
         console.warn("Erro ao buscar métricas de usuários");
         return;
       }
 
-      const dados = await response. json();
+      const dados = await response.json();
       console.log("Métricas carregadas:", dados);
 
       const metricaUsuarios = document.getElementById("metrica-usuarios");
@@ -564,11 +563,11 @@
 
       const totalEmpresas = document.getElementById("total-empresas");
       if (totalEmpresas) {
-        totalEmpresas. textContent = `${dados.empresasAtivas || 0} empresas ativas`;
+        totalEmpresas.textContent = `${dados.empresasAtivas || 0} empresas ativas`;
       }
 
     } catch (erro) {
-      console. error("Erro ao carregar métricas:", erro);
+      console.error("Erro ao carregar métricas:", erro);
     }
   }
 
@@ -578,7 +577,7 @@
       const response = await fetch("/admin/dashboard/crescimento");
       
       if (!response.ok) {
-        console. warn("Erro ao buscar crescimento de usuários");
+        console.warn("Erro ao buscar crescimento de usuários");
         inicializarGraficoUsuariosPadrao();
         return;
       }
@@ -607,9 +606,9 @@
     let novosUsuarios = [];
     let acumulado = [];
 
-    if (dados.crescimento && dados.crescimento. length > 0) {
+    if (dados.crescimento && dados.crescimento.length > 0) {
       labels = dados.crescimento.map(item => item.mesAbrev || meses[new Date(item.mes + '-01').getMonth()]);
-      novosUsuarios = dados.crescimento.map(item => item. novosUsuarios);
+      novosUsuarios = dados.crescimento.map(item => item.novosUsuarios);
       acumulado = dados.crescimento.map(item => item.acumulado);
     } else {
 
@@ -629,13 +628,13 @@
             label: "Novos Usuários",
             data: novosUsuarios,
             borderColor: CORES_GRAFICOS.primarias[0],
-            backgroundColor: CORES_GRAFICOS. fundos[0],
+            backgroundColor: CORES_GRAFICOS.fundos[0],
             tension: 0.4,
             fill: true,
             borderWidth: 3,
             pointRadius: 4,
             pointHoverRadius: 6,
-            pointBackgroundColor: CORES_GRAFICOS. primarias[0],
+            pointBackgroundColor: CORES_GRAFICOS.primarias[0],
             pointBorderColor: "#fff",
             pointBorderWidth: 2,
           },
@@ -643,13 +642,13 @@
             label: "Total Acumulado",
             data: acumulado,
             borderColor: CORES_GRAFICOS.primarias[1],
-            backgroundColor: CORES_GRAFICOS. fundos[1],
+            backgroundColor: CORES_GRAFICOS.fundos[1],
             tension: 0.4,
             fill: true,
             borderWidth: 2.5,
             pointRadius: 3,
             pointHoverRadius: 5,
-            pointBackgroundColor: CORES_GRAFICOS. primarias[1],
+            pointBackgroundColor: CORES_GRAFICOS.primarias[1],
             yAxisID: "y1",
           },
         ],
@@ -663,7 +662,7 @@
             border: { display: false }
           },
           y: {
-            grid: { color: "rgba(5, 150, 105, 0. 1)", drawBorder: false },
+            grid: { color: "rgba(5, 150, 105, 0.1)", drawBorder: false },
             ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
             border: { display: false },
             title: { display: true, text: "Novos", color: "#6b7280", font: { size: 10, weight: "600" } },
@@ -734,7 +733,7 @@
           {
             label: "Atividade",
             data: valores,
-            backgroundColor: CORES_GRAFICOS.primarias. slice(0, labels.length),
+            backgroundColor: CORES_GRAFICOS.primarias.slice(0, labels.length),
             borderRadius: 8,
             borderSkipped: false,
           },
@@ -745,7 +744,7 @@
         indexAxis: "y",
         scales: {
           x: {
-            grid: { color: "rgba(5, 150, 105, 0. 1)", drawBorder: false },
+            grid: { color: "rgba(5, 150, 105, 0.1)", drawBorder: false },
             ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
             border: { display: false }
           },
@@ -772,7 +771,7 @@
         return;
       }
 
-      const dados = await response. json();
+      const dados = await response.json();
       console.log("Atividades recentes:", dados);
 
       renderizarAtividades(dados);
@@ -812,8 +811,8 @@
 
     container.innerHTML = atividades.map(atividade => {
       const tipoIcone = icones[atividade.tipoLog] || icones['default'];
-      const usuario = atividade. nomeUsuario || atividade.emailAdmin || 'Sistema';
-      const empresa = atividade. nomeEmpresa || '';
+      const usuario = atividade.nomeUsuario || atividade.emailAdmin || 'Sistema';
+      const empresa = atividade.nomeEmpresa || '';
 
       return `
         <div class="activity-item">
@@ -867,7 +866,7 @@
   function logout() {
     if (confirm("Tem certeza que deseja sair?")) {
       sessionStorage.clear();
-      window. location.href = "./login. html";
+      window.location.href = "./login.html";
     }
   }
 
@@ -875,7 +874,7 @@
     try {
       const response = await fetch("/monitoramento/metricas");
 
-      if (!response. ok) {
+      if (!response.ok) {
         console.warn("Erro ao buscar métricas do sistema");
         return;
       }
@@ -884,7 +883,7 @@
 
       const metricaReq = document.getElementById("metrica-requisicoes");
       if (metricaReq) {
-        metricaReq.textContent = dadosBD.totalRequisicoes. toLocaleString("pt-BR");
+        metricaReq.textContent = dadosBD.totalRequisicoes.toLocaleString("pt-BR");
       }
 
       const tempoMedio = document.getElementById("tempo-medio");
@@ -894,7 +893,7 @@
 
       const metricaSync = document.getElementById("metrica-sync");
       if (metricaSync) {
-        metricaSync.innerHTML = `${parseFloat(dadosBD.taxaSucesso). toFixed(1)}<span class="unit">%</span>`;
+        metricaSync.innerHTML = `${parseFloat(dadosBD.taxaSucesso).toFixed(1)}<span class="unit">%</span>`;
       }
 
       const trendSync = document.getElementById("trend-sync");
@@ -906,15 +905,15 @@
           trendSync.className = "trend neutral";
           trendSync.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Alerta</span>';
         } else {
-          trendSync. className = "trend negative";
+          trendSync.className = "trend negative";
           trendSync.innerHTML = '<span class="trend-arrow">↓</span><span class="trend-text">Crítico</span>';
         }
       }
 
       if (dadosBD.dtUltimaSync) {
-        const ultimaSync = document. getElementById("ultima-sync");
+        const ultimaSync = document.getElementById("ultima-sync");
         if (ultimaSync) {
-          const data = new Date(dadosBD. dtUltimaSync);
+          const data = new Date(dadosBD.dtUltimaSync);
           const horas = String(data.getHours()).padStart(2, "0");
           const minutos = String(data.getMinutes()).padStart(2, "0");
           ultimaSync.textContent = `Sync: ${horas}:${minutos}`;
@@ -923,24 +922,24 @@
 
       const metricaErro = document.getElementById("metrica-erro");
       if (metricaErro) {
-        metricaErro. innerHTML = `${parseFloat(dadosBD.taxaErro).toFixed(1)}<span class="unit">%</span>`;
+        metricaErro.innerHTML = `${parseFloat(dadosBD.taxaErro).toFixed(1)}<span class="unit">%</span>`;
       }
 
       const totalErros = document.getElementById("total-erros");
       if (totalErros) {
-        totalErros.textContent = `${dadosBD.requisicoesErro} erro${dadosBD. requisicoesErro !== 1 ? "s" : ""}`;
+        totalErros.textContent = `${dadosBD.requisicoesErro} erro${dadosBD.requisicoesErro !== 1 ? "s" : ""}`;
       }
 
       const trendErro = document.getElementById("trend-erro");
       if (trendErro) {
-        if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === "0. 00") {
-          trendErro. className = "trend positive";
+        if (dadosBD.taxaErro === 0 || dadosBD.taxaErro === "0.00") {
+          trendErro.className = "trend positive";
           trendErro.innerHTML = '<span class="trend-arrow">✓</span><span class="trend-text">OK</span>';
         } else if (dadosBD.taxaErro < 5) {
           trendErro.className = "trend neutral";
           trendErro.innerHTML = '<span class="trend-arrow">→</span><span class="trend-text">Baixo</span>';
         } else {
-          trendErro. className = "trend negative";
+          trendErro.className = "trend negative";
           trendErro.innerHTML = '<span class="trend-arrow">↑</span><span class="trend-text">Alto</span>';
         }
       }
@@ -959,7 +958,7 @@
   }
 
   function fecharModalUsuario() {
-    const modal = document. getElementById("modalNovoUsuario");
+    const modal = document.getElementById("modalNovoUsuario");
     if (modal) {
       modal.classList.remove("active");
       document.body.style.overflow = "";
@@ -974,7 +973,7 @@
     try {
       const nome = document.getElementById("usuario-nome")?.value.trim();
       const email = document.getElementById("usuario-email")?.value.trim();
-      const senha = document. getElementById("usuario-senha")?.value;
+      const senha = document.getElementById("usuario-senha")?.value;
       const confirmarSenha = document.getElementById("usuario-confirmar-senha")?.value;
 
       if (!email || !senha) {
@@ -982,7 +981,7 @@
         return false;
       }
 
-      if (senha. length < 4) {
+      if (senha.length < 4) {
         alert("A senha deve ter no mínimo 4 caracteres!");
         return false;
       }
@@ -1012,7 +1011,7 @@
               throw new Error(text || "Erro ao cadastrar usuário");
             });
           }
-          return response. json();
+          return response.json();
         })
         .then((data) => {
           console.log("Admin cadastrado:", data);
@@ -1023,7 +1022,7 @@
         })
         .catch((erro) => {
           console.error("Erro ao cadastrar:", erro);
-          if (erro.message. includes("Email já cadastrado") || erro.message. includes("ER_DUP_ENTRY")) {
+          if (erro.message.includes("Email já cadastrado") || erro.message.includes("ER_DUP_ENTRY")) {
             alert("Este email já está cadastrado!");
           } else {
             alert("Erro ao cadastrar: " + erro.message);
@@ -1032,7 +1031,7 @@
 
       return false;
     } catch (erro) {
-      console. error("Erro no cadastro:", erro);
+      console.error("Erro no cadastro:", erro);
       alert("Erro inesperado: " + erro.message);
       return false;
     }
@@ -1047,10 +1046,10 @@
   }
 
   function fecharModalEmpresa() {
-    const modal = document. getElementById("modalNovaEmpresa");
+    const modal = document.getElementById("modalNovaEmpresa");
     if (modal) {
-      modal. classList.remove("active");
-      document. body.style.overflow = "";
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
       const form = document.getElementById("formNovaEmpresa");
       if (form) form.reset();
       const resumo = document.getElementById("resumo-plano");
@@ -1059,11 +1058,11 @@
   }
 
   function formatarCNPJ(input) {
-    let valor = input.value. replace(/\D/g, "");
+    let valor = input.value.replace(/\D/g, "");
     if (valor.length <= 14) {
       valor = valor.replace(/^(\d{2})(\d)/, "$1.$2");
-      valor = valor.replace(/^(\d{2})\. (\d{3})(\d)/, "$1.$2.$3");
-      valor = valor.replace(/\. (\d{3})(\d)/, ".$1/$2");
+      valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+      valor = valor.replace(/\.(\d{3})(\d)/, ".$1/$2");
       valor = valor.replace(/(\d{4})(\d)/, "$1-$2");
     }
     input.value = valor;
@@ -1073,9 +1072,9 @@
     event.preventDefault();
 
     try {
-      const cnpj = document. getElementById("empresa-cnpj")?.value.replace(/\D/g, "");
-      const nome = document. getElementById("empresa-nome")?.value.trim();
-      const email = document.getElementById("empresa-email")?. value.trim();
+      const cnpj = document.getElementById("empresa-cnpj")?.value.replace(/\D/g, "");
+      const nome = document.getElementById("empresa-nome")?.value.trim();
+      const email = document.getElementById("empresa-email")?.value.trim();
 
       if (!cnpj || !nome || !email) {
         alert("Preencha todos os campos obrigatórios!");
@@ -1123,13 +1122,13 @@
           if (erro.message.includes("CNPJ já cadastrado") || erro.message.includes("ER_DUP_ENTRY")) {
             alert("Este CNPJ já está cadastrado!");
           } else {
-            alert("Erro ao cadastrar empresa: " + erro. message);
+            alert("Erro ao cadastrar empresa: " + erro.message);
           }
         });
 
       return false;
     } catch (erro) {
-      console. error("Erro no cadastro:", erro);
+      console.error("Erro no cadastro:", erro);
       return false;
     }
   }

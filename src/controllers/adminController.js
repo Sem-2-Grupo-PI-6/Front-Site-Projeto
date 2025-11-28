@@ -236,6 +236,94 @@ function buscarTotalUsuarios(req, res) {
     });
 }
 
+function listarUsuariosEmpresas(req, res) {
+  adminModel
+    .listarUsuariosEmpresas()
+    .then(resultado => {
+      res.status(200).json(resultado);
+    })
+    .catch(erro => {
+      console.error("Erro ao listar usuários/empresas:", erro);
+      res.status(500).json({ erro: erro.message || erro. sqlMessage });
+    });
+}
+
+function editarUsuario(req, res) {
+  const idUsuario = req.params.id;
+  const { nome, email, telefone, idEmpresa } = req.body;
+  
+  if (!nome || !email) {
+    res.status(400).send("Nome e email são obrigatórios!");
+    return;
+  }
+  
+  adminModel
+    . editarUsuario(idUsuario, nome, email, telefone, idEmpresa)
+    . then(resultado => {
+      console.log("Usuário editado:", idUsuario);
+      
+      adminModel. registrarLogAtividade('EDICAO', `Usuário ${nome} editado`, idUsuario, idEmpresa, null);
+      
+      res.status(200).json({ mensagem: "Usuário atualizado com sucesso!" });
+    })
+    .catch(erro => {
+      console.error("Erro ao editar usuário:", erro);
+      res.status(500).json({ erro: erro. sqlMessage || erro.message });
+    });
+}
+
+function excluirUsuario(req, res) {
+  const idUsuario = req.params.id;
+  
+  adminModel
+    .excluirUsuario(idUsuario)
+    .then(resultado => {
+      console.log("Usuário excluído:", idUsuario);
+      
+      adminModel.registrarLogAtividade('EXCLUSAO', `Usuário ID ${idUsuario} excluído`, null, null, null);
+      
+      res.status(200).json({ mensagem: "Usuário excluído com sucesso!" });
+    })
+    .catch(erro => {
+      console.error("Erro ao excluir usuário:", erro);
+      if (erro.code === "ER_ROW_IS_REFERENCED_2") {
+        res.status(409).send("Não é possível excluir: usuário possui registros vinculados!");
+      } else {
+        res.status(500). json({ erro: erro.sqlMessage || erro.message });
+      }
+    });
+}
+
+function buscarUsuarioPorId(req, res) {
+  const idUsuario = req.params.id;
+  
+  adminModel
+    .buscarUsuarioPorId(idUsuario)
+    .then(resultado => {
+      if (resultado.length > 0) {
+        res. status(200).json(resultado[0]);
+      } else {
+        res.status(404).json({ erro: "Usuário não encontrado" });
+      }
+    })
+    .catch(erro => {
+      console.error("Erro ao buscar usuário:", erro);
+      res.status(500). json({ erro: erro.sqlMessage || erro.message });
+    });
+}
+
+function listarEmpresas(req, res) {
+  adminModel
+    .listarEmpresas()
+    .then(resultado => {
+      res. status(200).json(resultado);
+    })
+    .catch(erro => {
+      console.error("Erro ao listar empresas:", erro);
+      res.status(500).json({ erro: erro.sqlMessage || erro.message });
+    });
+}
+
 module.exports = {
   adminAutenticar,
   cadastrarEmpresa,
@@ -244,5 +332,10 @@ module.exports = {
   buscarCrescimentoUsuarios,
   buscarTop5Empresas,
   buscarAtividadesRecentes,
-  buscarTotalUsuarios
+  buscarTotalUsuarios,
+  listarUsuariosEmpresas,  
+  editarUsuario,           
+  excluirUsuario,          
+  buscarUsuarioPorId,      
+  listarEmpresas           
 };

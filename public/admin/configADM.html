@@ -132,100 +132,8 @@
                     <th>Ações</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div class="user-info">
-                        <div class="user-avatar">RM</div>
-                        <span>Rodrigo Martins</span>
-                      </div>
-                    </td>
-                    <td>rodrigo@admin.net</td>
-                    <td><span class="badge badge-admin">Admin</span></td>
-                    <td>Evolvere Invest</td>
-                    <td><span class="status-dot active"></span> Ativo</td>
-                    <td>15/01/2024</td>
-                    <td>
-                      <div class="table-actions">
-                        <button class="btn-icon btn-edit" title="Editar">
-                          ✏️
-                        </button>
-                        <button class="btn-icon btn-delete" title="Excluir">
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="user-info">
-                        <div class="user-avatar">JS</div>
-                        <span>Julia Santos</span>
-                      </div>
-                    </td>
-                    <td>julia.santos@construtoraabc.com</td>
-                    <td><span class="badge badge-user">Usuário</span></td>
-                    <td>Construtora ABC</td>
-                    <td><span class="status-dot active"></span> Ativo</td>
-                    <td>22/02/2024</td>
-                    <td>
-                      <div class="table-actions">
-                        <button class="btn-icon btn-edit" title="Editar">
-                          ✏️
-                        </button>
-                        <button class="btn-icon btn-delete" title="Excluir">
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="user-info">
-                        <div class="user-avatar">CM</div>
-                        <span>Carlos Mendes</span>
-                      </div>
-                    </td>
-                    <td>carlos@investimentos.com</td>
-                    <td><span class="badge badge-user">Usuário</span></td>
-                    <td>Investimentos Delta</td>
-                    <td><span class="status-dot active"></span> Ativo</td>
-                    <td>10/03/2024</td>
-                    <td>
-                      <div class="table-actions">
-                        <button class="btn-icon btn-edit" title="Editar">
-                          ✏️
-                        </button>
-                        <button class="btn-icon btn-delete" title="Excluir">
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="user-info">
-                        <div class="user-avatar">AP</div>
-                        <span>Ana Paula Silva</span>
-                      </div>
-                    </td>
-                    <td>ana.paula@fundosigma.com</td>
-                    <td><span class="badge badge-user">Usuário</span></td>
-                    <td>Fundo Sigma</td>
-                    <td><span class="status-dot inactive"></span> Inativo</td>
-                    <td>05/04/2024</td>
-                    <td>
-                      <div class="table-actions">
-                        <button class="btn-icon btn-edit" title="Editar">
-                          ✏️
-                        </button>
-                        <button class="btn-icon btn-delete" title="Excluir">
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
+<tbody id="usuarios-tbody">
+</tbody>
               </table>
             </div>
 
@@ -233,6 +141,47 @@
               <button class="btn-pagination">← Anterior</button>
               <span class="pagination-info">Página 1 de 10 • 127 usuários</span>
               <button class="btn-pagination">Próximo →</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="modal-editar-usuario" class="modal-overlay" style="display: none;">
+          <div class="modal-container">
+            <div class="modal-header">
+              <h2>✏️ Editar Usuário</h2>
+              <button class="modal-close" onclick="fecharModalEdicao()">✖</button>
+            </div>
+            <div class="modal-body">
+              <form id="form-editar-usuario">
+                <input type="hidden" id="edit-id-usuario" />
+                
+                <div class="form-group">
+                  <label for="edit-nome">Nome Completo *</label>
+                  <input type="text" id="edit-nome" required />
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit-email">Email *</label>
+                  <input type="email" id="edit-email" required />
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit-telefone">Telefone</label>
+                  <input type="text" id="edit-telefone" placeholder="11999999999" />
+                </div>
+                
+                <div class="form-group">
+                  <label for="edit-empresa">Empresa</label>
+                  <select id="edit-empresa">
+                    <option value="">Selecione uma empresa... </option>
+                  </select>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="button" class="btn-secondary" onclick="fecharModalEdicao()">Cancelar</button>
+                  <button type="submit" class="btn-primary">Salvar Alterações</button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -336,7 +285,6 @@
           </div>
         </div>
 
-        <!-- TAB 3: MEU PERFIL -->
         <div class="tab-content" id="tab-profile">
           <div class="card">
             <div class="card-header">
@@ -550,115 +498,174 @@
     tabButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const targetTab = button.getAttribute("data-tab");
-
-
         tabButtons.forEach((btn) => btn.classList.remove("active"));
         tabContents.forEach((content) => content.classList.remove("active"));
-
         button.classList.add("active");
         document.getElementById(`tab-${targetTab}`).classList.add("active");
       });
     });
 
-  
-    const createUserForm = document.querySelector("#tab-create form");
-    if (createUserForm) {
-      createUserForm.addEventListener("submit", function (e) {
-        e.preventDefault();
+    carregarUsuarios();
+    carregarEmpresasSelect();
 
-        const name = document.getElementById("create-name").value;
-        const email = document.getElementById("create-email").value;
-        const password = document.getElementById("create-password").value;
-        const confirm = document.getElementById("create-confirm").value;
-        const type = document.getElementById("create-type").value;
-
-        if (!name || !email || !password || !type) {
-          alert("⚠️ Por favor, preencha todos os campos obrigatórios!");
-          return;
-        }
-
-        if (password.length < 8) {
-          alert("⚠️ A senha deve ter no mínimo 8 caracteres!");
-          return;
-        }
-
-        if (password !== confirm) {
-          alert("⚠️ As senhas não coincidem!");
-          return;
-        }
-
-        if (type === "admin" && !email.endsWith("@admin.net")) {
-          alert("⚠️ Administradores devem usar email com domínio @admin.net!");
-          return;
-        }
-
-        alert(`✅ Usuário ${name} criado com sucesso!`);
-        createUserForm.reset();
-      });
+    function carregarUsuarios() {
+      fetch("/admin/usuarios/listar")
+        .then(res => res.json())
+        .then(usuarios => {
+          const tbody = document.getElementById("usuarios-tbody");
+          tbody.innerHTML = "";
+          
+          if (usuarios.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhum usuário encontrado</td></tr>';
+            return;
+          }
+          
+          usuarios.forEach(usuario => {
+            const statusClass = usuario.statusUsuario === "Ativo" ?  "active" : "inactive";
+            tbody.innerHTML += `
+              <tr>
+                <td>
+                  <div class="user-info">
+                    <div class="user-avatar">${getIniciais(usuario.nomeUsuario)}</div>
+                    <span>${usuario.nomeUsuario}</span>
+                  </div>
+                </td>
+                <td>${usuario.emailUsuario}</td>
+                <td><span class="badge badge-user">Usuário</span></td>
+                <td>${usuario.nomeFantasia || "-"}</td>
+                <td><span class="status-dot ${statusClass}"></span> ${usuario.statusUsuario}</td>
+                <td>${formatarData(usuario.dtCriacao)}</td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn-icon btn-edit" title="Editar" onclick="abrirModalEdicao(${usuario.idUsuario})">
+                      ✏️
+                    </button>
+                    <button class="btn-icon btn-delete" title="Excluir" onclick="excluirUsuario(${usuario.idUsuario}, '${usuario.nomeUsuario}')">
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+          });
+        })
+        .catch(err => {
+          console.error("Erro ao carregar usuários:", err);
+          alert("Erro ao carregar usuários: " + err.message);
+        });
     }
 
-    const profileForm = document.querySelector("#tab-profile form");
-    if (profileForm) {
-      profileForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const currentPassword = document.getElementById(
-          "profile-current-password"
-        ).value;
-        const newPassword = document.getElementById(
-          "profile-new-password"
-        ).value;
-        const confirmPassword = document.getElementById(
-          "profile-confirm-password"
-        ).value;
-
-        if (currentPassword || newPassword || confirmPassword) {
-          if (!currentPassword) {
-            alert("⚠️ Digite sua senha atual!");
-            return;
-          }
-
-          if (newPassword.length < 8) {
-            alert("⚠️ A nova senha deve ter no mínimo 8 caracteres!");
-            return;
-          }
-
-          if (newPassword !== confirmPassword) {
-            alert("⚠️ As senhas não coincidem!");
-            return;
-          }
-        }
-
-        alert("✅ Perfil atualizado com sucesso!");
-      });
+    window.abrirModalEdicao = function(idUsuario) {
+      fetch(`/admin/usuarios/${idUsuario}`)
+        .then(res => res.json())
+        .then(usuario => {
+          document.getElementById("edit-id-usuario").value = usuario.idUsuario;
+          document.getElementById("edit-nome").value = usuario.nome;
+          document.getElementById("edit-email").value = usuario.email;
+          document.getElementById("edit-telefone").value = usuario.telefone || "";
+          document.getElementById("edit-empresa").value = usuario.Empresa_idEmpresa || "";
+          
+          document.getElementById("modal-editar-usuario").style.display = "flex";
+        })
+        .catch(err => {
+          console.error("Erro ao buscar usuário:", err);
+          alert("Erro ao carregar dados do usuário");
+        });
     }
 
-    const settingsForm = document.querySelector("#tab-settings form");
-    if (settingsForm) {
-      settingsForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        alert("✅ Configurações salvas com sucesso!");
-      });
+    window.fecharModalEdicao = function() {
+      document.getElementById("modal-editar-usuario").style.display = "none";
+    }
+
+    document.getElementById("form-editar-usuario").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      const idUsuario = document.getElementById("edit-id-usuario").value;
+      const dados = {
+        nome: document.getElementById("edit-nome").value,
+        email: document.getElementById("edit-email").value,
+        telefone: document.getElementById("edit-telefone").value,
+        idEmpresa: document.getElementById("edit-empresa").value || null
+      };
+      
+      fetch(`/admin/usuarios/${idUsuario}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados)
+      })
+        .then(res => res.json())
+        .then(resultado => {
+          alert("Usuário atualizado com sucesso!");
+          fecharModalEdicao();
+          carregarUsuarios();
+        })
+        .catch(err => {
+          console.error("Erro ao editar usuário:", err);
+          alert("Erro ao atualizar usuário");
+        });
+    });
+
+    window.excluirUsuario = function(idUsuario, nomeUsuario) {
+      if (! confirm(`Tem certeza que deseja excluir o usuário "${nomeUsuario}"?\n\nEsta ação não pode ser desfeita! `)) {
+        return;
+      }
+      
+      fetch(`/admin/usuarios/${idUsuario}`, {
+        method: "DELETE"
+      })
+        .then(res => res.json())
+        .then(resultado => {
+          alert("Usuário excluído com sucesso!");
+          carregarUsuarios();
+        })
+        .catch(err => {
+          console.error("Erro ao excluir usuário:", err);
+          alert("Erro ao excluir usuário");
+        });
+    }
+
+    function carregarEmpresasSelect() {
+      fetch("/admin/empresas/listar")
+        .then(res => res.json())
+        .then(empresas => {
+          const select = document.getElementById("edit-empresa");
+          select.innerHTML = '<option value="">Sem empresa vinculada</option>';
+          
+          empresas.forEach(empresa => {
+            select.innerHTML += `<option value="${empresa.idEmpresa}">${empresa.nomeFantasia}</option>`;
+          });
+        })
+        .catch(err => {
+          console.error("Erro ao carregar empresas:", err);
+        });
+    }
+
+    
+    function getIniciais(nome) {
+      if (!nome) return "";
+      return nome.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
+    }
+
+    function formatarData(dataStr) {
+      if (!dataStr) return "-";
+      const date = new Date(dataStr);
+      return date.toLocaleDateString('pt-BR');
     }
 
     const searchInput = document.querySelector(".search-input");
     const filterSelect = document.querySelector(".filter-select");
-    const tableRows = document.querySelectorAll(".users-table tbody tr");
 
     function filterTable() {
-      const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+      const searchTerm = searchInput ?  searchInput.value.toLowerCase() : "";
       const filterType = filterSelect ? filterSelect.value : "all";
+      const tableRows = document.querySelectorAll(".users-table tbody tr");
 
       tableRows.forEach((row) => {
-        const name =
-          row.querySelector(".user-info span")?.textContent.toLowerCase() || "";
-        const email =
-          row.querySelectorAll("td")[1]?.textContent.toLowerCase() || "";
-        const type =
-          row.querySelector(".badge")?.textContent.toLowerCase() || "";
+        const name = row.querySelector(".user-info span")?.textContent.toLowerCase() || "";
+        const email = row.querySelectorAll("td")[1]?.textContent.toLowerCase() || "";
+        const type = row.querySelector(".badge")?.textContent.toLowerCase() || "";
 
-        const matchesSearch =
-          name.includes(searchTerm) || email.includes(searchTerm);
+        const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
         const matchesFilter =
           filterType === "all" ||
           (filterType === "admin" && type.includes("admin")) ||
@@ -676,84 +683,16 @@
       filterSelect.addEventListener("change", filterTable);
     }
 
-    const deleteButtons = document.querySelectorAll(".btn-delete");
-    deleteButtons.forEach((button) => {
-      button.addEventListener("click", function () {
-        const row = this.closest("tr");
-        const userName = row.querySelector(".user-info span").textContent;
-
-        if (
-          confirm(
-            `⚠️ Tem certeza que deseja excluir o usuário "${userName}"?\n\nEsta ação não pode ser desfeita!`
-          )
-        ) {
-          row.remove();
-          alert("✅ Usuário excluído com sucesso!");
-        }
-      });
-    });
-
-    const editButtons = document.querySelectorAll(".btn-edit");
-    editButtons.forEach((button) => {
-      button.addEventListener("click", function () {
-        alert("ℹ️ Funcionalidade de edição em desenvolvimento...");
-      });
-    });
-
-    const syncButton = document.querySelector(".btn-sync");
-    if (syncButton) {
-      syncButton.addEventListener("click", function () {
-        this.disabled = true;
-        this.innerHTML = "<span>🔄</span><span>Sincronizando...</span>";
-
-        setTimeout(() => {
-          this.disabled = false;
-          this.innerHTML =
-            "<span>🔄</span><span>Forçar Sincronização Agora</span>";
-          alert("✅ Sincronização concluída com sucesso!");
-        }, 2000);
-      });
-    }
-
-    const typeSelect = document.getElementById("create-type");
-    const emailInput = document.getElementById("create-email");
-
-    if (typeSelect && emailInput) {
-      typeSelect.addEventListener("change", function () {
-        if (this.value === "admin") {
-          const currentEmail = emailInput.value;
-          if (currentEmail && !currentEmail.includes("@")) {
-            emailInput.value = currentEmail + "@admin.net";
-          } else if (!currentEmail) {
-            emailInput.placeholder = "usuario@admin.net";
-          }
-        } else {
-          emailInput.placeholder = "usuario@exemplo.com";
-        }
-      });
-    }
-
-    const cancelButtons = document.querySelectorAll(".btn-secondary");
-    cancelButtons.forEach((button) => {
-      if (button.textContent.includes("Cancelar")) {
-        button.addEventListener("click", function () {
-          const form = this.closest("form");
-          if (form) {
-            if (
-              confirm(
-                "⚠️ Tem certeza que deseja cancelar? Todas as alterações serão perdidas."
-              )
-            ) {
-              form.reset();
-            }
-          }
-        });
+    window.addEventListener("click", function(e) {
+      const modal = document.getElementById("modal-editar-usuario");
+      if (e.target === modal) {
+        fecharModalEdicao();
       }
     });
   });
 
   function logout() {
-    if (confirm("⚠️ Tem certeza que deseja sair?")) {
+    if (confirm("Tem certeza que deseja sair?")) {
       sessionStorage.clear();
       window.location.href = "./login.html";
     }

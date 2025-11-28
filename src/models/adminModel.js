@@ -12,7 +12,7 @@ function adminAutenticar(email, token) {
 
 function cadastrarEmpresa(cnpj, nome, email) {
 
-  console. log("ACESSEI O ADMIN MODEL - function cadastrarEmpresa()");
+  console.log("ACESSEI O ADMIN MODEL - function cadastrarEmpresa()");
 
   var instrucaoSql = `CALL setCadastrarEmpresa(?, ?, ?)`;
   console.log("Executando SQL:\n", instrucaoSql);
@@ -21,7 +21,7 @@ function cadastrarEmpresa(cnpj, nome, email) {
 }
 
 function cadastrarUsuarioAdmin(email, senha) {
-  console. log("ACESSEI O ADMIN MODEL - function cadastrarUsuarioAdmin()");
+  console.log("ACESSEI O ADMIN MODEL - function cadastrarUsuarioAdmin()");
 
   var instrucaoSql = `
     INSERT INTO tblAdmin (email, senha, dtAdmissao) 
@@ -93,14 +93,14 @@ function buscarTop5Empresas() {
       COUNT(u.idUsuario) as totalUsuarios,
       (SELECT COUNT(*) FROM tblLogSistemaAcesso l WHERE l.Usuario_Empresa_idEmpresa = e.idEmpresa) as totalAcessos
     FROM tblEmpresa e
-    LEFT JOIN tblUsuario u ON e.idEmpresa = u. Empresa_idEmpresa
+    LEFT JOIN tblUsuario u ON e.idEmpresa = u.Empresa_idEmpresa
     WHERE e.situacaoLicensa = 'Ativa'
-    GROUP BY e.idEmpresa, e.nomeFantasia, e. situacaoLicensa
+    GROUP BY e.idEmpresa, e.nomeFantasia, e situacaoLicensa
     ORDER BY totalAcessos DESC, totalUsuarios DESC
     LIMIT 5;
   `;
 
-  return database. executar(instrucaoSql);
+  return database.executar(instrucaoSql);
 }
 
 function buscarAtividadesRecentes(limite = 10) {
@@ -110,7 +110,7 @@ function buscarAtividadesRecentes(limite = 10) {
   var instrucaoSql = `
     SELECT 
       l.idLogSistema,
-      l. dtAcontecimento,
+      l.dtAcontecimento,
       l.tipoLog,
       l.descricaoLog,
       u.nome as nomeUsuario,
@@ -118,14 +118,14 @@ function buscarAtividadesRecentes(limite = 10) {
       a.email as emailAdmin,
       TIMESTAMPDIFF(MINUTE, l.dtAcontecimento, NOW()) as minutosAtras
     FROM tblLogSistemaAcesso l
-    LEFT JOIN tblUsuario u ON l. Usuario_idUsuario = u.idUsuario
+    LEFT JOIN tblUsuario u ON l.Usuario_idUsuario = u.idUsuario
     LEFT JOIN tblEmpresa e ON l.Usuario_Empresa_idEmpresa = e.idEmpresa
     LEFT JOIN tblAdmin a ON l.Admin_idAdmin = a.idAdmin
     ORDER BY l.dtAcontecimento DESC
     LIMIT ${limite};
   `;
 
-  return database. executar(instrucaoSql);
+  return database.executar(instrucaoSql);
 }
 
 function buscarComparativoUsuarios() {
@@ -154,7 +154,7 @@ function registrarLogAtividade(tipoLog, descricao, idUsuario, idEmpresa, idAdmin
 }
 
 function buscarMetricasDashboard() {
-  console. log("ACESSEI O ADMIN MODEL - function buscarMetricasDashboard()");
+  console.log("ACESSEI O ADMIN MODEL - function buscarMetricasDashboard()");
 
   var instrucaoSql = `
     SELECT 
@@ -201,15 +201,15 @@ function buscarUsuarioPorId(idUsuario) {
       u.idUsuario,
       u.nome,
       u.email,
-      u. telefone,
+      u.telefone,
       u.senha,
       u.dtCriacao,
-      u. Empresa_idEmpresa,
+      u.Empresa_idEmpresa,
       u.receberNotificacao,
       e.nomeFantasia,
       e.cnpj
     FROM tblUsuario u
-    LEFT JOIN tblEmpresa e ON u. Empresa_idEmpresa = e.idEmpresa
+    LEFT JOIN tblEmpresa e ON u.Empresa_idEmpresa = e.idEmpresa
     WHERE u.idUsuario = ? 
   `;
   
@@ -217,7 +217,7 @@ function buscarUsuarioPorId(idUsuario) {
 }
 
 function listarEmpresas() {
-  console. log("ACESSEI O ADMIN MODEL - function listarEmpresas()");
+  console.log("ACESSEI O ADMIN MODEL - function listarEmpresas()");
   
   var instrucaoSql = `
     SELECT 
@@ -230,6 +230,25 @@ function listarEmpresas() {
     ORDER BY nomeFantasia ASC
   `;
   
+  return database.executar(instrucaoSql);
+}
+
+function listarUsuariosEmpresas() {
+  console.log("ACESSEI O ADMIN MODEL - listarUsuariosEmpresas()");
+  var instrucaoSql = `
+    SELECT 
+      u.idUsuario,
+      u.nome AS nomeUsuario,
+      u.email as emailUsuario,
+      u.dtCriacao,
+      CASE WHEN u.receberNotificacao = 1 THEN 'Ativo' ELSE 'Inativo' END AS statusUsuario,
+      e.nomeFantasia,
+      e.idEmpresa,
+      e.situacaoLicensa
+    FROM tblUsuario u
+    LEFT JOIN tblEmpresa e ON u. Empresa_idEmpresa = e.idEmpresa
+    ORDER BY u.idUsuario DESC
+  `;
   return database.executar(instrucaoSql);
 }
 
