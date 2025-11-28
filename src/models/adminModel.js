@@ -246,9 +246,41 @@ function listarUsuariosEmpresas() {
       e.idEmpresa,
       e.situacaoLicensa
     FROM tblUsuario u
-    LEFT JOIN tblEmpresa e ON u. Empresa_idEmpresa = e.idEmpresa
+    LEFT JOIN tblEmpresa e ON u.Empresa_idEmpresa = e.idEmpresa
     ORDER BY u.idUsuario DESC
   `;
+  return database.executar(instrucaoSql);
+}
+
+function listarUsuariosEmpresasPaginado(limite, offset) {
+  console.log("ACESSEI O ADMIN MODEL - listarUsuariosEmpresasPaginado()");
+  
+  var instrucaoSql = `
+    SELECT 
+      u.idUsuario,
+      u.nome AS nomeUsuario,
+      u.email as emailUsuario,
+      u.dtCriacao,
+      CASE WHEN u.receberNotificacao = 1 THEN 'Ativo' ELSE 'Inativo' END AS statusUsuario,
+      e.nomeFantasia,
+      e.idEmpresa,
+      e.situacaoLicensa
+    FROM tblUsuario u
+    LEFT JOIN tblEmpresa e ON u.Empresa_idEmpresa = e.idEmpresa
+    ORDER BY u.idUsuario DESC
+    LIMIT ${limite} OFFSET ${offset}
+  `;
+  
+  return database.executar(instrucaoSql);
+}
+
+function contarTotalUsuarios() {
+  console.log("ACESSEI O ADMIN MODEL - contarTotalUsuarios()");
+  
+  var instrucaoSql = `
+    SELECT COUNT(*) as total FROM tblUsuario
+  `;
+  
   return database.executar(instrucaoSql);
 }
 
@@ -266,6 +298,8 @@ module.exports = {
   registrarLogAtividade,
   buscarMetricasDashboard,
   listarUsuariosEmpresas,
+  listarUsuariosEmpresasPaginado,
+  contarTotalUsuarios,
   editarUsuario,
   excluirUsuario,
   buscarUsuarioPorId,

@@ -495,6 +495,9 @@
     const tabButtons = document.querySelectorAll(".tab-btn");
     const tabContents = document.querySelectorAll(".tab-content");
 
+    let paginaAtual = 1;
+    let totalPaginas = 1;
+
     tabButtons.forEach((button) => {
       button.addEventListener("click", () => {
         const targetTab = button.getAttribute("data-tab");
@@ -505,15 +508,18 @@
       });
     });
 
-    carregarUsuarios();
+    carregarUsuarios(1);
     carregarEmpresasSelect();
-
-    function carregarUsuarios() {
-      fetch("/admin/usuarios/listar")
+    function carregarUsuarios(pagina) {
+      fetch(`/admin/usuarios/listar/paginado?pagina=${pagina}&limite=20`)
         .then(res => res.json())
-        .then(usuarios => {
+        .then(data => {
+          const { usuarios, paginacao } = data;
           const tbody = document.getElementById("usuarios-tbody");
           tbody.innerHTML = "";
+          
+          paginaAtual = paginacao.paginaAtual;
+          totalPaginas = paginacao.totalPaginas;
           
           if (usuarios.length === 0) {
             tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhum usuário encontrado</td></tr>';
@@ -521,7 +527,7 @@
           }
           
           usuarios.forEach(usuario => {
-            const statusClass = usuario.statusUsuario === "Ativo" ?  "active" : "inactive";
+            const statusClass = usuario.statusUsuario === "Ativo" ? "active" : "inactive";
             tbody.innerHTML += `
               <tr>
                 <td>
@@ -548,11 +554,40 @@
               </tr>
             `;
           });
+          atualizarPaginacao(paginacao);
         })
         .catch(err => {
           console.error("Erro ao carregar usuários:", err);
           alert("Erro ao carregar usuários: " + err.message);
         });
+    }
+
+    function atualizarPaginacao(paginacao) {
+      const paginationInfo = document.querySelector(".pagination-info");
+      const btnAnterior = document.querySelector(".btn-pagination:first-child");
+      const btnProximo = document.querySelector(".btn-pagination:last-child");
+      
+      paginationInfo.textContent = `Página ${paginacao.paginaAtual} de ${paginacao.totalPaginas} • ${paginacao.totalUsuarios} usuários`;
+
+      btnAnterior.disabled = ! paginacao.temAnterior;
+      btnProximo.disabled = !paginacao.temProxima;
+      
+      btnAnterior.style.opacity = paginacao.temAnterior ? "1" : "0.5";
+      btnProximo.style.opacity = paginacao.temProxima ? "1" : "0.5";
+      btnAnterior.style.cursor = paginacao.temAnterior ? "pointer" : "not-allowed";
+      btnProximo.style.cursor = paginacao.temProxima ? "pointer" : "not-allowed";
+
+      btnAnterior.onclick = () => {
+        if (paginacao.temAnterior) {
+          carregarUsuarios(paginacao.paginaAtual - 1);
+        }
+      };
+      
+      btnProximo.onclick = () => {
+        if (paginacao.temProxima) {
+          carregarUsuarios(paginacao.paginaAtual + 1);
+        }
+      };
     }
 
     window.abrirModalEdicao = function(idUsuario) {
@@ -597,7 +632,7 @@
         .then(resultado => {
           alert("Usuário atualizado com sucesso!");
           fecharModalEdicao();
-          carregarUsuarios();
+          carregarUsuarios(paginaAtual);
         })
         .catch(err => {
           console.error("Erro ao editar usuário:", err);
@@ -616,7 +651,7 @@
         .then(res => res.json())
         .then(resultado => {
           alert("Usuário excluído com sucesso!");
-          carregarUsuarios();
+          carregarUsuarios(paginaAtual);
         })
         .catch(err => {
           console.error("Erro ao excluir usuário:", err);
@@ -640,7 +675,6 @@
         });
     }
 
-    
     function getIniciais(nome) {
       if (!nome) return "";
       return nome.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();

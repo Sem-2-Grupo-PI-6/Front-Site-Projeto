@@ -324,6 +324,37 @@ function listarEmpresas(req, res) {
     });
 }
 
+function listarUsuariosEmpresasPaginado(req, res) {
+  const pagina = parseInt(req.query. pagina) || 1;
+  const limite = parseInt(req. query.limite) || 20;
+  const offset = (pagina - 1) * limite;
+  
+  Promise.all([
+    adminModel. listarUsuariosEmpresasPaginado(limite, offset),
+    adminModel.contarTotalUsuarios()
+  ])
+    .then(([usuarios, total]) => {
+      const totalUsuarios = total[0].total;
+      const totalPaginas = Math.ceil(totalUsuarios / limite);
+      
+      res.status(200).json({
+        usuarios: usuarios,
+        paginacao: {
+          paginaAtual: pagina,
+          totalPaginas: totalPaginas,
+          totalUsuarios: totalUsuarios,
+          usuariosPorPagina: limite,
+          temProxima: pagina < totalPaginas,
+          temAnterior: pagina > 1
+        }
+      });
+    })
+    .catch(erro => {
+      console.error("Erro ao listar usuários paginados:", erro);
+      res.status(500).json({ erro: erro.message || erro. sqlMessage });
+    });
+}
+
 module.exports = {
   adminAutenticar,
   cadastrarEmpresa,
@@ -333,7 +364,8 @@ module.exports = {
   buscarTop5Empresas,
   buscarAtividadesRecentes,
   buscarTotalUsuarios,
-  listarUsuariosEmpresas,  
+  listarUsuariosEmpresas,
+  listarUsuariosEmpresasPaginado,
   editarUsuario,           
   excluirUsuario,          
   buscarUsuarioPorId,      

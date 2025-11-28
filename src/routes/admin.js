@@ -54,4 +54,8 @@ router.get("/empresas/listar", function (req, res) {
   adminController.listarEmpresas(req, res);
 });
 
+router.get("/usuarios/listar/paginado", function (req, res) {
+  adminController.listarUsuariosEmpresasPaginado(req, res);
+});
+
 module.exports = router;
