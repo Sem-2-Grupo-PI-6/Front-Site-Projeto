@@ -1,7 +1,6 @@
 var database = require("../database/config");
 
 function adminAutenticar(email, token) {
-
   console.log("ACESSEI O ADMIN MODEL - function adminAutenticar():", email);
 
   var instrucaoSql = `CALL getAutenticarAdmin(?, ?)`;
@@ -11,7 +10,6 @@ function adminAutenticar(email, token) {
 }
 
 function cadastrarEmpresa(cnpj, nome, email) {
-
   console.log("ACESSEI O ADMIN MODEL - function cadastrarEmpresa()");
 
   var instrucaoSql = `CALL setCadastrarEmpresa(?, ?, ?)`;
@@ -20,20 +18,16 @@ function cadastrarEmpresa(cnpj, nome, email) {
   return database.executar(instrucaoSql, [cnpj, nome, email]);
 }
 
-function cadastrarUsuarioAdmin(email, senha) {
+function cadastrarUsuarioAdmin(nome, email, senha) {
   console.log("ACESSEI O ADMIN MODEL - function cadastrarUsuarioAdmin()");
 
-  var instrucaoSql = `
-    INSERT INTO tblAdmin (email, senha, dtAdmissao) 
-    VALUES ('${email}', '${senha}', CURDATE());
-  `;
+  var instrucaoSql = `CALL setCadastrarAdmin(?, ?, ?)`;
 
   console.log("Executando SQL:\n", instrucaoSql);
-  return database.executar(instrucaoSql);
+  return database.executar(instrucaoSql, [nome, email, senha]);
 }
 
 function buscarTotalUsuariosAtivos() {
-
   console.log("ACESSEI O ADMIN MODEL - function buscarTotalUsuariosAtivos()");
 
   var instrucaoSql = `
@@ -47,7 +41,6 @@ function buscarTotalUsuariosAtivos() {
 }
 
 function buscarCrescimentoUsuarios() {
-
   console.log("ACESSEI O ADMIN MODEL - function buscarCrescimentoUsuarios()");
 
   var instrucaoSql = `
@@ -66,7 +59,9 @@ function buscarCrescimentoUsuarios() {
 }
 
 function buscarTotalAcumuladoUsuarios() {
-  console.log("ACESSEI O ADMIN MODEL - function buscarTotalAcumuladoUsuarios()");
+  console.log(
+    "ACESSEI O ADMIN MODEL - function buscarTotalAcumuladoUsuarios()"
+  );
 
   var instrucaoSql = `
     SELECT 
@@ -104,7 +99,6 @@ function buscarTop5Empresas() {
 }
 
 function buscarAtividadesRecentes(limite = 10) {
-
   console.log("ACESSEI O ADMIN MODEL - function buscarAtividadesRecentes()");
 
   var instrucaoSql = `
@@ -138,10 +132,15 @@ function buscarComparativoUsuarios() {
   `;
 
   return database.executar(instrucaoSql);
-
 }
 
-function registrarLogAtividade(tipoLog, descricao, idUsuario, idEmpresa, idAdmin) {
+function registrarLogAtividade(
+  tipoLog,
+  descricao,
+  idUsuario,
+  idEmpresa,
+  idAdmin
+) {
   console.log("ACESSEI O ADMIN MODEL - function registrarLogAtividade()");
 
   var instrucaoSql = `
@@ -149,7 +148,13 @@ function registrarLogAtividade(tipoLog, descricao, idUsuario, idEmpresa, idAdmin
     VALUES (NOW(), ?, ?, ?, ?, ?)
   `;
 
-  return database.executar(instrucaoSql, [tipoLog, descricao, idUsuario || null, idEmpresa || null, idAdmin || null]);
+  return database.executar(instrucaoSql, [
+    tipoLog,
+    descricao,
+    idUsuario || null,
+    idEmpresa || null,
+    idAdmin || null,
+  ]);
 }
 
 function buscarMetricasDashboard() {
@@ -163,12 +168,12 @@ function buscarMetricasDashboard() {
       (SELECT COUNT(*) FROM tblUsuario WHERE MONTH(dtCriacao) = MONTH(CURDATE()) AND YEAR(dtCriacao) = YEAR(CURDATE())) as novosUsuariosMes,
       (SELECT COUNT(*) FROM tblLogSistemaAcesso WHERE dtAcontecimento >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)) as acessos30Dias;
   `;
-  
+
   return database.executar(instrucaoSql);
 }
 function editarUsuario(idUsuario, nome, email, telefone, idEmpresa) {
   console.log("ACESSEI O ADMIN MODEL - function editarUsuario()");
-  
+
   var instrucaoSql = `
     UPDATE tblUsuario 
     SET nome = ?, 
@@ -177,24 +182,30 @@ function editarUsuario(idUsuario, nome, email, telefone, idEmpresa) {
         Empresa_idEmpresa = ?
     WHERE idUsuario = ?
   `;
-  
-  return database.executar(instrucaoSql, [nome, email, telefone, idEmpresa, idUsuario]);
+
+  return database.executar(instrucaoSql, [
+    nome,
+    email,
+    telefone,
+    idEmpresa,
+    idUsuario,
+  ]);
 }
 
 function excluirUsuario(idUsuario) {
   console.log("ACESSEI O ADMIN MODEL - function excluirUsuario()");
-  
+
   var instrucaoSql = `
     DELETE FROM tblUsuario 
     WHERE idUsuario = ?
   `;
-  
+
   return database.executar(instrucaoSql, [idUsuario]);
 }
 
 function buscarUsuarioPorId(idUsuario) {
   console.log("ACESSEI O ADMIN MODEL - function buscarUsuarioPorId()");
-  
+
   var instrucaoSql = `
     SELECT 
       u.idUsuario,
@@ -211,13 +222,13 @@ function buscarUsuarioPorId(idUsuario) {
     LEFT JOIN tblEmpresa e ON u.Empresa_idEmpresa = e.idEmpresa
     WHERE u.idUsuario = ? 
   `;
-  
+
   return database.executar(instrucaoSql, [idUsuario]);
 }
 
 function listarEmpresas() {
   console.log("ACESSEI O ADMIN MODEL - function listarEmpresas()");
-  
+
   var instrucaoSql = `
     SELECT 
       idEmpresa,
@@ -228,7 +239,7 @@ function listarEmpresas() {
     WHERE situacaoLicensa = 'Ativa'
     ORDER BY nomeFantasia ASC
   `;
-  
+
   return database.executar(instrucaoSql);
 }
 
@@ -253,7 +264,7 @@ function listarUsuariosEmpresas() {
 
 function listarUsuariosEmpresasPaginado(limite, offset) {
   console.log("ACESSEI O ADMIN MODEL - listarUsuariosEmpresasPaginado()");
-  
+
   var instrucaoSql = `
     SELECT 
       u.idUsuario,
@@ -269,20 +280,19 @@ function listarUsuariosEmpresasPaginado(limite, offset) {
     ORDER BY u.idUsuario DESC
     LIMIT ${limite} OFFSET ${offset}
   `;
-  
+
   return database.executar(instrucaoSql);
 }
 
 function contarTotalUsuarios() {
   console.log("ACESSEI O ADMIN MODEL - contarTotalUsuarios()");
-  
+
   var instrucaoSql = `
     SELECT COUNT(*) as total FROM tblUsuario
   `;
-  
+
   return database.executar(instrucaoSql);
 }
-
 
 module.exports = {
   adminAutenticar,
@@ -302,5 +312,5 @@ module.exports = {
   editarUsuario,
   excluirUsuario,
   buscarUsuarioPorId,
-  listarEmpresas
+  listarEmpresas,
 };
