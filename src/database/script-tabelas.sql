@@ -10,6 +10,7 @@ CREATE TABLE tblSistema (
 
 select * from tblSistema;
 
+-- Rodar este comando para a proc setCadastrarAdmin() funcionar: alter table tbladmin add column nome varchar(45);
 CREATE TABLE tblAdmin (
     idAdmin INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(45),
@@ -541,15 +542,18 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- Atualizar proc em BD Local:
 -- DROP PROCEDURE IF EXISTS setCadastrarAdmin;
 DELIMITER $$
 CREATE PROCEDURE setCadastrarAdmin(
+	IN cadastro_nome VARCHAR (45),
 	IN cadastro_email VARCHAR (45),
-    IN cadastro_senha CHAR(4)
+  IN cadastro_senha VARCHAR(20)
 )
 BEGIN
-	INSERT INTO tblAdmin (email, senha, dtadmissao) 
+	INSERT INTO tblAdmin (nome, email, senha, dtadmissao) 
     VALUES (
+    cadastro_nome,
     cadastro_email,
     cadastro_senha,
     CURDATE()
