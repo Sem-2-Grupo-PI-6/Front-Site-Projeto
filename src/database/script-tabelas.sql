@@ -561,6 +561,21 @@ BEGIN
 END $$
 DELIMITER ;
 
+-- DROP PROCEDURE IF EXISTS updateSenhaUsuario;
+DELIMITER $$
+CREATE PROCEDURE updateSenhaUsuario(
+	IN update_senhaNova VARCHAR(20),
+	IN update_idUsuario INT,
+  IN update_senhaAntiga VARCHAR(20)
+)
+BEGIN
+	UPDATE tblUsuario 
+    SET senha = update_senhaNova
+    WHERE idUsuario = update_idUsuario 
+      AND senha = update_senhaAntiga;
+END $$
+DELIMITER ;
+
 /*
 insert into tblUsuario (nome, telefone, email, senha, dtCriacao, filtrosPersonalizados, Empresa_idEmpresa)
 VALUES ('Rodrigo', '11999999999', 'rodrigo@teste.com', '12345678', '2025-11-23', '[{"nome": "PIB Sudeste", "periodo": "2023"}]', 5);
