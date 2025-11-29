@@ -44,15 +44,10 @@ function atualizarPerfil(idUsuario, nome, telefone) {
 function alterarSenha(idUsuario, senhaAtual, novaSenha) {
   console.log("ACESSEI O USUARIO MODEL - function alterarSenha():", idUsuario);
 
-  var instrucaoSql = `
-    UPDATE tblUsuario 
-    SET senha = '${novaSenha}'
-    WHERE idUsuario = ${idUsuario} 
-      AND senha = '${senhaAtual}';
-  `;
+  var instrucaoSql = `CALL updateSenhaUsuario(?, ?, ?);`;
 
   console.log("Executando SQL:\n", instrucaoSql);
-  return database.executar(instrucaoSql);
+  return database.executar(instrucaoSql, [novaSenha, idUsuario, senhaAtual]);
 }
 
 function atualizarPreferencias(idUsuario, receberNotificacao) {
@@ -118,63 +113,68 @@ function criarSlack(
   alertaWarning,
   alertaInfo
 ) {
-  console.log('📝 criarSlack() chamado com:', {
+  console.log("📝 criarSlack() chamado com:", {
     idUsuario,
     maiorPopulacao,
     aumentoSelic,
     crescimentoPib,
     alertaError,
     alertaWarning,
-    alertaInfo
+    alertaInfo,
   });
 
   var instrucaoSql = `
     INSERT INTO tblSlack (maiorPopulacao, aumentoSelic, crescimentoPib, 
                           alertaError, alertaWarning, alertaInfo)
-    VALUES (${maiorPopulacao || 0}, ${aumentoSelic || 0}, ${crescimentoPib || 0},
+    VALUES (${maiorPopulacao || 0}, ${aumentoSelic || 0}, ${
+    crescimentoPib || 0
+  },
             ${alertaError || 0}, ${alertaWarning || 0}, ${alertaInfo || 0});
   `;
 
-  console.log('📤 SQL INSERT tblSlack:', instrucaoSql);
+  console.log("📤 SQL INSERT tblSlack:", instrucaoSql);
 
-  return database.executar(instrucaoSql).then((resultado) => {
-    console.log('✅ INSERT tblSlack executado!');
-    console.log('📊 Resultado INSERT:', resultado);
-    console.log('🆔 insertId:', resultado.insertId);
-    
-    const idSlack = resultado.insertId;
+  return database
+    .executar(instrucaoSql)
+    .then((resultado) => {
+      console.log("✅ INSERT tblSlack executado!");
+      console.log("📊 Resultado INSERT:", resultado);
+      console.log("🆔 insertId:", resultado.insertId);
 
-    if (!idSlack) {
-      throw new Error('insertId não foi retornado!');
-    }
+      const idSlack = resultado.insertId;
 
-    const updateSql = `
+      if (!idSlack) {
+        throw new Error("insertId não foi retornado!");
+      }
+
+      const updateSql = `
       UPDATE tblUsuario 
       SET fkSlack = ${idSlack}
       WHERE idUsuario = ${idUsuario};
     `;
 
-    console.log('📤 SQL UPDATE tblUsuario:', updateSql);
+      console.log("📤 SQL UPDATE tblUsuario:", updateSql);
 
-    return database.executar(updateSql).then((resultadoUpdate) => {
-      console.log('✅ UPDATE tblUsuario executado!');
-      console.log('📊 Resultado UPDATE:', resultadoUpdate);
-      console.log('📊 Linhas afetadas:', resultadoUpdate.affectedRows);
-      
-      if (resultadoUpdate.affectedRows === 0) {
-        console.warn('⚠️ Nenhuma linha foi atualizada no UPDATE!');
-      }
-      
-      return {
-        insertId: idSlack,
-        affectedRows: resultado.affectedRows,
-        updateAffectedRows: resultadoUpdate.affectedRows
-      };
+      return database.executar(updateSql).then((resultadoUpdate) => {
+        console.log("✅ UPDATE tblUsuario executado!");
+        console.log("📊 Resultado UPDATE:", resultadoUpdate);
+        console.log("📊 Linhas afetadas:", resultadoUpdate.affectedRows);
+
+        if (resultadoUpdate.affectedRows === 0) {
+          console.warn("⚠️ Nenhuma linha foi atualizada no UPDATE!");
+        }
+
+        return {
+          insertId: idSlack,
+          affectedRows: resultado.affectedRows,
+          updateAffectedRows: resultadoUpdate.affectedRows,
+        };
+      });
+    })
+    .catch((erro) => {
+      console.error("❌ Erro em criarSlack:", erro);
+      throw erro;
     });
-  }).catch((erro) => {
-    console.error('❌ Erro em criarSlack:', erro);
-    throw erro;
-  });
 }
 
 function atualizarSlack(
