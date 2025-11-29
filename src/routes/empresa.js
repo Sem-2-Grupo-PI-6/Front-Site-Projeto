@@ -6,6 +6,10 @@ router.post("/autenticarEmpresa", function (req, res) {
   empresaController.autenticarEmpresa(req, res);
 });
 
+router.put("/:idEmpresa/atualizarSenha", function (req, res) {
+  empresaController.atualizarSenha(req, res);
+});
+
 router.post("/cadastrarUsuario", function (req, res) {
   empresaController.cadastrarUsuario(req, res);
 });

@@ -450,8 +450,8 @@
               });
           });
         }
-
         const profileForm = document.querySelector("#tab-profile form");
+
         if (profileForm) {
           profileForm.addEventListener("submit", function (e) {
             e.preventDefault();
@@ -468,22 +468,54 @@
 
             if (currentPassword || newPassword || confirmPassword) {
               if (!currentPassword) {
-                alert(" Digite sua senha atual!");
+                alert("❌ Digite sua senha atual!");
                 return;
               }
 
               if (newPassword.length < 8) {
-                alert(" A nova senha deve ter no mínimo 8 caracteres!");
+                alert("❌ A nova senha deve ter no mínimo 8 caracteres!");
                 return;
               }
 
               if (newPassword !== confirmPassword) {
-                alert(" As senhas não coincidem!");
+                alert("❌ As senhas não coincidem!");
                 return;
               }
-            }
 
-            alert(" Perfil atualizado com sucesso!");
+              const empresaLogada = JSON.parse(
+                sessionStorage.getItem("EMPRESA_LOGADA")
+              );
+
+              if (!empresaLogada || !empresaLogada.idEmpresa) {
+                alert("❌ Sessão expirada. Faça login novamente.");
+                window.location.href = "/login";
+                return;
+              }
+
+              fetch(`/empresa/${empresaLogada.idEmpresa}/atualizarSenha`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  senhaAtualServer: currentPassword,
+                  novaSenhaServer: newPassword,
+                }),
+              })
+                .then((response) => {
+                  if (!response.ok) {
+                    return response.json().then((data) => {
+                      throw new Error(data.erro || "Erro ao atualizar senha");
+                    });
+                  }
+                  return response.json();
+                })
+                .then((data) => {
+                  alert("✓ Senha atualizada com sucesso!");
+                  profileForm.reset();
+                })
+                .catch((erro) => {
+                  alert(`❌ ${erro.message}`);
+                });
+            }
           });
         }
 

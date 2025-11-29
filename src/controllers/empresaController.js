@@ -51,6 +51,38 @@ function autenticarEmpresa(req, res) {
     });
 }
 
+function atualizarSenha(req, res) {
+  const idEmpresa = req.params.idEmpresa;
+  const novaSenha = req.body.novaSenhaServer;
+
+  console.log("🔐 Atualizando senha - Empresa ID:", idEmpresa);
+
+  if (!novaSenha) {
+    res.status(400).json({ erro: "Nova senha está undefined!" });
+    return;
+  }
+
+  empresaModel
+    .atualizarSenha(idEmpresa, novaSenha)
+    .then(function (resultadoAtualizar) {
+      console.log("📊 Resultado atualização:", resultadoAtualizar);
+
+      if (resultadoAtualizar.affectedRows === 0) {
+        console.log("❌ Nenhum registro atualizado");
+        res.status(404).json({ erro: "Empresa não encontrada" });
+        return;
+      }
+
+      console.log("✅ Senha atualizada com sucesso!");
+      res.json({ mensagem: "Senha atualizada com sucesso" });
+    })
+    .catch(function (erro) {
+      console.error("❌ ERRO COMPLETO:", erro);
+      console.error("❌ Stack trace:", erro.stack);
+      res.status(500).json({ erro: "Erro interno do servidor" });
+    });
+}
+
 function cadastrarUsuario(req, res) {
   var nome = req.body.nomeServer;
   var email = req.body.emailServer;
@@ -124,6 +156,7 @@ function atualizarEmpresa(req, res) {
 
 module.exports = {
   autenticarEmpresa,
+  atualizarSenha,
   cadastrarUsuario,
   listarEmpresas,
   verificarVagas,
