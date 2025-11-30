@@ -42,7 +42,7 @@ router.get("/usuarios/:id", function (req, res) {
   adminController.buscarUsuarioPorId(req, res);
 });
 
-router.put("/usuarios/:id", function (req, res) {
+router.put("/usuario/:id", function (req, res) {
   adminController.editarUsuario(req, res);
 });
 

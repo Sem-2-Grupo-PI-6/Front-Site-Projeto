@@ -14,7 +14,7 @@ function atualizarSenha(idEmpresa, novaSenha) {
     "ACESSEI O EMPRESA MODEL - function atualizarSenha():",
     idEmpresa
   );
-  const instrucaoSql = `CALL updateSenhaAdmin(?, ?)`;
+  const instrucaoSql = `CALL updateSenhaEmpresa(?, ?)`;
   console.log("Executando SQL:", instrucaoSql);
   return database.executar(instrucaoSql, [novaSenha, idEmpresa]);
 }

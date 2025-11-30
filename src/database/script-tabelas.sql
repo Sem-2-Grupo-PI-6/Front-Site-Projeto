@@ -576,9 +576,9 @@ BEGIN
 END $$
 DELIMITER ;
 
--- DROP PROCEDURE IF EXISTS updateSenhaAdmin;
+-- DROP PROCEDURE IF EXISTS updateSenhaEmpresa;
 DELIMITER $$
-CREATE PROCEDURE updateSenhaAdmin(
+CREATE PROCEDURE updateSenhaEmpresa(
 	IN update_senhaNova VARCHAR(20),
 	IN update_idEmpresa INT
 )
@@ -586,6 +586,21 @@ BEGIN
 	UPDATE tblEmpresa 
 		SET senha = update_senhaNova 
         WHERE idEmpresa = update_idEmpresa;
+END $$
+DELIMITER ;
+
+-- DROP PROCEDURE IF EXISTS updateSenhaAdmin;
+DELIMITER $$
+CREATE PROCEDURE updateSenhaAdmin(
+	IN update_senhaNova VARCHAR(20),
+  IN update_nome VARCHAR(45),
+	IN update_idAdmin INT
+)
+BEGIN
+	UPDATE tblAdmin 
+		SET senha = update_senhaNova,
+        nome = update_nome
+        WHERE idAdmin = update_idAdmin;
 END $$
 DELIMITER ;
 

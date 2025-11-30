@@ -171,25 +171,13 @@ function buscarMetricasDashboard() {
 
   return database.executar(instrucaoSql);
 }
-function editarUsuario(idUsuario, nome, email, telefone, idEmpresa) {
+
+function editarUsuario(novaSenha, nome, idAdmin) {
   console.log("ACESSEI O ADMIN MODEL - function editarUsuario()");
 
-  var instrucaoSql = `
-    UPDATE tblUsuario 
-    SET nome = ?, 
-        email = ?, 
-        telefone = ?,
-        Empresa_idEmpresa = ?
-    WHERE idUsuario = ?
-  `;
+  var instrucaoSql = `CALL updateSenhaAdmin(?, ?, ?)`;
 
-  return database.executar(instrucaoSql, [
-    nome,
-    email,
-    telefone,
-    idEmpresa,
-    idUsuario,
-  ]);
+  return database.executar(instrucaoSql, [novaSenha, nome, idAdmin]);
 }
 
 function excluirUsuario(idUsuario) {

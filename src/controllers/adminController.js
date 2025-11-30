@@ -259,32 +259,32 @@ function listarUsuariosEmpresas(req, res) {
 }
 
 function editarUsuario(req, res) {
-  const idUsuario = req.params.id;
-  const { nome, email, telefone, idEmpresa } = req.body;
+  const idAdmin = req.params.id;
+  const nome = req.body.nomeServer;
+  const novaSenha = req.body.novaSenhaServer;
 
-  if (!nome || !email) {
-    res.status(400).send("Nome e email são obrigatórios!");
+  console.log("✏️ Atualizando admin - ID:", idAdmin);
+
+  if (!nome) {
+    res.status(400).json({ erro: "Nome está undefined!" });
     return;
   }
 
   adminModel
-    .editarUsuario(idUsuario, nome, email, telefone, idEmpresa)
-    .then((resultado) => {
-      console.log("Usuário editado:", idUsuario);
+    .editarUsuario(novaSenha, nome, idAdmin)
+    .then(function (resultadoAtualizar) {
+      if (resultadoAtualizar.affectedRows === 0) {
+        console.log("❌ Nenhum registro atualizado");
+        res.status(404).json({ erro: "Admin não encontrado" });
+        return;
+      }
 
-      adminModel.registrarLogAtividade(
-        "EDICAO",
-        `Usuário ${nome} editado`,
-        idUsuario,
-        idEmpresa,
-        null
-      );
-
-      res.status(200).json({ mensagem: "Usuário atualizado com sucesso!" });
+      console.log("✅ Admin atualizado com sucesso!");
+      res.json({ mensagem: "Perfil atualizado com sucesso" });
     })
-    .catch((erro) => {
-      console.error("Erro ao editar usuário:", erro);
-      res.status(500).json({ erro: erro.sqlMessage || erro.message });
+    .catch(function (erro) {
+      console.error("❌ ERRO COMPLETO:", erro);
+      res.status(500).json({ erro: "Erro interno do servidor" });
     });
 }
 
