@@ -67,15 +67,6 @@
             <span class="overview-trend neutral">→ Média: 281/dia</span>
           </div>
         </article>
-
-        <article class="overview-card card-system">
-          <div class="overview-icon">⚡</div>
-          <div class="overview-content">
-            <h3>Status do Sistema</h3>
-            <div class="overview-value">99.8<span class="unit">%</span></div>
-            <span class="overview-trend positive">✓ Todos sistemas OK</span>
-          </div>
-        </article>
       </section>
 
       <section class="config-tabs">
@@ -92,10 +83,6 @@
             <span class="tab-icon">👤</span>
             <span>Meu Perfil</span>
           </button>
-          <button class="tab-btn" data-tab="settings">
-            <span class="tab-icon">⚙️</span>
-            <span>Configurações</span>
-          </button>
         </div>
 
         <div class="tab-content active" id="tab-users">
@@ -111,11 +98,6 @@
                   placeholder="🔍 Buscar usuário..."
                   class="search-input"
                 />
-                <select class="filter-select">
-                  <option value="all">Todos</option>
-                  <option value="admin">Administradores</option>
-                  <option value="user">Usuários Padrão</option>
-                </select>
               </div>
             </div>
 
@@ -208,11 +190,14 @@
             <div class="card-header">
               <div>
                 <h2>➕ Criar Novo Usuário</h2>
-                <p>Adicione administradores ou usuários padrão à plataforma</p>
+                <p>Adicione administradores à plataforma</p>
               </div>
             </div>
 
-            <form class="config-form">
+            <form
+              id="formNovoUsuario"
+              onsubmit="return cadastrarUsuarioAdmin(event)"
+            >
               <div class="form-row">
                 <div class="form-group">
                   <label for="create-name">Nome Completo *</label>
@@ -253,37 +238,6 @@
                     required
                   />
                 </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="create-type">Tipo de Usuário *</label>
-                  <select id="create-type" required>
-                    <option value="">Selecione...</option>
-                    <option value="user">Usuário Padrão</option>
-                    <option value="admin">Administrador (@admin.net)</option>
-                  </select>
-                  <small class="form-hint"
-                    >Administradores têm acesso total ao sistema</small
-                  >
-                </div>
-                <div class="form-group">
-                  <label for="create-company">Empresa (Opcional)</label>
-                  <input
-                    type="text"
-                    id="create-company"
-                    placeholder="Nome da empresa"
-                  />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="create-cnpj">CNPJ (Opcional)</label>
-                <input
-                  type="text"
-                  id="create-cnpj"
-                  placeholder="00.000.000/0000-00"
-                />
               </div>
 
               <div class="alert alert-info">
@@ -382,112 +336,6 @@
                 <button type="button" class="btn-secondary">Cancelar</button>
                 <button type="submit" class="btn-primary">
                   📥 Salvar Alterações
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="tab-content" id="tab-settings">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h2>⚙️ Configurações do Sistema</h2>
-                <p>Ajustes gerais da plataforma</p>
-              </div>
-            </div>
-
-            <form class="config-form">
-              <h3 class="section-title">🔔 Notificações</h3>
-
-              <div class="toggle-group">
-                <div class="toggle-item">
-                  <div class="toggle-info">
-                    <strong>Notificar novos cadastros</strong>
-                    <p>Receba email quando um novo usuário se cadastrar</p>
-                  </div>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-
-                <div class="toggle-item">
-                  <div class="toggle-info">
-                    <strong>Alertas de erro de API</strong>
-                    <p>Notificação quando APIs externas falharem</p>
-                  </div>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-
-                <div class="toggle-item">
-                  <div class="toggle-info">
-                    <strong>Relatório semanal</strong>
-                    <p>Resumo de atividades enviado toda segunda-feira</p>
-                  </div>
-                  <label class="toggle-switch">
-                    <input type="checkbox" />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-
-              <h3 class="section-title">🗄️ Dados e Sincronização</h3>
-
-              <div class="sync-info">
-                <div class="sync-item">
-                  <span class="sync-label">Última sincronização:</span>
-                  <span class="sync-value">Hoje, 14:32</span>
-                </div>
-                <div class="sync-item">
-                  <span class="sync-label">Próxima sincronização:</span>
-                  <span class="sync-value">Hoje, 18:00</span>
-                </div>
-                <div class="sync-item">
-                  <span class="sync-label">Frequência:</span>
-                  <span class="sync-value">A cada 4 horas</span>
-                </div>
-              </div>
-
-              <button type="button" class="btn-sync">
-                <span>🔄</span>
-                <span>Forçar Sincronização Agora</span>
-              </button>
-
-              <h3 class="section-title">🔒 Segurança</h3>
-
-              <div class="toggle-group">
-                <div class="toggle-item">
-                  <div class="toggle-info">
-                    <strong>Autenticação de dois fatores (2FA)</strong>
-                    <p>Camada extra de segurança no login</p>
-                  </div>
-                  <label class="toggle-switch">
-                    <input type="checkbox" />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-
-                <div class="toggle-item">
-                  <div class="toggle-info">
-                    <strong>Exigir senha forte</strong>
-                    <p>Mínimo de 12 caracteres com símbolos</p>
-                  </div>
-                  <label class="toggle-switch">
-                    <input type="checkbox" checked />
-                    <span class="toggle-slider"></span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-actions">
-                <button type="button" class="btn-secondary">
-                  Restaurar Padrões
-                </button>
-                <button type="submit" class="btn-primary">
-                  💾 Salvar Configurações
                 </button>
               </div>
             </form>
@@ -645,6 +493,53 @@
     window.fecharModalEdicao = function () {
       document.getElementById("modal-editar-usuario").style.display = "none";
     };
+
+    async function cadastrarUsuarioAdmin(event) {
+      event.preventDefault();
+
+      const nome = document.getElementById("create-name").value;
+      const email = document.getElementById("create-email").value;
+      const senha = document.getElementById("create-password").value;
+      const confirmarSenha = document.getElementById("create-confirm").value;
+
+      if (senha !== confirmarSenha) {
+        alert("As senhas não coincidem!");
+        return false;
+      }
+
+      if (senha.length < 8) {
+        alert("A senha deve ter no mínimo 8 caracteres!");
+        return false;
+      }
+      console.log("Antes do fetch");
+      try {
+        const response = await fetch("/admin/cadastrarUsuarioAdmin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nomeServer: nome,
+            emailServer: email,
+            senhaServer: senha,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          alert("Usuário cadastrado com sucesso!");
+          document.getElementById("formNovoUsuario").reset();
+        } else {
+          const errorText = await response.text();
+          alert(errorText || "Erro ao cadastrar usuário");
+        }
+      } catch (error) {
+        console.error("Erro:", error);
+        alert("Erro de conexão com o servidor");
+      }
+
+      return false;
+    }
 
     // ESTOU EDITANDO AQUI
     document

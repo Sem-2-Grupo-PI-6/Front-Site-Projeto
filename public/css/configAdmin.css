@@ -26,7 +26,7 @@
 /* ===== OVERVIEW CARDS ===== */
 .overview-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.25rem;
   margin-bottom: 2rem;
 }
@@ -46,13 +46,17 @@
 }
 
 .overview-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    var(--accent-light) 100%
+  );
 }
 
 .overview-card:hover {
@@ -67,7 +71,11 @@
   height: 64px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, rgba(14, 105, 48, 0.1), rgba(14, 105, 48, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(14, 105, 48, 0.1),
+    rgba(14, 105, 48, 0.05)
+  );
   border-radius: 12px;
   flex-shrink: 0;
 }
@@ -465,7 +473,7 @@
 
 .form-divider::before,
 .form-divider::after {
-  content: '';
+  content: "";
   flex: 1;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--border), transparent);
@@ -651,7 +659,7 @@
 }
 
 .toggle-slider::before {
-  content: '';
+  content: "";
   position: absolute;
   height: 20px;
   width: 20px;
@@ -848,7 +856,6 @@
   }
 }
 
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -877,7 +884,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1. 5rem;
+  padding: 1 5rem;
   background: var(--bg-secondary);
   border-bottom: 2px solid rgba(14, 105, 48, 0.1);
 }
