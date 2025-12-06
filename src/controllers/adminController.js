@@ -30,6 +30,7 @@ function adminAutenticar(req, res) {
 
       res.json({
         idAdmin: admin.idAdmin,
+        nome: admin.nome,
         email: admin.email,
         dtAdmissao: admin.dtAdmissao,
       });

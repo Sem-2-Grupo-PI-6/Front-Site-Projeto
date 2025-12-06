@@ -267,10 +267,10 @@
 
             <form class="config-form" id="form-editar-usuario-proprio">
               <div class="profile-header">
-                <div class="profile-avatar-large">RM</div>
+                <div class="profile-avatar-large" id="profile-avatar"></div>
                 <div class="profile-info">
-                  <h3>Rodrigo Martins</h3>
-                  <p>rodrigo@admin.net</p>
+                  <h3 id="profile-header-nome"></h3>
+                  <p id="profile-header-email"></p>
                   <span class="badge badge-admin">Administrador Master</span>
                 </div>
               </div>
@@ -278,20 +278,11 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="profile-name">Nome Completo</label>
-                  <input
-                    type="text"
-                    id="profile-name"
-                    value="Rodrigo Martins"
-                  />
+                  <input type="text" id="profile-name" />
                 </div>
                 <div class="form-group">
                   <label for="profile-email">Email</label>
-                  <input
-                    type="email"
-                    id="profile-email"
-                    value="rodrigo@admin.net"
-                    disabled
-                  />
+                  <input type="email" id="profile-email" disabled />
                   <small class="form-hint">Email não pode ser alterado</small>
                 </div>
               </div>
@@ -709,6 +700,41 @@
       }
     });
   });
+
+  // O que esta sendo feito:
+  // Implementando a leitura do session Storage,
+  // Deixando de ser Mock os dados visualizados em MeuPerfil
+  function carregarDadosUsuario() {
+    const dadosAdmin = sessionStorage.getItem("ADMIN_LOGADO");
+
+    if (!dadosAdmin) {
+      console.error("Usuário não logado!");
+      return;
+    }
+
+    const admin = JSON.parse(dadosAdmin);
+
+    console.log(`${admin} existe dados.`);
+
+    document.getElementById("profile-name").value = admin.nome;
+    document.getElementById("profile-email").value = admin.email;
+
+    document.getElementById("profile-header-nome").textContent = admin.nome;
+    document.getElementById("profile-header-email").textContent = admin.email;
+
+    if (admin.nome) {
+      const iniciais = admin.nome
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+      document.getElementById("profile-avatar").textContent = iniciais;
+    }
+  }
+  document.addEventListener("DOMContentLoaded", carregarDadosUsuario);
+  window.carregarDadosUsuario = carregarDadosUsuario;
+  // Encerra aqui.
 
   function logout() {
     if (confirm("Tem certeza que deseja sair?")) {
