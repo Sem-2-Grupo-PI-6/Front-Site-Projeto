@@ -1277,7 +1277,7 @@
   padding: 2rem;
   opacity: 0;
   transition: opacity 0.3s ease;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .modal-overlay.active {
@@ -1344,7 +1344,6 @@
 .btn-close-modal:hover {
   background: #dc2626;
   color: white;
-  transform: rotate(90deg);
 }
 
 .modal-body {
@@ -1389,12 +1388,14 @@
   flex-shrink: 0;
 }
 
-input[type="checkbox"]:checked + .checkbox-custom {
+input[type="checkbox"]:checked + 
+.checkbox-custom {
   background: var(--accent);
   border-color: var(--accent);
 }
 
-input[type="checkbox"]:checked + .checkbox-custom::after {
+input[type="checkbox"]:checked + 
+.checkbox-custom::after {
   content: '✓';
   position: absolute;
   color: white;

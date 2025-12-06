@@ -203,7 +203,6 @@ function buscarUsuarioPorId(idUsuario) {
       u.senha,
       u.dtCriacao,
       u.Empresa_idEmpresa,
-      u.receberNotificacao,
       e.nomeFantasia,
       e.cnpj
     FROM tblUsuario u
@@ -239,7 +238,6 @@ function listarUsuariosEmpresas() {
       u.nome AS nomeUsuario,
       u.email as emailUsuario,
       u.dtCriacao,
-      CASE WHEN u.receberNotificacao = 1 THEN 'Ativo' ELSE 'Inativo' END AS statusUsuario,
       e.nomeFantasia,
       e.idEmpresa,
       e.situacaoLicensa
@@ -259,7 +257,6 @@ function listarUsuariosEmpresasPaginado(limite, offset) {
       u.nome AS nomeUsuario,
       u.email as emailUsuario,
       u.dtCriacao,
-      CASE WHEN u.receberNotificacao = 1 THEN 'Ativo' ELSE 'Inativo' END AS statusUsuario,
       e.nomeFantasia,
       e.idEmpresa,
       e.situacaoLicensa
