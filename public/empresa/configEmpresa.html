@@ -457,49 +457,64 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("modal-editar-usuario").style.display = "none";
   };
 
-  document.getElementById("form-editar-usuario").addEventListener("submit", function (e) {
-    e.preventDefault();
+document.getElementById("form-editar-usuario").addEventListener("submit", function (e) {
+  e.preventDefault();
 
-    const idUsuario = document.getElementById("edit-id-usuario").value;
-    const nome = document.getElementById("edit-nome").value;
-    const telefone = document.getElementById("edit-telefone").value;
-    const senha = document.getElementById("edit-senha").value;
+  const idUsuario = document. getElementById("edit-id-usuario").value;
+  const nome = document.getElementById("edit-nome").value.trim();
+  const telefone = document.getElementById("edit-telefone").value.trim();
+  const senha = document.getElementById("edit-senha").value.trim();
 
-    const dados = {
-      nomeServer: nome,
-      telefoneServer: telefone,
-      idEmpresaServer: empresaLogada.idEmpresa,
-    };
+  if (!nome && !telefone && !senha) {
+    alert(" Preencha pelo menos um campo para atualizar!");
+    return;
+  }
 
-    if (senha && senha.length > 0) {
-      if (senha.length < 8) {
-        alert(" A senha deve ter no mínimo 8 caracteres!");
-        return;
-      }
-      dados.senhaServer = senha;
+  const dados = {
+    idEmpresaServer: empresaLogada.idEmpresa,
+  };
+
+  if (nome) {
+    dados.nomeServer = nome;
+  }
+
+  if (telefone) {
+    dados.telefoneServer = telefone;
+  }
+
+  if (senha) {
+    if (senha.length < 8) {
+      alert(" A senha deve ter no mínimo 8 caracteres!");
+      return;
     }
+    dados.senhaServer = senha;
+  }
 
-    fetch(`/empresa/usuarios/${idUsuario}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dados),
+  console.log("Enviando dados:", dados);
+
+  fetch(`/empresa/usuarios/${idUsuario}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados),
+  })
+    .then((res) => {
+      if (! res.ok) {
+        return res.json().then((data) => {
+          throw new Error(data.erro || "Erro ao atualizar usuário");
+        });
+      }
+      return res.json();
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erro ao atualizar usuário");
-        }
-        return res.json();
-      })
-      .then(() => {
-        alert(" Usuário atualizado com sucesso!");
-        fecharModalEdicao();
-        carregarUsuarios(paginaAtual);
-      })
-      .catch((err) => {
-        console.error(" Erro ao atualizar usuário:", err);
-        alert(" Erro ao atualizar usuário");
-      });
-  });
+    .then((resultado) => {
+      alert("Usuário atualizado com sucesso!");
+      fecharModalEdicao();
+      carregarUsuarios(paginaAtual);
+    })
+    .catch((err) => {
+      console.error(" Erro ao atualizar usuário:", err);
+      alert(` ${err.message}`);
+    });
+});
 
   window.excluirUsuario = function (idUsuario, nomeUsuario) {
     if (! confirm(`Tem certeza que deseja excluir o usuário "${nomeUsuario}"?\n\nEsta ação não pode ser desfeita! `)) {

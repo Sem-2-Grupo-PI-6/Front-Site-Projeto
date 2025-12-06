@@ -216,7 +216,7 @@ function buscarUsuarioPorId(req, res){
 
 function atualizarUsuario(req, res) {
  const idUsuario = req.params.idUsuario;
- const idEmpresa = req.body.idEmpresa;
+ const idEmpresa = req.body.idEmpresaServer;
 
  const dados = {
   nome: req.body.nomeServer,
@@ -229,6 +229,11 @@ function atualizarUsuario(req, res) {
    if(!idEmpresa){
     return res.status(400).json({erro: "id da empresa não salvo no localStorege ou não fez login"})
   }
+
+   if (! dados.nome && !dados.telefone && !dados.senha) {
+    return res.status(400).json({ erro: "Nenhum campo para atualizar foi fornecido" });
+  }
+
 
   empresaModel
     .atualizarUsuario(idUsuario, idEmpresa, dados)

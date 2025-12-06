@@ -141,20 +141,27 @@ const campos = [];
 
 const valores = [];
 
-if (dados.nome){
-  campos.push("nome = ? ")
-  valores.push(dados.nome)
-}
 
-if(dados.telefone){
-  campos.push("telefone = ?")
-  valores.push(dados.telefone)
-}
+  if (dados.nome && dados.nome.trim() !== "") {
+    campos.push("nome = ?");
+    valores.push(dados.nome);
+  }
 
-if(dados.senha){
-  campos.push("senha = ?")
-  valores.push(dados.senha)
-}
+  if (dados.telefone && dados.telefone.trim() !== "") {
+    campos.push("telefone = ?");
+    valores.push(dados.telefone);
+  }
+
+  if (dados.senha && dados.senha.trim() !== "") {
+    campos. push("senha = ?");
+    valores.push(dados.senha);
+  }
+
+  
+  if (campos.length === 0) {
+    return Promise.reject(new Error("Nenhum campo válido para atualizar"));
+  }
+
 
 valores.push(idUsuario, idEmpresa);
 
@@ -167,7 +174,6 @@ var instrucaoSql = `
 
 
 return database.executar(instrucaoSql, valores);
-
 }
 
 function excluirUsuario(idUsuario, idEmpresa){
