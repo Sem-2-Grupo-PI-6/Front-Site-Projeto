@@ -214,9 +214,9 @@ function buscarUsuarioPorId(req, res){
     })
 }
 
-function atualizarUsuario(res, req) {
+function atualizarUsuario(req, res) {
  const idUsuario = req.params.idUsuario;
- const idEmpresa = req.query.idEmpresa;
+ const idEmpresa = req.body.idEmpresa;
 
  const dados = {
   nome: req.body.nomeServer,

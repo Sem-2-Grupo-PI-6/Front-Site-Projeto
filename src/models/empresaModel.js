@@ -81,8 +81,8 @@ function atualizarEmpresa(id, dados) {
   return database.executar(instrucaoSql);
 }
 
-function listarUsuariosEmpresas(idEmpresa, pagina, limite){
-  console.log("ACESSEI O EMPRESA MODEL - function listarUsuariosEmpresas()");
+function listarUsuariosPaginado(idEmpresa, pagina, limite){
+  console.log("ACESSEI O EMPRESA MODEL - function listarUsuarioPaginado()");
 
   const offset = (pagina - 1) * limite;
 
@@ -94,13 +94,26 @@ function listarUsuariosEmpresas(idEmpresa, pagina, limite){
       u.telefone as telefoneUsuario,
       u.dtCriacao,
       e.nomefantasia,
+      'Ativo' AS statusUsuario
       from tblUsuario u
       inner join tblEmpresa e on u.Empresa_idEmpresa = e.idEmpresa
       where u.Empresa_idEmpresa = ?
       order by u.dtCriacao desc limit ? offset ?;
       `;
 
-    return database.executar(instrucaoSql, [idEmpresa]);
+    return database.executar(instrucaoSql, [idEmpresa, limite, offset]);
+}
+
+function contarUsuariosEmpresa(idEmpresa,){
+  console.log("ACESSEI O EMPRESA MODEL - function contarUsuariosEmpresa()");
+
+  var instrucaoSql = `
+  select count (*) as total 
+  from tblUsuario where Empresa_idEmpresa = ?;
+  `;
+
+  return database.executar(instrucaoSql,  [idEmpresa]);
+
 }
 
 function buscarUsuarioPorId(idUsuario, idEmpresa){
@@ -117,7 +130,7 @@ function buscarUsuarioPorId(idUsuario, idEmpresa){
     from tblUsuario u where u.idUsuario = ? and u.Empresa_idEmpresa = ?;
     `;
 
-    return database.executar(instrucaoSql, [idEmpresa]);
+    return database.executar(instrucaoSql,[idUsuario,idEmpresa]);
 }
 
 function atualizarUsuario(idUsuario, idEmpresa, dados){
@@ -149,7 +162,7 @@ valores.push(idUsuario, idEmpresa);
 var instrucaoSql = `
   update tblUsuario
   set ${campos.join(", ")}
-  where idUsuario = ? and excluirUsuario = ?;
+  where idUsuario = ? and Empresa_idEmpresa = ?;
   `;
 
 
@@ -162,7 +175,7 @@ function excluirUsuario(idUsuario, idEmpresa){
 
   var instrucaoSql = `
     delete from tblUsuario
-    where idUsuario = ? and excluirUsuario = ? ; 
+    where idUsuario = ? and Empresa_idEmpresa = ? ; 
     `; 
 
   return database.executar(instrucaoSql, [idUsuario, idEmpresa])
@@ -176,8 +189,9 @@ module.exports = {
   listarEmpresas,
   verificarVagas,
   atualizarEmpresa,
-  listarUsuariosEmpresas,
+  listarUsuariosPaginado,
   buscarUsuarioPorId,
   atualizarUsuario,
   excluirUsuario,
+  contarUsuariosEmpresa,
 };

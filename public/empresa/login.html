@@ -125,7 +125,11 @@
             console.log("Login bem-sucedido!");
             console.log("Dados da empresa:", empresa);
 
-            sessionStorage.setItem("EMPRESA_LOGADA", JSON.stringify(empresa));
+            sessionStorage.setItem("EMPRESA_LOGADA", JSON.stringify({
+              idEmpresa : resultado.idEmpresa,
+              email: resultado.email,
+              nomeFantasia: resultado.nomeFantasia
+            }));
 
             console.log("Dados salvos no sessionStorage");
 
