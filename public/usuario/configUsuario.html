@@ -738,19 +738,22 @@ async function carregarDadosUsuario() {
     document.getElementById('profile-name').value = dados.nome || '';
     document.getElementById('profile-email').value = dados.email || '';
     document.getElementById('profile-company').value = dados.nomeFantasia || '';
-    document.getElementById('profile-cnpj').value = formatarCNPJ(dados.cnpj) || '';
     document.getElementById('profile-phone').value = dados.telefone || '';
     
 
-    const iniciais = dados.nome ? dados.nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'SC';
+    const iniciais = dados.nomeFantasia 
+      ? dados.nomeFantasia.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() 
+      : 'US';
     document.querySelector('.profile-avatar-hero').textContent = iniciais;
     document.querySelector('.profile-hero-info h1').textContent = dados.nomeFantasia || 'Empresa';
-    document.querySelector('.profile-email').textContent = dados.email || '';
+    document.querySelector('.profile-email').textContent = dados.emailCoorporativa || '';
 
   } catch (erro) {
     console.error('❌ Erro ao carregar dados:', erro);
   }
 }
+document.addEventListener("DOMContentLoaded", carregarDadosUsuario);
+window.carregarDadosUsuario = carregarDadosUsuario;
 
 async function atualizarPerfil() {
   const nome = document.getElementById('profile-name').value.trim();

@@ -73,16 +73,14 @@ function obterDadosUsuario(idUsuario) {
   );
 
   var instrucaoSql = `
-    SELECT 
+      SELECT
       u.idUsuario,
       u.nome,
       u.email,
       u.telefone,
       u.dtCriacao,
-      u.receberNotificacao,
-      e.idEmpresa,
       e.nomeFantasia,
-      e.cnpj
+      e.emailCoorporativa
     FROM tblUsuario u
     INNER JOIN tblEmpresa e ON u.Empresa_idEmpresa = e.idEmpresa
     WHERE u.idUsuario = ${idUsuario};
