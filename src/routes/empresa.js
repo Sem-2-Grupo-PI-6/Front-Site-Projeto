@@ -26,4 +26,20 @@ router.put("/atualizar/:id", function (req, res) {
   empresaController.atualizarEmpresa(req, res);
 });
 
+router.get("/usuarios/listar/paginado", function(req, res){
+  empresaController.listarUsuariosPaginado(req, res);
+})
+
+router.get("/usuarios/:idUsuario", function(req, res){
+  empresaController.buscarUsuarioId(req, res);
+})
+
+router.put("/usuarios/:idUsuarios", function(req, res){
+  empresaController.atualizarUsuario(req, res);
+})
+
+router.delete("/usuarios/:idUsuarios", function(req, res){
+  empresaController.excluirUsuario(req, res);
+})
+
 module.exports = router;

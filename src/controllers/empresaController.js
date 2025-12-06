@@ -154,6 +154,119 @@ function atualizarEmpresa(req, res) {
     });
 }
 
+function listarUsuariosPaginado(req, res){
+  const idEmpresa = req.query.idEmpresa;
+  const pagina = parseInt(req.query.pagina) || 1;
+  const limite = parseInt(req.query.limite) || 5;
+
+  console.log( "Listar usuarios - Empresa ", idEmpresa, "Pagina", pagina);
+
+  if(!idEmpresa){
+    return res.status(400).json({error: "Id empresa nã encontrado ou nao salvo no localStorege"});
+  }
+
+  Promise.all([
+    empresaModel.listarUsuariosPaginado(idEmpresa, pagina, limite),
+    empresaModel.contarUsuariosEmpresa(idEmpresa),
+  ])
+    .then(function ([usuarios, [{total}]]){
+      const totalPaginas = Math.ceil(total / limite);
+
+      res.json({
+        usuarios: usuarios,
+        paginacao: {
+          paginaAtual: pagina,
+          totalPaginas: totalPaginas,
+          totalUsuarios: total,
+          limite: limite,
+          temAnterior: pagina > 1,
+          temProxima: pagina < totalPaginas,
+        },
+      });
+    })
+      .catch(function (erro) {
+        console.log("Deu erro ao listar o usuario, provavel ser null ou undefined", erro);
+        res.status(500).json({erro: "Erro interno servidor"});
+      });
+}
+
+function buscarUsuarioPorId(req, res){
+  const idUsuario = req.params.idUsuario;
+  const idEmpresa = req.query.idEmpresa;
+
+  console.log("Id usuario: ", idUsuario, "empresa:", idEmpresa);
+
+  if(!idEmpresa){
+    return res.status(400).json({erro: "id da empresa não salvo no localStorege ou não fez login"})
+  }
+
+  empresaModel
+    .buscarUsuarioPorId(idUsuario, idEmpresa)
+    .then(function(resultado){
+      if(resultado.length === 0){
+        return res.status(404).json({error: "Usuario não encontrado, bd ta vazio"})
+      }
+      res.json(resultado[0]);
+    })
+    .catch(function(erro){
+      console.error("Erro ao buscar usuario: ", erro);
+      res.status(500).json({erro: "Erro servidor"})
+    })
+}
+
+function atualizarUsuario(res, req) {
+ const idUsuario = req.params.idUsuario;
+ const idEmpresa = req.query.idEmpresa;
+
+ const dados = {
+  nome: req.body.nomeServer,
+  telefone: req.body.telefoneServer,
+  senha: req.body.senhaServer,
+ };
+
+ console.log("Usuario Atualizado ", idUsuario);
+
+   if(!idEmpresa){
+    return res.status(400).json({erro: "id da empresa não salvo no localStorege ou não fez login"})
+  }
+
+  empresaModel
+    .atualizarUsuario(idUsuario, idEmpresa, dados)
+    .then(function(resultado){
+      if(resultado.affectedRows === 0){
+        return res.status(404).json({error: "Usuario não encontrado"})
+      }
+      res.json({mensagem: "Usuairo att"});
+    })
+    .catch(function(erro){
+      console.error("Erro ao att usuario: ", erro);
+      res.status(500).json({erro: "Erro servidor"})
+    });
+}
+
+function excluirUsuario(req, res){
+ const idUsuario = req.params.idUsuario;
+ const idEmpresa = req.query.idEmpresa;
+
+    if(!idEmpresa){
+    return res.status(400).json({erro: "id da empresa não salvo no localStorege ou não fez login"})
+  }
+
+   empresaModel
+    .excluirUsuario(idUsuario, idEmpresa)
+    .then(function(resultado){
+      if(resultado.affectedRows === 0){
+        return res.status(404).json({error: "Usuario não encontrado"})
+      }
+      res.json({mensagem: "Usuairo att"});
+    })
+    .catch(function(erro){
+      console.error("Erro ao excluir usuario: ", erro);
+      res.status(500).json({erro: "Erro servidor"})
+    });
+}
+
+
 module.exports = {
   autenticarEmpresa,
   atualizarSenha,
@@ -161,4 +274,8 @@ module.exports = {
   listarEmpresas,
   verificarVagas,
   atualizarEmpresa,
+  listarUsuariosPaginado,
+  buscarUsuarioPorId,
+  atualizarUsuario,
+  excluirUsuario,
 };

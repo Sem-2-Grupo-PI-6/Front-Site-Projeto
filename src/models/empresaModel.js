@@ -81,6 +81,94 @@ function atualizarEmpresa(id, dados) {
   return database.executar(instrucaoSql);
 }
 
+function listarUsuariosEmpresas(idEmpresa, pagina, limite){
+  console.log("ACESSEI O EMPRESA MODEL - function listarUsuariosEmpresas()");
+
+  const offset = (pagina - 1) * limite;
+
+  var instrucaoSql = `
+    select 
+      u.idUsuario,
+      u.nome as nomeUsuario,
+      u.email as emailUsuario,
+      u.telefone as telefoneUsuario,
+      u.dtCriacao,
+      e.nomefantasia,
+      from tblUsuario u
+      inner join tblEmpresa e on u.Empresa_idEmpresa = e.idEmpresa
+      where u.Empresa_idEmpresa = ?
+      order by u.dtCriacao desc limit ? offset ?;
+      `;
+
+    return database.executar(instrucaoSql, [idEmpresa]);
+}
+
+function buscarUsuarioPorId(idUsuario, idEmpresa){
+  console.log("ACESSEI O EMPRESA MODEL - function buscarUsuarioPorId()");
+
+  var instrucaoSql = `
+    select
+      u.idUsuario,
+      u.nome,
+      u.email,
+      u.telefone,
+      u.dtCriacao,
+      u.Empresa_idEmpresa
+    from tblUsuario u where u.idUsuario = ? and u.Empresa_idEmpresa = ?;
+    `;
+
+    return database.executar(instrucaoSql, [idEmpresa]);
+}
+
+function atualizarUsuario(idUsuario, idEmpresa, dados){
+  console.log("ACESSEI O EMPRESA MODEL - function atualizarUsuario()");
+  
+
+const campos = [];
+
+const valores = [];
+
+if (dados.nome){
+  campos.push("nome = ? ")
+  valores.push(dados.nome)
+}
+
+if(dados.telefone){
+  campos.push("telefone = ?")
+  valores.push(dados.telefone)
+}
+
+if(dados.senha){
+  campos.push("senha = ?")
+  valores.push(dados.senha)
+}
+
+valores.push(idUsuario, idEmpresa);
+
+
+var instrucaoSql = `
+  update tblUsuario
+  set ${campos.join(", ")}
+  where idUsuario = ? and excluirUsuario = ?;
+  `;
+
+
+return database.executar(instrucaoSql, valores);
+
+}
+
+function excluirUsuario(idUsuario, idEmpresa){
+  console.log("ACESSEI O EMPRESA MODEL - function excluirUsuario()");
+
+  var instrucaoSql = `
+    delete from tblUsuario
+    where idUsuario = ? and excluirUsuario = ? ; 
+    `; 
+
+  return database.executar(instrucaoSql, [idUsuario, idEmpresa])
+}
+
+
 module.exports = {
   autenticarEmpresa,
   atualizarSenha,
@@ -88,4 +176,8 @@ module.exports = {
   listarEmpresas,
   verificarVagas,
   atualizarEmpresa,
+  listarUsuariosEmpresas,
+  buscarUsuarioPorId,
+  atualizarUsuario,
+  excluirUsuario,
 };
