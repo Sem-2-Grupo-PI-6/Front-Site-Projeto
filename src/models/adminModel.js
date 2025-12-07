@@ -290,11 +290,12 @@ function listarEmpresasPaginado(limite, offset){
       e.emailCoorporativa,
       e.dtLicensa,
       e.situacaoLicensa,
+      'Empresa' as tipo,
       COUNT(u.idUsuario) as totalUsuarios,
       (SELECT COUNT(*) FROM tblLogSistemaAcesso l WHERE l.Usuario_Empresa_idEmpresa = e.idEmpresa) as totalAcessos
     FROM tblEmpresa e 
     LEFT JOIN tblUsuario u ON e.idEmpresa = u.Empresa_idEmpresa
-    GROUP BY e. idEmpresa, e.cnpj, e.nomeFantasia, e.emailCoorporativa, e.dtLicensa, e.situacaoLicensa
+    GROUP BY e.idEmpresa, e.cnpj, e.nomeFantasia, e.emailCoorporativa, e.dtLicensa, e.situacaoLicensa
     ORDER BY e.idEmpresa DESC
     LIMIT ${limite} OFFSET ${offset}
   `;
@@ -334,12 +335,12 @@ function atualizarEmpresa(idEmpresa, dados){
   const valores = [];
 
   if(dados.nomeFantasia){
-    campos.push("nomeFantasia = ? ");
+    campos.push("nomeFantasia = ?");
     valores.push(dados.nomeFantasia);
   }
 
   if(dados.emailCoorporativa){
-    campos. push("emailCoorporativa = ? ");
+    campos.push("emailCoorporativa = ?");
     valores.push(dados.emailCoorporativa);
   }
   
@@ -348,13 +349,18 @@ function atualizarEmpresa(idEmpresa, dados){
     valores.push(dados.cnpj);
   }
   
+  if(dados.senha){
+    campos.push("senha = ?");
+    valores.push(dados.senha);
+  }
+  
   if(dados.situacaoLicensa){
     campos.push("situacaoLicensa = ?");
     valores.push(dados.situacaoLicensa);
   }
   
   if(dados.dtLicensa){
-    campos. push("dtLicensa = ? ");
+    campos.push("dtLicensa = ?");
     valores.push(dados.dtLicensa);
   }
 
@@ -372,17 +378,29 @@ function atualizarEmpresa(idEmpresa, dados){
 
   return database.executar(instrucaoSql, valores);
 }
-  function excluirEmpresa(idEmpresa){
-    console.log("ACESSEI O ADMIN MODEL - excluirEmpresa()");
+function excluirEmpresa(idEmpresa){
+  console.log("ACESSEI O ADMIN MODEL - excluirEmpresa()");
 
-    var instrucaoSql = `
-    delete from tblEmpresa
-    where idEmpresa = ?
-    `;
+  var instrucaoSql1 = `
+    DELETE FROM tblLogSistemaAcesso
+    WHERE Usuario_Empresa_idEmpresa = ?
+  `;
 
+  var instrucaoSql2 = `
+    UPDATE tblUsuario
+    SET Empresa_idEmpresa = NULL
+    WHERE Empresa_idEmpresa = ?
+  `;
 
-    return database.executar(instrucaoSql,[idEmpresa])
-  }
+  var instrucaoSql3 = `
+    DELETE FROM tblEmpresa
+    WHERE idEmpresa = ?
+  `;
+
+  return database.executar(instrucaoSql1, [idEmpresa])
+    .then(() => database.executar(instrucaoSql2, [idEmpresa]))
+    .then(() => database.executar(instrucaoSql3, [idEmpresa]));
+}
 module.exports = {
   adminAutenticar,
   cadastrarEmpresa,

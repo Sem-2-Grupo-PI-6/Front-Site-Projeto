@@ -18,7 +18,7 @@
       <div class="container header-inner">
         <div class="logo">
           <a href="index.html">
-            <img src="./imgs/Logo-projeto.png" alt="Evolvere Logo" />
+            <img src="../imgs/Logo-projeto.png" alt="Evolvere Logo" />
           </a>
           <div class="brand-txt">
             <h1>Evolvere Invest</h1>
@@ -30,7 +30,6 @@
           <ul class="nav-list">
             <li><a href="dashboardAdmin.html">📊 Dashboard</a></li>
             <li>
-              <a href="configAdmin.html" class="active">⚙️ Configurações</a>
             </li>
             <li class="divider">|</li>
             <li><a onclick="logout()" class="btn-link">Sair</a></li>
@@ -126,51 +125,65 @@
           </div>
         </div>
 
-        <div
-          id="modal-editar-usuario"
-          class="modal-overlay"
-          style="display: none"
-        >
+         <div id="modal-editar-usuario" class="modal-overlay" style="display: none">
           <div class="modal-container">
             <div class="modal-header">
               <h2>✏️ Editar Empresa</h2>
-              <button class="modal-close" onclick="fecharModalEdicao()">
-                ✖
-              </button>
+              <button class="modal-close" onclick="fecharModalEdicao()">✖</button>
             </div>
             <div class="modal-body">
               <form id="form-editar-usuario">
                 <input type="hidden" id="edit-id-usuario" />
 
                 <div class="form-group">
-                  <label for="edit-nome">Nome Completo *</label>
+                  <label for="edit-nome">Nome Fantasia *</label>
                   <input type="text" id="edit-nome" required />
                 </div>
 
                 <div class="form-group">
-                  <label for="edit-email">Email *</label>
+                  <label for="edit-email">Email Corporativo *</label>
                   <input type="email" id="edit-email" required />
                 </div>
 
                 <div class="form-group">
-                  <label for="edit-telefone">Telefone</label>
+                  <label for="edit-telefone">CNPJ</label>
                   <input
                     type="text"
                     id="edit-telefone"
-                    placeholder="11999999999"
+                    placeholder="00000000000000"
+                    maxlength="14"
+                    disabled
                   />
+                  <small class="form-hint">CNPJ não pode ser alterado</small>
+                </div>
+
+                <div class="form-divider">
+                  <span>Alterar Senha</span>
                 </div>
 
                 <div class="form-group">
-                  
+                  <label for="edit-senha">Nova Senha</label>
+                  <input
+                    type="password"
+                    id="edit-senha"
+                    placeholder="Deixe em branco para não alterar"
+                    minlength="8"
+                  />
+                  <small class="form-hint">Mínimo 8 caracteres.  Deixe vazio para manter a senha atual. </small>
+                </div>
+
+                <div class="form-group">
+                  <label for="edit-confirmar-senha">Confirmar Nova Senha</label>
+                  <input
+                    type="password"
+                    id="edit-confirmar-senha"
+                    placeholder="Repita a nova senha"
+                    minlength="8"
+                  />
                 </div>
 
                 <div class="form-actions">
-                  <button
-                    type="button"
-                    class="btn-secondary"
-                    onclick="fecharModalEdicao()"
-                  >
+                  <button type="button" class="btn-secondary" onclick="fecharModalEdicao()">
                     Cancelar
                   </button>
                   <button type="submit" class="btn-primary">
@@ -343,453 +356,474 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const tabButtons = document.querySelectorAll(".tab-btn");
-    const tabContents = document.querySelectorAll(".tab-content");
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const tabContents = document.querySelectorAll(".tab-content");
 
-    let paginaAtual = 1;
-    let totalPaginas = 1;
+  let paginaAtual = 1;
+  let totalPaginas = 1;
 
-    tabButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const targetTab = button.getAttribute("data-tab");
-        tabButtons.forEach((btn) => btn.classList.remove("active"));
-        tabContents.forEach((content) => content.classList.remove("active"));
-        button.classList.add("active");
-        document.getElementById(`tab-${targetTab}`).classList.add("active");
-      });
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const targetTab = button.getAttribute("data-tab");
+      tabButtons.forEach((btn) => btn.classList.remove("active"));
+      tabContents.forEach((content) => content.classList.remove("active"));
+      button.classList.add("active");
+      document.getElementById(`tab-${targetTab}`).classList.add("active");
     });
+  });
 
-    carregarEmpresas(1);
-    function carregarEmpresas(pagina) {
-      fetch(`/admin/empresas/listar/paginado?pagina=${pagina}&limite=20`)
-        .then((res) => res.json())
-        .then((data) => {
-          const { empresas, paginacao } = data;
-          const tbody = document.getElementById("usuarios-tbody");
-          tbody.innerHTML = "";
-
-          paginaAtual = paginacao.paginaAtual;
-          totalPaginas = paginacao.totalPaginas;
-
-          if (empresas.length === 0) {
-            tbody.innerHTML =
-              '<tr><td colspan="7" style="text-align:center;">Nenhuma empresa encontrado</td></tr>';
-            return;
-          }
-
-          empresas.forEach((empresa) => {
-            const statusClass =
-              empresa.statusUsuario === "Ativo" ? "active" : "inactive";
-              const licencaVencida = new Date(empresa.dtLicenca) < new Date();
-
-            tbody.innerHTML += `
-              <tr>
-                <td>
-                  <div class="user-info">
-                    <div class="user-avatar">${getIniciais(
-                      empresa.nomeFantasia
-                    )}</div>
-                    <span>${empresa.nomeFantasia}</span>
-                  </div>
-                </td>
-                <td>${empresa.emailCoorporativa}</td>
-                <td>
-                  <span class="badge ${empresa.tipo === 'Admin' ? 'badge-admin' : 'badge-user'}">
-                    ${empresa.tipo}
-                  </span>
-                </td>
-                <td>${empresa.cnpj}</td>
-                <td><span class="status-dot ${statusClass}"></span> ${empresa.situacaoLicensa}</td>
-                <td>${formatarData(empresa.dtLicensa)} ${licencaVencida ? '<span style="color:red;"></span>' : ''}</td>
-                <td>
-                  <div class="table-actions">
-                    <button class="btn-icon btn-edit" title="Editar" onclick="abrirModalEdicao(${
-                      empresa.idEmpresa
-                    })">
-                      ✏️
-                    </button>
-                    <button class="btn-icon btn-delete" title="Excluir" onclick="excluirUsuario(${
-                      empresa.idEmpresa
-                    }, '${empresa.nomeFantasia}')">
-                      🗑️
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            `;
-          });
-          atualizarPaginacao(paginacao);
-        })
-        .catch((err) => {
-          console.error("Erro ao carregar empresas:", err);
-          alert("Erro ao carregar empresas: " + err.message);
-        });
-    }
-
-    window.excluirEmpresa = function(idEmpresa, nomeEmpresa){
-      if (
-        ! confirm(
-          `tem certeza que quer excluir a empresa "${nomeEmpresa}"?\n\nEsta ação não podera ser desfeita`
-        )
-      ){
-        return;
-      }
-
-      fetch(`/admin/empresas/${idEmpresa}`, {
-        method: "DELETE",
-      })
+  carregarEmpresas(1);
+  
+  function carregarEmpresas(pagina) {
+    fetch(`/admin/empresas/listar/paginado? pagina=${pagina}&limite=20`)
       .then((res) => res.json())
-      .then((resultado) => {
-        alert("Empresa excluída!");
-        carregarEmpresas(paginaAtual);
+      .then((data) => {
+        const { empresas, paginacao } = data;
+        const tbody = document.getElementById("usuarios-tbody");
+        tbody.innerHTML = "";
+
+        paginaAtual = paginacao.paginaAtual;
+        totalPaginas = paginacao.totalPaginas;
+
+        if (empresas.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="7" style="text-align:center;">Nenhuma empresa encontrada</td></tr>';
+          return;
+        }
+
+        empresas.forEach((empresa) => {
+          const statusClass =
+            empresa.situacaoLicensa === "Ativa" ? "active" : "inactive";
+          const licencaVencida = new Date(empresa.dtLicensa) < new Date();
+
+          tbody.innerHTML += `
+            <tr>
+              <td>
+                <div class="user-info">
+                  <div class="user-avatar">${getIniciais(
+                    empresa.nomeFantasia
+                  )}</div>
+                  <span>${empresa.nomeFantasia}</span>
+                </div>
+              </td>
+              <td>${empresa.emailCoorporativa}</td>
+              <td>
+                <span class="badge badge-user">Empresa</span>
+              </td>
+              <td>${empresa.cnpj}</td>
+              <td><span class="status-dot ${statusClass}"></span> ${empresa.situacaoLicensa}</td>
+              <td>${formatarData(empresa.dtLicensa)} ${licencaVencida ? '<span style="color:red;">&#10060;</span>' : ''}</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon btn-edit" title="Editar" onclick="abrirModalEdicao(${
+                    empresa.idEmpresa
+                  })">
+                    &#9998;
+                  </button>
+                  <button class="btn-icon btn-delete" title="Excluir" onclick="excluirEmpresa(${
+                    empresa.idEmpresa
+                  }, '${empresa.nomeFantasia}')">
+                    &#128465;
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        atualizarPaginacao(paginacao);
       })
       .catch((err) => {
-        console.error("Erro ao excluir empresa", err);
-        alert("Erro ao excluir")
+        console.error("Erro ao carregar empresas:", err);
+        alert("Erro ao carregar empresas: " + err.message);
       });
-    };
+  }
 
-    function atualizarPaginacao(paginacao) {
-      const paginationInfo = document.querySelector(".pagination-info");
-      const btnAnterior = document.querySelector(".btn-pagination:first-child");
-      const btnProximo = document.querySelector(".btn-pagination:last-child");
-      carregarEmpresasSelect();
-
-      paginationInfo.textContent = `Página ${paginacao.paginaAtual} de ${paginacao.totalPaginas} • ${paginacao.totalEmpresas} empresas`;
-
-      btnAnterior.disabled = !paginacao.temAnterior;
-      btnProximo.disabled = !paginacao.temProxima;
-
-      btnAnterior.style.opacity = paginacao.temAnterior ? "1" : "0.5";
-      btnProximo.style.opacity = paginacao.temProxima ? "1" : "0.5";
-      btnAnterior.style.cursor = paginacao.temAnterior
-        ? "pointer"
-        : "not-allowed";
-      btnProximo.style.cursor = paginacao.temProxima
-        ? "pointer"
-        : "not-allowed";
-
-      btnAnterior.onclick = () => {
-        if (paginacao.temAnterior) {
-          carregarEmpresas(paginacao.paginaAtual - 1);
-        }
-      };
-
-      btnProximo.onclick = () => {
-        if (paginacao.temProxima) {
-          carregarEmpresas(paginacao.paginaAtual + 1);
-        }
-      };
-    }
-
-      window.abrirModalEdicao = function (idEmpresa) {
-        fetch(`/admin/empresas/${idEmpresa}`)
-          .then((res) => res.json())
-          .then((empresa) => {
-            document.getElementById("edit-id-usuario").value = empresa.idEmpresa;
-            document.getElementById("edit-nome"). value = empresa.nomeFantasia;
-            document.getElementById("edit-email").value = empresa.emailCoorporativa;
-            document. getElementById("edit-telefone").value = empresa.cnpj || "";
-            
-            const selectEmpresa = document.getElementById("edit-empresa");
-            if (selectEmpresa) {
-              selectEmpresa.style.display = "none";
-            }
-
-            document.getElementById("modal-editar-usuario").style.display = "flex";
-          })
-          .catch((err) => {
-            console.error("Erro ao buscar empresa:", err);
-            alert("Erro ao carregar dados da empresa");
-          });
-      };
-
-      document.getElementById("form-editar-usuario").addEventListener("submit", function(e) {
-  e.preventDefault();
-  
-  const idEmpresa = document.getElementById("edit-id-usuario").value;
-  const nomeFantasia = document.getElementById("edit-nome"). value;
-  const emailCoorporativa = document.getElementById("edit-email").value;
-  const cnpj = document.getElementById("edit-telefone").value;
-
-  fetch(`/admin/empresas/${idEmpresa}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nomeServer: nomeFantasia,
-      emailServer: emailCoorporativa,
-      cnpjServer: cnpj
-    })
-  })
-  .then((res) => res.json())
-  .then((resultado) => {
-    alert(" Empresa atualizada com sucesso!");
-    fecharModalEdicao();
-    carregarEmpresas(paginaAtual);
-  })
-  .catch((err) => {
-    console.error("Erro ao atualizar empresa:", err);
-    alert(" Erro ao atualizar empresa");
-  });
-});
-
-    async function cadastrarUsuarioAdmin(event) {
-      event.preventDefault();
-
-      const nome = document.getElementById("create-name").value;
-      const email = document.getElementById("create-email").value;
-      const senha = document.getElementById("create-password").value;
-      const confirmarSenha = document.getElementById("create-confirm").value;
-
-      if (senha !== confirmarSenha) {
-        alert("As senhas não coincidem!");
-        return false;
-      }
-
-      if (senha.length < 8) {
-        alert("A senha deve ter no mínimo 8 caracteres!");
-        return false;
-      }
-      console.log("Antes do fetch");
-      try {
-        const response = await fetch("/admin/cadastrarUsuarioAdmin", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nomeServer: nome,
-            emailServer: email,
-            senhaServer: senha,
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          alert("Usuário cadastrado com sucesso!");
-          document.getElementById("formNovoUsuario").reset();
-        } else {
-          const errorText = await response.text();
-          alert(errorText || "Erro ao cadastrar usuário");
-        }
-      } catch (error) {
-        console.error("Erro:", error);
-        alert("Erro de conexão com o servidor");
-      }
-
-      return false;
-    }
-
-    window.cadastrarUsuarioAdmin = cadastrarUsuarioAdmin;
-
-    // ESTOU EDITANDO AQUI
-    document
-      .getElementById("form-editar-usuario-proprio")
-      .addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const adminLogado = JSON.parse(sessionStorage.getItem("ADMIN_LOGADO"));
-
-        if (!adminLogado || !adminLogado.idAdmin) {
-          alert(" Sessão expirada. Faça login novamente.");
-          window.location.href = "/login";
-          return;
-        }
-
-        const nome = document.getElementById("profile-name").value;
-        const senhaAtual = document.getElementById(
-          "profile-current-password"
-        ).value;
-        const novaSenha = document.getElementById("profile-new-password").value;
-        const confirmarSenha = document.getElementById(
-          "profile-confirm-password"
-        ).value;
-
-        if (!nome) {
-          alert(" Digite seu nome!");
-          return;
-        }
-
-        if (!senhaAtual) {
-          alert(" Digite sua senha atual!");
-          return;
-        }
-
-        if (novaSenha.length < 8) {
-          alert(" A nova senha deve ter no mínimo 8 caracteres!");
-          return;
-        }
-
-        if (novaSenha !== confirmarSenha) {
-          alert(" As senhas não coincidem!");
-          return;
-        }
-        fetch(`/admin/usuario/${adminLogado.idAdmin}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            nomeServer: nome,
-            novaSenhaServer: novaSenha,
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              return response.json().then((data) => {
-                throw new Error(data.erro || "Erro ao atualizar perfil");
-              });
-            }
-            return response.json();
-          })
-          .then((data) => {
-            alert("✓ Perfil atualizado com sucesso!");
-            document.getElementById("profile-current-password").value = "";
-            document.getElementById("profile-new-password").value = "";
-            document.getElementById("profile-confirm-password").value = "";
-          })
-          .catch((erro) => {
-            console.error("Erro ao atualizar perfil:", erro);
-            alert(` ${erro.message}`);
-          });
-      });
-    // ENCERRA AQUI
-
-    window.excluirUsuario = function (idUsuario, nomeUsuario) {
-      if (
-        !confirm(
-          `Tem certeza que deseja excluir o usuário "${nomeUsuario}"?\n\nEsta ação não pode ser desfeita! `
-        )
-      ) {
-        return;
-      }
-
-      fetch(`/admin/usuarios/${idUsuario}`, {
-        method: "DELETE",
-      })
-        .then((res) => res.json())
-        .then((resultado) => {
-          alert("Usuário excluído com sucesso!");
-          carregarEmpresas(paginaAtual);
-        })
-        .catch((err) => {
-          console.error("Erro ao excluir usuário:", err);
-          alert("Erro ao excluir usuário");
-        });
-    };
-
-    function carregarEmpresasSelect() {
-      fetch("/admin/empresas/listar")
-        .then((res) => res.json())
-        .then((empresas) => {
-          const select = document.getElementById("edit-empresa");
-          select.innerHTML = '<option value="">Sem empresa vinculada</option>';
-
-          empresas.forEach((empresa) => {
-            select.innerHTML += `<option value="${empresa.idEmpresa}">${empresa.nomeFantasia}</option>`;
-          });
-        })
-        .catch((err) => {
-          console.error("Erro ao carregar empresas:", err);
-        });
-    }
-
-    function getIniciais(nome) {
-      if (!nome) return "";
-      return nome
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase();
-    }
-
-    function formatarData(dataStr) {
-      if (!dataStr) return "-";
-      const date = new Date(dataStr);
-      return date.toLocaleDateString("pt-BR");
-    }
-
-    const searchInput = document.querySelector(".search-input");
-    const filterSelect = document.querySelector(".filter-select");
-
-    function filterTable() {
-      const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
-      const filterType = filterSelect ? filterSelect.value : "all";
-      const tableRows = document.querySelectorAll(".users-table tbody tr");
-
-      tableRows.forEach((row) => {
-        const name =
-          row.querySelector(".user-info span")?.textContent.toLowerCase() || "";
-        const email =
-          row.querySelectorAll("td")[1]?.textContent.toLowerCase() || "";
-        const type =
-          row.querySelector(".badge")?.textContent.toLowerCase() || "";
-
-        const matchesSearch =
-          name.includes(searchTerm) || email.includes(searchTerm);
-        const matchesFilter =
-          filterType === "all" ||
-          (filterType === "admin" && type.includes("admin")) ||
-          (filterType === "user" && type.includes("usuário"));
-
-        row.style.display = matchesSearch && matchesFilter ? "" : "none";
-      });
-    }
-
-    if (searchInput) {
-      searchInput.addEventListener("input", filterTable);
-    }
-
-    if (filterSelect) {
-      filterSelect.addEventListener("change", filterTable);
-    }
-
-    window.addEventListener("click", function (e) {
-      const modal = document.getElementById("modal-editar-usuario");
-      if (e.target === modal) {
-        fecharModalEdicao();
-      }
-    });
-  });
-
-  // O que esta sendo feito:
-  // Implementando a leitura do session Storage,
-  // Deixando de ser Mock os dados visualizados em MeuPerfil
-  function carregarDadosUsuario() {
-    const dadosAdmin = sessionStorage.getItem("ADMIN_LOGADO");
-
-    if (!dadosAdmin) {
-      console.error("Usuário não logado!");
+  window.excluirEmpresa = function(idEmpresa, nomeEmpresa){
+    if (
+      ! confirm(
+        `Tem certeza que quer excluir a empresa "${nomeEmpresa}"?\n\nEsta ação não poderá ser desfeita`
+      )
+    ){
       return;
     }
 
-    const admin = JSON.parse(dadosAdmin);
+    fetch(`/admin/empresas/${idEmpresa}`, {
+      method: "DELETE",
+    })
+    .then((res) => res.json())
+    .then((resultado) => {
+      alert("Empresa excluída!");
+      carregarEmpresas(paginaAtual);
+    })
+    .catch((err) => {
+      console.error("Erro ao excluir empresa", err);
+      alert("Erro ao excluir")
+    });
+  };
 
-    console.log(`${admin} existe dados.`);
+  function atualizarPaginacao(paginacao) {
+    const paginationInfo = document.querySelector(".pagination-info");
+    const btnAnterior = document.querySelector(".btn-pagination:first-child");
+    const btnProximo = document.querySelector(".btn-pagination:last-child");
+    carregarEmpresasSelect();
 
-    document.getElementById("profile-name").value = admin.nome;
-    document.getElementById("profile-email").value = admin.email;
+    paginationInfo.textContent = `Página ${paginacao.paginaAtual} de ${paginacao.totalPaginas} • ${paginacao.totalEmpresas} empresas`;
 
-    document.getElementById("profile-header-nome").textContent = admin.nome;
-    document.getElementById("profile-header-email").textContent = admin.email;
+    btnAnterior.disabled = ! paginacao.temAnterior;
+    btnProximo.disabled = !paginacao.temProxima;
 
-    if (admin.nome) {
-      const iniciais = admin.nome
-        .split(" ")
-        .map((n) => n[0])
-        .slice(0, 2)
-        .join("")
-        .toUpperCase();
-      document.getElementById("profile-avatar").textContent = iniciais;
-    }
+    btnAnterior.style.opacity = paginacao.temAnterior ? "1" : "0.5";
+    btnProximo.style.opacity = paginacao.temProxima ? "1" : "0.5";
+    btnAnterior.style.cursor = paginacao.temAnterior
+      ? "pointer"
+      : "not-allowed";
+    btnProximo.style.cursor = paginacao.temProxima
+      ?  "pointer"
+      : "not-allowed";
+
+    btnAnterior.onclick = () => {
+      if (paginacao.temAnterior) {
+        carregarEmpresas(paginacao.paginaAtual - 1);
+      }
+    };
+
+    btnProximo.onclick = () => {
+      if (paginacao.temProxima) {
+        carregarEmpresas(paginacao.paginaAtual + 1);
+      }
+    };
   }
-  document.addEventListener("DOMContentLoaded", carregarDadosUsuario);
-  window.carregarDadosUsuario = carregarDadosUsuario;
-  // Encerra aqui.
 
-  function logout() {
-    if (confirm("Tem certeza que deseja sair?")) {
-      sessionStorage.clear();
-      window.location.href = "./login.html";
+  window.abrirModalEdicao = function (idEmpresa) {
+    fetch(`/admin/empresas/${idEmpresa}`)
+      .then((res) => res.json())
+      .then((empresa) => {
+        document.getElementById("edit-id-usuario").value = empresa.idEmpresa;
+        document.getElementById("edit-nome").value = empresa.nomeFantasia;
+        document.getElementById("edit-email").value = empresa.emailCoorporativa;
+        document.getElementById("edit-telefone").value = empresa.cnpj || "";
+        document.getElementById("edit-senha").value = "";
+        document.getElementById("edit-confirmar-senha").value = "";
+        
+        const selectEmpresa = document.getElementById("edit-empresa");
+        if (selectEmpresa) {
+          selectEmpresa.style.display = "none";
+        }
+
+        document.getElementById("modal-editar-usuario").style.display = "flex";
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar empresa:", err);
+        alert("Erro ao carregar dados da empresa");
+      });
+  };
+
+  window.fecharModalEdicao = function () {
+    document.getElementById("modal-editar-usuario").style.display = "none";
+    document.getElementById("form-editar-usuario").reset();
+  };
+
+  document.getElementById("form-editar-usuario").addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    const idEmpresa = document.getElementById("edit-id-usuario").value;
+    const nomeFantasia = document.getElementById("edit-nome").value;
+    const emailCoorporativa = document.getElementById("edit-email").value;
+    const cnpj = document.getElementById("edit-telefone").value;
+    const novaSenha = document.getElementById("edit-senha").value;
+    const confirmarSenha = document.getElementById("edit-confirmar-senha").value;
+
+    if (novaSenha || confirmarSenha) {
+      if (novaSenha.length < 8) {
+        alert("A nova senha deve ter no mínimo 8 caracteres!");
+        return;
+      }
+      
+      if (novaSenha !== confirmarSenha) {
+        alert("As senhas não coincidem!");
+        return;
+      }
     }
+
+    const dados = {
+      nomeServer: nomeFantasia,
+      emailServer: emailCoorporativa,
+      cnpjServer: cnpj
+    };
+
+    if (novaSenha) {
+      dados.senhaServer = novaSenha;
+    }
+
+    fetch(`/admin/empresas/${idEmpresa}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    })
+    .then((res) => res.json())
+    .then((resultado) => {
+      alert("Empresa atualizada com sucesso!");
+      fecharModalEdicao();
+      carregarEmpresas(paginaAtual);
+    })
+    .catch((err) => {
+      console.error("Erro ao atualizar empresa:", err);
+      alert("Erro ao atualizar empresa");
+    });
+  });
+
+  async function cadastrarUsuarioAdmin(event) {
+    event.preventDefault();
+
+    const nome = document.getElementById("create-name").value;
+    const email = document.getElementById("create-email"). value;
+    const senha = document.getElementById("create-password").value;
+    const confirmarSenha = document.getElementById("create-confirm"). value;
+
+    if (senha !== confirmarSenha) {
+      alert("As senhas não coincidem!");
+      return false;
+    }
+
+    if (senha.length < 8) {
+      alert("A senha deve ter no mínimo 8 caracteres!");
+      return false;
+    }
+
+    try {
+      const response = await fetch("/admin/cadastrarUsuarioAdmin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nomeServer: nome,
+          emailServer: email,
+          senhaServer: senha,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert("Usuário cadastrado com sucesso!");
+        document.getElementById("formNovoUsuario").reset();
+      } else {
+        const errorText = await response.text();
+        alert(errorText || "Erro ao cadastrar usuário");
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Erro de conexão com o servidor");
+    }
+
+    return false;
   }
+
+  window.cadastrarUsuarioAdmin = cadastrarUsuarioAdmin;
+
+  document
+    .getElementById("form-editar-usuario-proprio")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const adminLogado = JSON.parse(sessionStorage.getItem("ADMIN_LOGADO"));
+
+      if (! adminLogado || !adminLogado.idAdmin) {
+        alert("Sessão expirada. Faça login novamente.");
+        window.location.href = "/login";
+        return;
+      }
+
+      const nome = document.getElementById("profile-name").value;
+      const senhaAtual = document.getElementById(
+        "profile-current-password"
+      ).value;
+      const novaSenha = document.getElementById("profile-new-password").value;
+      const confirmarSenha = document.getElementById(
+        "profile-confirm-password"
+      ).value;
+
+      if (! nome) {
+        alert("Digite seu nome!");
+        return;
+      }
+
+      if (! senhaAtual) {
+        alert("Digite sua senha atual!");
+        return;
+      }
+
+      if (novaSenha.length < 8) {
+        alert("A nova senha deve ter no mínimo 8 caracteres!");
+        return;
+      }
+
+      if (novaSenha !== confirmarSenha) {
+        alert("As senhas não coincidem!");
+        return;
+      }
+
+      fetch(`/admin/usuario/${adminLogado.idAdmin}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nomeServer: nome,
+          novaSenhaServer: novaSenha,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((data) => {
+              throw new Error(data.erro || "Erro ao atualizar perfil");
+            });
+          }
+          return response.json();
+        })
+        .then((data) => {
+          alert("Perfil atualizado com sucesso!");
+          document.getElementById("profile-current-password").value = "";
+          document.getElementById("profile-new-password").value = "";
+          document.getElementById("profile-confirm-password").value = "";
+        })
+        .catch((erro) => {
+          console.error("Erro ao atualizar perfil:", erro);
+          alert(erro.message);
+        });
+    });
+
+  window.excluirUsuario = function (idUsuario, nomeUsuario) {
+    if (
+      !confirm(
+        `Tem certeza que deseja excluir o usuário "${nomeUsuario}"?\n\nEsta ação não pode ser desfeita! `
+      )
+    ) {
+      return;
+    }
+
+    fetch(`/admin/usuarios/${idUsuario}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((resultado) => {
+        alert("Usuário excluído com sucesso!");
+        carregarEmpresas(paginaAtual);
+      })
+      .catch((err) => {
+        console.error("Erro ao excluir usuário:", err);
+        alert("Erro ao excluir usuário");
+      });
+  };
+
+  function carregarEmpresasSelect() {
+    fetch("/admin/empresas/listar")
+      .then((res) => res.json())
+      .then((empresas) => {
+        const select = document.getElementById("edit-empresa");
+        if (! select) return;
+        select.innerHTML = '<option value="">Sem empresa vinculada</option>';
+
+        empresas.forEach((empresa) => {
+          select.innerHTML += `<option value="${empresa.idEmpresa}">${empresa.nomeFantasia}</option>`;
+        });
+      })
+      .catch((err) => {
+        console.error("Erro ao carregar empresas:", err);
+      });
+  }
+
+  function getIniciais(nome) {
+    if (!nome) return "";
+    return nome
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+  }
+
+  function formatarData(dataStr) {
+    if (!dataStr) return "-";
+    const date = new Date(dataStr);
+    return date.toLocaleDateString("pt-BR");
+  }
+
+  const searchInput = document.querySelector(".search-input");
+  const filterSelect = document.querySelector(".filter-select");
+
+  function filterTable() {
+    const searchTerm = searchInput ?  searchInput.value.toLowerCase() : "";
+    const filterType = filterSelect ? filterSelect.value : "all";
+    const tableRows = document.querySelectorAll(".users-table tbody tr");
+
+    tableRows.forEach((row) => {
+      const name =
+        row.querySelector(".user-info span")?.textContent.toLowerCase() || "";
+      const email =
+        row.querySelectorAll("td")[1]?.textContent.toLowerCase() || "";
+      const type =
+        row.querySelector(".badge")?.textContent.toLowerCase() || "";
+
+      const matchesSearch =
+        name.includes(searchTerm) || email.includes(searchTerm);
+      const matchesFilter =
+        filterType === "all" ||
+        (filterType === "admin" && type.includes("admin")) ||
+        (filterType === "user" && type.includes("usuário"));
+
+      row.style.display = matchesSearch && matchesFilter ? "" : "none";
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", filterTable);
+  }
+
+  if (filterSelect) {
+    filterSelect.addEventListener("change", filterTable);
+  }
+
+  window.addEventListener("click", function (e) {
+    const modal = document.getElementById("modal-editar-usuario");
+    if (e.target === modal) {
+      fecharModalEdicao();
+    }
+  });
+});
+
+function carregarDadosUsuario() {
+  const dadosAdmin = sessionStorage.getItem("ADMIN_LOGADO");
+
+  if (! dadosAdmin) {
+    console.error("Usuário não logado!");
+    return;
+  }
+
+  const admin = JSON.parse(dadosAdmin);
+
+  document.getElementById("profile-name").value = admin.nome;
+  document.getElementById("profile-email").value = admin.email;
+
+  document.getElementById("profile-header-nome").textContent = admin.nome;
+  document.getElementById("profile-header-email").textContent = admin.email;
+
+  if (admin.nome) {
+    const iniciais = admin.nome
+      .split(" ")
+      .map((n) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+    document.getElementById("profile-avatar").textContent = iniciais;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", carregarDadosUsuario);
+window.carregarDadosUsuario = carregarDadosUsuario;
+
+function logout() {
+  if (confirm("Tem certeza que deseja sair?")) {
+    sessionStorage.clear();
+    window.location.href = "./login.html";
+  }
+}
 </script>

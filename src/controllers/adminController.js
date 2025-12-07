@@ -381,19 +381,19 @@ function listarUsuariosEmpresasPaginado(req, res) {
 }
 
 function listarEmpresasPaginado(req, res){
-  const pagina = parseInt(req.query. pagina) || 1;
-  const limite = parseInt(req. query.limite) || 20;
+  const pagina = parseInt(req.query.pagina) || 1;
+  const limite = parseInt(req.query.limite) || 20;
   const offset = (pagina - 1) * limite;
 
   Promise.all([
-    adminModel. listarEmpresasPaginado(limite, offset),
+    adminModel.listarEmpresasPaginado(limite, offset),
     adminModel.contarTotalEmpresas(),
   ])
     .then(([empresas, total]) => {
       const totalEmpresas = total[0].total;
       const totalPaginas = Math.ceil(totalEmpresas / limite);
 
-      res. status(200).json({
+      res.status(200).json({
         empresas: empresas,
         paginacao: {
           paginaAtual: pagina,
@@ -407,7 +407,7 @@ function listarEmpresasPaginado(req, res){
     })
     .catch((erro) => {
       console.error("Erro ao listar empresas paginado:", erro);
-      res.status(500).json({erro: erro.message || erro. sqlMessage});
+      res.status(500).json({erro: erro.message || erro.sqlMessage});
     });
 }
 
@@ -425,7 +425,7 @@ function buscarEmpresaPorId(req, res){
     })
     .catch((erro) => {
       console.error("Erro ao buscar empresa:", erro);
-      res. status(500).json({erro: erro.sqlMessage || erro.message});
+      res.status(500).json({erro: erro.sqlMessage || erro.message});
     });
 }
 
@@ -436,6 +436,7 @@ function atualizarEmpresa(req, res) {
     emailCoorporativa: req.body.emailServer,
     cnpj: req.body.cnpjServer,
     situacaoLicensa: req.body.licensaServer,
+    senha: req.body.senhaServer,
   };
 
   adminModel
@@ -459,7 +460,7 @@ function excluirEmpresa(req, res){
     .then((resultado) => {
       console.log("Empresa excluída:", idEmpresa);
 
-      adminModel. registrarLogAtividade(
+      adminModel.registrarLogAtividade(
         "EXCLUSAO",
         `Empresa ID ${idEmpresa} excluída`,
         null,
@@ -476,12 +477,11 @@ function excluirEmpresa(req, res){
           .status(409)
           .send("Não é possível excluir: empresa possui usuários vinculados");
       } else{
-        res.status(500). json({erro: erro.sqlMessage || erro.message});
+        res.status(500).json({erro: erro.sqlMessage || erro.message});
       }
     });
 }
-
-module. exports = {
+module.exports = {
   adminAutenticar,
   cadastrarEmpresa,
   cadastrarUsuarioAdmin,
