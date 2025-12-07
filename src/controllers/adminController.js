@@ -27,6 +27,7 @@ function adminAutenticar(req, res) {
 
       const admin = resultadoAutenticar[0];
       console.log("Autenticação bem-sucedida!");
+      console.log("Dados retornados:", admin);
 
       res.json({
         idAdmin: admin.idAdmin,
@@ -43,7 +44,6 @@ function adminAutenticar(req, res) {
       });
     });
 }
-
 function cadastrarEmpresa(req, res) {
   const cnpj = req.body.cnpjServer;
   const nome = req.body.nomeServer;

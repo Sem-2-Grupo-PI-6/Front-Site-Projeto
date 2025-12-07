@@ -795,25 +795,41 @@ function carregarDadosUsuario() {
 
   if (! dadosAdmin) {
     console.error("Usuário não logado!");
+    alert("Sessão expirada. Faça login novamente.");
+    window.location.href = "./login.html";
     return;
   }
 
-  const admin = JSON.parse(dadosAdmin);
+  try {
+    const admin = JSON.parse(dadosAdmin);
+    
+    console.log("Dados do admin carregados:", admin);
 
-  document.getElementById("profile-name").value = admin.nome;
-  document.getElementById("profile-email").value = admin.email;
+    if (! admin.nome || !admin.email) {
+      console.error("Dados incompletos:", admin);
+      alert("Erro ao carregar dados do perfil. Faça login novamente.");
+      window.location.href = "./login.html";
+      return;
+    }
 
-  document.getElementById("profile-header-nome").textContent = admin.nome;
-  document.getElementById("profile-header-email").textContent = admin.email;
+    document.getElementById("profile-name").value = admin.nome;
+    document.getElementById("profile-email").value = admin.email;
+    document.getElementById("profile-header-nome").textContent = admin.nome;
+    document.getElementById("profile-header-email").textContent = admin.email;
 
-  if (admin.nome) {
-    const iniciais = admin.nome
-      .split(" ")
-      .map((n) => n[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase();
-    document.getElementById("profile-avatar").textContent = iniciais;
+    if (admin.nome) {
+      const iniciais = admin.nome
+        .split(" ")
+        .map((n) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+      document.getElementById("profile-avatar").textContent = iniciais;
+    }
+  } catch (erro) {
+    console.error("Erro ao parsear dados do admin:", erro);
+    alert("Erro ao carregar perfil. Faça login novamente.");
+    window.location.href = "./login.html";
   }
 }
 
