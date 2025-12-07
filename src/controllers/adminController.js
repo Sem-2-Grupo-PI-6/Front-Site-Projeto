@@ -275,7 +275,7 @@ function editarUsuario(req, res) {
     .editarUsuario(novaSenha, nome, idAdmin)
     .then(function (resultadoAtualizar) {
       if (resultadoAtualizar.affectedRows === 0) {
-        console.log("❌ Nenhum registro atualizado");
+        console.log(" Nenhum registro atualizado");
         res.status(404).json({ erro: "Admin não encontrado" });
         return;
       }
@@ -284,7 +284,7 @@ function editarUsuario(req, res) {
       res.json({ mensagem: "Perfil atualizado com sucesso" });
     })
     .catch(function (erro) {
-      console.error("❌ ERRO COMPLETO:", erro);
+      console.error(" ERRO COMPLETO:", erro);
       res.status(500).json({ erro: "Erro interno do servidor" });
     });
 }
@@ -380,6 +380,107 @@ function listarUsuariosEmpresasPaginado(req, res) {
     });
 }
 
+function listarEmpresasPaginado(req, res){
+  const pagina = parseInt(req.query.pagina) || 1;
+  const limite = parseInt(req.query.limite) || 20;
+  const offset = (pagina - 1) * limite;
+
+  Promise.all([
+    adminModel.listarEmpresasPaginado(limite,offset),
+    adminModel.contarTotalEmpresas(),
+  ])
+    .then(([empresa, total]) => {
+      const totalEmpresas = total[0].total;
+      const totalPaginas = Math.ceil(totalEmpresas / limite);
+
+      res.status(200).json({
+        empresas: empresas,
+        paginacao: {
+          paginaAtual: pagina,
+          totalPaginas: totalPaginas,
+          totalEmpresas: totalEmpresas,
+          empresasPorPagina: limite,
+          temProxima: pagina < totalPaginas,
+          temAnterior: pagina > 1,
+        },
+      });
+    })
+    .catch((erro) => {
+      console.error("Erro ao listar empresas pagina:", erro);
+      res.status(500).json({erro: erro.mensagem || erro.sqlMessage});
+    });
+}
+
+function buscarEmpresaPorID(req, res){
+  const idEmpresa = req.params.id;
+
+  adminModel
+    .buscarEmpresaPorID(idEmpresa)
+    .then((resultado) => {
+      if(resultado.length > 0){
+        res.status(200).json(resultado[0]);
+      }else{
+        res.status(404).json({erro: "Empresa não encontrada"})
+      }
+    })
+    .catch((erro) => {
+      console.error("Erro ao buscar empresa", erro);
+      res.status(500).json({erro: erro.sqlMessage || erro.mensagem});
+    });
+}
+
+function atualizarEmpresa(req, res) {
+  const idEmpresa = req.params.id;
+  const dados = {
+    nomeFantasia: req.body.nomeServer,
+    emailCoorporativa: req.body.emailServer,
+    situacaoLicensa: req.body.licensaServer,
+  };
+
+  adminModel
+  .atualizarEmpresa(idEmpresa, dados)
+  .then((reultado) => {
+    if(resultado.affectedRows === 0){
+      return res.status(404).json({erro: "Empresa não econtrada "})
+    }
+  })
+  .catch((erro) => {
+      console.error("Erro ao att empresa", erro);
+      res.status(500).json({erro: erro.sqlMessage || erro.mensagem});
+    });
+}
+
+function excluirEmpresa(req, res){
+  const idEmpresa = req.params.id;
+
+  adminModel
+    .excluirEmpresa(idEmpresa)
+    .then((resultado) => {
+      console.log("EMpresa excluida", idEmpresa);
+
+      adminModel.registrarLogAtividade(
+        "EXCLUSAO",
+        `Empresa ID ${idEmpresa} excluida`,
+        "null",
+        "null",
+        "null"
+      );
+
+      res.status(200).json({mensagem: "empresa exluida com sucesso"})
+    })
+    .catch((erro) => {
+      console.error("Erro ao att empresa", erro);
+      if(erro.code === "ER_ROW_IS_REFERENCED_2") {
+        res
+        .status(409)
+        .send("Não é possivel exlcuir: empresa possui usuarios vonculados erro fk");
+      } else{
+        res.status(500).json({erro: erro.sqlMessage || erro.mensagem});
+      }
+    });
+
+}
+
 module.exports = {
   adminAutenticar,
   cadastrarEmpresa,
@@ -395,4 +496,8 @@ module.exports = {
   excluirUsuario,
   buscarUsuarioPorId,
   listarEmpresas,
+  listarEmpresasPaginado,
+  buscarEmpresaPorID,
+  atualizarEmpresa,
+  excluirEmpresa,
 };

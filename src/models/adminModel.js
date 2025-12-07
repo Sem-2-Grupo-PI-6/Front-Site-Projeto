@@ -280,7 +280,7 @@ function contarTotalUsuarios() {
 }
 
 
-function listarEmpresaPaginado(limite, offset){
+function listarEmpresasPaginado(limite, offset){
   console.log("ACESSEI O ADMIN MODEL - listarEmpresaPaginado()");
 
   var instrucaoSql = `
@@ -302,7 +302,7 @@ function listarEmpresaPaginado(limite, offset){
       return database.executar(instrucaoSql);
 }
 
-function contarTotalEmpresa(idEmpresa){
+function contarTotalEmpresas(idEmpresa){
   console.log ("ACESSEI O ADMIN MODEL - contarTotalEmpresa()");
 
   var instrucaoSql = `
@@ -392,8 +392,8 @@ module.exports = {
   excluirUsuario,
   buscarUsuarioPorId,
   listarEmpresas,
-  listarEmpresaPaginado,
-  contarTotalEmpresa,
+  listarEmpresasPaginado,
+  contarTotalEmpresas,
   atualizarEmpresa,
   excluirEmpresa,
 };
