@@ -279,43 +279,52 @@ function contarTotalUsuarios() {
   return database.executar(instrucaoSql);
 }
 
-
 function listarEmpresasPaginado(limite, offset){
   console.log("ACESSEI O ADMIN MODEL - listarEmpresaPaginado()");
 
   var instrucaoSql = `
-    select
+    SELECT
       e.idEmpresa,
+      e.cnpj,
       e.nomeFantasia,
       e.emailCoorporativa,
       e.dtLicensa,
       e.situacaoLicensa,
-      count(u.idUsuario) as totalUsuarios,
-      (select count(*) from tblLogSistemaAcesso where Usuario_Empresa_idEmpresa = e.idEmpresa) as totalAcessos
-      from tblEmpresa e 
-      left join tblUsuario u on e.idEmpresa = u.Empresa_idEmpresa
-      group by e.idEmpresa, e.cnpj, e.nomeFantasia, e.emailCoorporativa, e.dtLicensa, e.situacaoLicensa
-      order by e.idEmpresa DESC
-      LIMIT $(limite) off set $(offset)
-      `;
+      COUNT(u.idUsuario) as totalUsuarios,
+      (SELECT COUNT(*) FROM tblLogSistemaAcesso l WHERE l.Usuario_Empresa_idEmpresa = e.idEmpresa) as totalAcessos
+    FROM tblEmpresa e 
+    LEFT JOIN tblUsuario u ON e.idEmpresa = u.Empresa_idEmpresa
+    GROUP BY e. idEmpresa, e.cnpj, e.nomeFantasia, e.emailCoorporativa, e.dtLicensa, e.situacaoLicensa
+    ORDER BY e.idEmpresa DESC
+    LIMIT ${limite} OFFSET ${offset}
+  `;
 
-      return database.executar(instrucaoSql);
+  return database.executar(instrucaoSql);
 }
-
-function contarTotalEmpresas(idEmpresa){
-  console.log ("ACESSEI O ADMIN MODEL - contarTotalEmpresa()");
+function contarTotalEmpresas(){
+  console.log("ACESSEI O ADMIN MODEL - contarTotalEmpresa()");
 
   var instrucaoSql = `
-    select 
-      e.*,
-      count(u.idUsuario) as totalUsuarios
-    from tblEmpresa e
-    left join tblUsuario u on e.idEmpresa = u.Empresa_idEmpresa
-    where e.idEmpresa = ?
-    group by e.idEmpresa
-    `;
+    SELECT COUNT(*) as total FROM tblEmpresa
+  `;
 
-    return database.executar(instrucaoSql, [idEmpresa]);
+  return database.executar(instrucaoSql);
+}
+
+function buscarEmpresaPorId(idEmpresa){
+  console.log("ACESSEI O ADMIN MODEL - buscarEmpresaPorId()");
+  
+  var instrucaoSql = `
+    SELECT 
+      e.*,
+      COUNT(u.idUsuario) as totalUsuarios
+    FROM tblEmpresa e
+    LEFT JOIN tblUsuario u ON e.idEmpresa = u.Empresa_idEmpresa
+    WHERE e.idEmpresa = ? 
+    GROUP BY e.idEmpresa
+  `;
+
+  return database.executar(instrucaoSql, [idEmpresa]);
 }
 
 function atualizarEmpresa(idEmpresa, dados){
@@ -352,7 +361,7 @@ function atualizarEmpresa(idEmpresa, dados){
 
 
   var instrucaoSql = `
-    update tblUsuario
+    update tblEmpresa
     set ${campos.join(", ")}
     where idUsuario = ? and Empresa_idEmpresa = ?;
     `;
@@ -366,12 +375,12 @@ function atualizarEmpresa(idEmpresa, dados){
     console.log("ACESSEI O ADMIN MODEL - excluirEmpresa()");
 
     var instrucaoSql = `
-    delete from tblEmrpesa
+    delete from tblEmpresa
     where idEmpresa = ?
     `;
 
 
-    return database.executar(idEmpresa)
+    return database.executar(instrucaoSql,[idEmpresa])
   }
 module.exports = {
   adminAutenticar,
@@ -393,6 +402,7 @@ module.exports = {
   buscarUsuarioPorId,
   listarEmpresas,
   listarEmpresasPaginado,
+  buscarEmpresaPorId,
   contarTotalEmpresas,
   atualizarEmpresa,
   excluirEmpresa,

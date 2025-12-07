@@ -381,19 +381,19 @@ function listarUsuariosEmpresasPaginado(req, res) {
 }
 
 function listarEmpresasPaginado(req, res){
-  const pagina = parseInt(req.query.pagina) || 1;
-  const limite = parseInt(req.query.limite) || 20;
+  const pagina = parseInt(req.query. pagina) || 1;
+  const limite = parseInt(req. query.limite) || 20;
   const offset = (pagina - 1) * limite;
 
   Promise.all([
-    adminModel.listarEmpresasPaginado(limite,offset),
+    adminModel. listarEmpresasPaginado(limite, offset),
     adminModel.contarTotalEmpresas(),
   ])
-    .then(([empresa, total]) => {
+    .then(([empresas, total]) => {
       const totalEmpresas = total[0].total;
       const totalPaginas = Math.ceil(totalEmpresas / limite);
 
-      res.status(200).json({
+      res. status(200).json({
         empresas: empresas,
         paginacao: {
           paginaAtual: pagina,
@@ -406,26 +406,26 @@ function listarEmpresasPaginado(req, res){
       });
     })
     .catch((erro) => {
-      console.error("Erro ao listar empresas pagina:", erro);
-      res.status(500).json({erro: erro.mensagem || erro.sqlMessage});
+      console.error("Erro ao listar empresas paginado:", erro);
+      res.status(500).json({erro: erro.message || erro. sqlMessage});
     });
 }
 
-function buscarEmpresaPorID(req, res){
+function buscarEmpresaPorId(req, res){
   const idEmpresa = req.params.id;
 
   adminModel
-    .buscarEmpresaPorID(idEmpresa)
+    .buscarEmpresaPorId(idEmpresa)
     .then((resultado) => {
       if(resultado.length > 0){
         res.status(200).json(resultado[0]);
       }else{
-        res.status(404).json({erro: "Empresa não encontrada"})
+        res.status(404).json({erro: "Empresa não encontrada"});
       }
     })
     .catch((erro) => {
-      console.error("Erro ao buscar empresa", erro);
-      res.status(500).json({erro: erro.sqlMessage || erro.mensagem});
+      console.error("Erro ao buscar empresa:", erro);
+      res. status(500).json({erro: erro.sqlMessage || erro.message});
     });
 }
 
@@ -438,15 +438,16 @@ function atualizarEmpresa(req, res) {
   };
 
   adminModel
-  .atualizarEmpresa(idEmpresa, dados)
-  .then((reultado) => {
-    if(resultado.affectedRows === 0){
-      return res.status(404).json({erro: "Empresa não econtrada "})
-    }
-  })
-  .catch((erro) => {
-      console.error("Erro ao att empresa", erro);
-      res.status(500).json({erro: erro.sqlMessage || erro.mensagem});
+    . atualizarEmpresa(idEmpresa, dados)
+    .then((resultado) => {
+      if(resultado.affectedRows === 0){
+        return res.status(404).json({erro: "Empresa não encontrada"});
+      }
+      res. status(200).json({mensagem: "Empresa atualizada com sucesso"});
+    })
+    .catch((erro) => {
+      console.error("Erro ao atualizar empresa:", erro);
+      res.status(500). json({erro: erro.sqlMessage || erro.message});
     });
 }
 
@@ -456,32 +457,31 @@ function excluirEmpresa(req, res){
   adminModel
     .excluirEmpresa(idEmpresa)
     .then((resultado) => {
-      console.log("EMpresa excluida", idEmpresa);
+      console.log("Empresa excluída:", idEmpresa);
 
-      adminModel.registrarLogAtividade(
+      adminModel. registrarLogAtividade(
         "EXCLUSAO",
-        `Empresa ID ${idEmpresa} excluida`,
-        "null",
-        "null",
-        "null"
+        `Empresa ID ${idEmpresa} excluída`,
+        null,
+        null,
+        null
       );
 
-      res.status(200).json({mensagem: "empresa exluida com sucesso"})
+      res.status(200).json({mensagem: "Empresa excluída com sucesso"});
     })
     .catch((erro) => {
-      console.error("Erro ao att empresa", erro);
+      console.error("Erro ao excluir empresa:", erro);
       if(erro.code === "ER_ROW_IS_REFERENCED_2") {
         res
-        .status(409)
-        .send("Não é possivel exlcuir: empresa possui usuarios vonculados erro fk");
+          .status(409)
+          .send("Não é possível excluir: empresa possui usuários vinculados");
       } else{
-        res.status(500).json({erro: erro.sqlMessage || erro.mensagem});
+        res.status(500). json({erro: erro.sqlMessage || erro.message});
       }
     });
-
 }
 
-module.exports = {
+module. exports = {
   adminAutenticar,
   cadastrarEmpresa,
   cadastrarUsuarioAdmin,
@@ -497,7 +497,7 @@ module.exports = {
   buscarUsuarioPorId,
   listarEmpresas,
   listarEmpresasPaginado,
-  buscarEmpresaPorID,
+  buscarEmpresaPorId,
   atualizarEmpresa,
   excluirEmpresa,
 };

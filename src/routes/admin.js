@@ -1,5 +1,5 @@
 var express = require("express");
-var router = express.Router();
+var router = express. Router();
 var adminController = require("../controllers/adminController");
 
 router.post("/adminAutenticar", function (req, res) {
@@ -10,7 +10,7 @@ router.post("/cadastrarEmpresa", function (req, res) {
   adminController.cadastrarEmpresa(req, res);
 });
 
-router.post("/cadastrarUsuarioAdmin", function (req, res) {
+router. post("/cadastrarUsuarioAdmin", function (req, res) {
   adminController.cadastrarUsuarioAdmin(req, res);
 });
 
@@ -38,7 +38,7 @@ router.get("/usuarios/listar", function (req, res) {
   adminController.listarUsuariosEmpresas(req, res);
 });
 
-router.get("/usuarios/:id", function (req, res) {
+router. get("/usuarios/:id", function (req, res) {
   adminController.buscarUsuarioPorId(req, res);
 });
 
@@ -55,24 +55,23 @@ router.get("/empresas/listar", function (req, res) {
 });
 
 router.get("/usuarios/listar/paginado", function (req, res) {
-  adminController.listarUsuariosEmpresasPaginado(req, res);
+  adminController. listarUsuariosEmpresasPaginado(req, res);
 });
 
-route.get("/empresa/listar/paginado", function(req, res){
-  adminController.listarEmpresa(req, res);
-})
+router.get("/empresas/listar/paginado", function(req, res){
+  adminController.listarEmpresasPaginado(req, res);
+});
 
-route.get("/empresa/:id", function(req, res) {
+router. get("/empresas/:id", function(req, res) {
   adminController.buscarEmpresaPorId(req, res);
-})
+});
 
-router.put("/empresas/:id", function(req, res){
-  adminController.atualizarEMpresa(req, res);
-})
+router. put("/empresas/:id", function(req, res){
+  adminController.atualizarEmpresa(req, res);
+});
 
-route.delete("/empresa/:id", function(req, res){
-  adminController.excluirUsuario(req, res)
-})
+router.delete("/empresas/:id", function(req, res){
+  adminController. excluirEmpresa(req, res);
+});
 
-
-module.exports = router;
+module. exports = router;

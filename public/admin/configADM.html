@@ -362,55 +362,58 @@
       });
     });
 
-    carregarUsuarios(1);
-    carregarEmpresasSelect();
-    function carregarUsuarios(pagina) {
-      fetch(`/admin/usuarios/listar/paginado?pagina=${pagina}&limite=20`)
+    carregarEmpresas(1);
+    function carregarEmpresas(pagina) {
+      fetch(`/admin/empresas/listar/paginado?pagina=${pagina}&limite=20`)
         .then((res) => res.json())
         .then((data) => {
-          const { usuarios, paginacao } = data;
+          const { empresas, paginacao } = data;
           const tbody = document.getElementById("usuarios-tbody");
           tbody.innerHTML = "";
 
           paginaAtual = paginacao.paginaAtual;
           totalPaginas = paginacao.totalPaginas;
 
-          if (usuarios.length === 0) {
+          if (empresas.length === 0) {
             tbody.innerHTML =
-              '<tr><td colspan="7" style="text-align:center;">Nenhum usuário encontrado</td></tr>';
+              '<tr><td colspan="7" style="text-align:center;">Nenhuma empresa encontrado</td></tr>';
             return;
           }
 
-          usuarios.forEach((usuario) => {
+          empresas.forEach((empresa) => {
             const statusClass =
-              usuario.statusUsuario === "Ativo" ? "active" : "inactive";
+              empresa.statusUsuario === "Ativo" ? "active" : "inactive";
+              const licencaVencida = new Date(empresa.dtLicenca) < new Date();
+
             tbody.innerHTML += `
               <tr>
                 <td>
                   <div class="user-info">
                     <div class="user-avatar">${getIniciais(
-                      usuario.nomeUsuario
+                      empresa.nomeFantasia
                     )}</div>
-                    <span>${usuario.nomeUsuario}</span>
+                    <span>${empresa.nomeFantasia}</span>
                   </div>
                 </td>
-                <td>${usuario.emailUsuario}</td>
-                <td><span class="badge badge-user">Usuário</span></td>
-                <td>${usuario.nomeFantasia || "-"}</td>
-                <td><span class="status-dot ${statusClass}"></span> ${
-              usuario.statusUsuario
-            }</td>
-                <td>${formatarData(usuario.dtCriacao)}</td>
+                <td>${empresa.emailCoorporativa}</td>
+                <td>
+                  <span class="badge ${empresa.tipo === 'Admin' ? 'badge-admin' : 'badge-user'}">
+                    ${empresa.tipo}
+                  </span>
+                </td>
+                <td>${empresa.cnpj}</td>
+                <td><span class="status-dot ${statusClass}"></span> ${empresa.situacaoLicensa}</td>
+                <td>${formatarData(empresa.dtLicensa)} ${licencaVencida ? '<span style="color:red;">❌</span>' : ''}</td>
                 <td>
                   <div class="table-actions">
                     <button class="btn-icon btn-edit" title="Editar" onclick="abrirModalEdicao(${
-                      usuario.idUsuario
+                      empresa.idEmpresa
                     })">
                       ✏️
                     </button>
                     <button class="btn-icon btn-delete" title="Excluir" onclick="excluirUsuario(${
-                      usuario.idUsuario
-                    }, '${usuario.nomeUsuario}')">
+                      empresa.idEmpresa
+                    }, '${empresa.nomeFantasia}')">
                       🗑️
                     </button>
                   </div>
@@ -421,17 +424,41 @@
           atualizarPaginacao(paginacao);
         })
         .catch((err) => {
-          console.error("Erro ao carregar usuários:", err);
-          alert("Erro ao carregar usuários: " + err.message);
+          console.error("Erro ao carregar empresas:", err);
+          alert("Erro ao carregar empresas: " + err.message);
         });
     }
+
+    window.excluirEmpresa = function(idEmpresa, nomeEmpresa){
+      if (
+        ! confirm(
+          `tem certeza que quer excluir a empresa "${nomeEmpresa}"?\n\nEsta ação não podera ser desfeita`
+        )
+      ){
+        return;
+      }
+
+      fetch(`/admin/empresas/${idEmpresa}`, {
+        method: "DELETE",
+      })
+      .then((res) => res.json())
+      .then((resultado) => {
+        alert("Empresa excluída!");
+        carregarEmpresas(paginaAtual);
+      })
+      .catch((err) => {
+        console.error("Erro ao excluir empresa", err);
+        alert("Erro ao excluir")
+      });
+    };
 
     function atualizarPaginacao(paginacao) {
       const paginationInfo = document.querySelector(".pagination-info");
       const btnAnterior = document.querySelector(".btn-pagination:first-child");
       const btnProximo = document.querySelector(".btn-pagination:last-child");
+      carregarEmpresasSelect();
 
-      paginationInfo.textContent = `Página ${paginacao.paginaAtual} de ${paginacao.totalPaginas} • ${paginacao.totalUsuarios} usuários`;
+      paginationInfo.textContent = `Página ${paginacao.paginaAtual} de ${paginacao.totalPaginas} • ${paginacao.totalEmpresas} empresas`;
 
       btnAnterior.disabled = !paginacao.temAnterior;
       btnProximo.disabled = !paginacao.temProxima;
@@ -447,13 +474,13 @@
 
       btnAnterior.onclick = () => {
         if (paginacao.temAnterior) {
-          carregarUsuarios(paginacao.paginaAtual - 1);
+          carregarEmpresas(paginacao.paginaAtual - 1);
         }
       };
 
       btnProximo.onclick = () => {
         if (paginacao.temProxima) {
-          carregarUsuarios(paginacao.paginaAtual + 1);
+          carregarEmpresas(paginacao.paginaAtual + 1);
         }
       };
     }
@@ -618,7 +645,7 @@
         .then((res) => res.json())
         .then((resultado) => {
           alert("Usuário excluído com sucesso!");
-          carregarUsuarios(paginaAtual);
+          carregarEmpresas(paginaAtual);
         })
         .catch((err) => {
           console.error("Erro ao excluir usuário:", err);
