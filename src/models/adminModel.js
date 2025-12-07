@@ -279,6 +279,100 @@ function contarTotalUsuarios() {
   return database.executar(instrucaoSql);
 }
 
+
+function listarEmpresaPaginado(limite, offset){
+  console.log("ACESSEI O ADMIN MODEL - listarEmpresaPaginado()");
+
+  var instrucaoSql = `
+    select
+      e.idEmpresa,
+      e.nomeFantasia,
+      e.emailCoorporativa,
+      e.dtLicensa,
+      e.situacaoLicensa,
+      count(u.idUsuario) as totalUsuarios,
+      (select count(*) from tblLogSistemaAcesso where Usuario_Empresa_idEmpresa = e.idEmpresa) as totalAcessos
+      from tblEmpresa e 
+      left join tblUsuario u on e.idEmpresa = u.Empresa_idEmpresa
+      group by e.idEmpresa, e.cnpj, e.nomeFantasia, e.emailCoorporativa, e.dtLicensa, e.situacaoLicensa
+      order by e.idEmpresa DESC
+      LIMIT $(limite) off set $(offset)
+      `;
+
+      return database.executar(instrucaoSql);
+}
+
+function contarTotalEmpresa(idEmpresa){
+  console.log ("ACESSEI O ADMIN MODEL - contarTotalEmpresa()");
+
+  var instrucaoSql = `
+    select 
+      e.*,
+      count(u.idUsuario) as totalUsuarios
+    from tblEmpresa e
+    left join tblUsuario u on e.idEmpresa = u.Empresa_idEmpresa
+    where e.idEmpresa = ?
+    group by e.idEmpresa
+    `;
+
+    return database.executar(instrucaoSql, [idEmpresa]);
+}
+
+function atualizarEmpresa(idEmpresa, dados){
+  console.log("ACESSEI O ADMIN MODEL - atualizarEmpresa()");
+
+  const campos = [];
+
+  const valores = [];
+
+  if(dados.nomeFantasia){
+    campos.push("nomeFantasia = ?");
+    valores.push(dados.nomeFantasia);
+  }
+
+  if(dados.emailCorporativo){
+    campos.push("emailCoorporativo = ?");
+    valores.push(dados.emailCorporativo);
+  }
+  if(dados.situacaoLicensa){
+    campos.push("situacaoLicensa = ?");
+    valores.push(dados.situacaoLicensa)
+  }
+  if(dados.dtLicensa){
+    campos.push("dtLicensa = ?")
+    valores.push(dados.dtLicensa)
+  }
+
+  if(campos.length === 0){
+    return Promise.reject(new Error("Nenhum campo"))
+  }
+
+
+  valores.push(idEmpresa);
+
+
+  var instrucaoSql = `
+    update tblUsuario
+    set ${campos.join(", ")}
+    where idUsuario = ? and Empresa_idEmpresa = ?;
+    `;
+
+    return database.executar(instrucaoSql, valores)
+
+}
+
+
+  function excluirEmpresa(idEmpresa){
+    console.log("ACESSEI O ADMIN MODEL - excluirEmpresa()");
+
+    var instrucaoSql = `
+    delete from tblEmrpesa
+    where idEmpresa = ?
+    `;
+
+
+    return database.executar(idEmpresa)
+  }
 module.exports = {
   adminAutenticar,
   cadastrarEmpresa,
@@ -298,4 +392,8 @@ module.exports = {
   excluirUsuario,
   buscarUsuarioPorId,
   listarEmpresas,
+  listarEmpresaPaginado,
+  contarTotalEmpresa,
+  atualizarEmpresa,
+  excluirEmpresa,
 };

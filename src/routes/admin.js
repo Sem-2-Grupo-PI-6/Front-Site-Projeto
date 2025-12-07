@@ -58,4 +58,21 @@ router.get("/usuarios/listar/paginado", function (req, res) {
   adminController.listarUsuariosEmpresasPaginado(req, res);
 });
 
+route.get("/empresa/listar/paginado", function(req, res){
+  adminController.listarEmpresa(req, res);
+})
+
+route.get("/empresa/:id", function(req, res) {
+  adminController.buscarEmpresaPorId(req, res);
+})
+
+router.put("/empresas/:id", function(req, res){
+  adminController.atualizarEMpresa(req, res);
+})
+
+route.delete("/empresa/:id", function(req, res){
+  adminController.excluirUsuario(req, res)
+})
+
+
 module.exports = router;
