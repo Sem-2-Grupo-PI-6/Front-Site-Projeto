@@ -331,46 +331,47 @@ function atualizarEmpresa(idEmpresa, dados){
   console.log("ACESSEI O ADMIN MODEL - atualizarEmpresa()");
 
   const campos = [];
-
   const valores = [];
 
   if(dados.nomeFantasia){
-    campos.push("nomeFantasia = ?");
+    campos.push("nomeFantasia = ? ");
     valores.push(dados.nomeFantasia);
   }
 
-  if(dados.emailCorporativo){
-    campos.push("emailCoorporativo = ?");
-    valores.push(dados.emailCorporativo);
+  if(dados.emailCoorporativa){
+    campos. push("emailCoorporativa = ? ");
+    valores.push(dados.emailCoorporativa);
   }
+  
+  if(dados.cnpj){
+    campos.push("cnpj = ?");
+    valores.push(dados.cnpj);
+  }
+  
   if(dados.situacaoLicensa){
     campos.push("situacaoLicensa = ?");
-    valores.push(dados.situacaoLicensa)
+    valores.push(dados.situacaoLicensa);
   }
+  
   if(dados.dtLicensa){
-    campos.push("dtLicensa = ?")
-    valores.push(dados.dtLicensa)
+    campos. push("dtLicensa = ? ");
+    valores.push(dados.dtLicensa);
   }
 
   if(campos.length === 0){
-    return Promise.reject(new Error("Nenhum campo"))
+    return Promise.reject(new Error("Nenhum campo para atualizar"));
   }
-
 
   valores.push(idEmpresa);
 
-
   var instrucaoSql = `
-    update tblEmpresa
-    set ${campos.join(", ")}
-    where idUsuario = ? and Empresa_idEmpresa = ?;
-    `;
+    UPDATE tblEmpresa
+    SET ${campos.join(", ")}
+    WHERE idEmpresa = ?
+  `;
 
-    return database.executar(instrucaoSql, valores)
-
+  return database.executar(instrucaoSql, valores);
 }
-
-
   function excluirEmpresa(idEmpresa){
     console.log("ACESSEI O ADMIN MODEL - excluirEmpresa()");
 

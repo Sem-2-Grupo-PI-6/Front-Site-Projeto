@@ -133,7 +133,7 @@
         >
           <div class="modal-container">
             <div class="modal-header">
-              <h2>✏️ Editar Usuário</h2>
+              <h2>✏️ Editar Empresa</h2>
               <button class="modal-close" onclick="fecharModalEdicao()">
                 ✖
               </button>
@@ -403,7 +403,7 @@
                 </td>
                 <td>${empresa.cnpj}</td>
                 <td><span class="status-dot ${statusClass}"></span> ${empresa.situacaoLicensa}</td>
-                <td>${formatarData(empresa.dtLicensa)} ${licencaVencida ? '<span style="color:red;">❌</span>' : ''}</td>
+                <td>${formatarData(empresa.dtLicensa)} ${licencaVencida ? '<span style="color:red;"></span>' : ''}</td>
                 <td>
                   <div class="table-actions">
                     <button class="btn-icon btn-edit" title="Editar" onclick="abrirModalEdicao(${
@@ -485,30 +485,56 @@
       };
     }
 
-    window.abrirModalEdicao = function (idUsuario) {
-      fetch(`/admin/usuarios/${idUsuario}`)
-        .then((res) => res.json())
-        .then((usuario) => {
-          document.getElementById("edit-id-usuario").value = usuario.idUsuario;
-          document.getElementById("edit-nome").value = usuario.nome;
-          document.getElementById("edit-email").value = usuario.email;
-          document.getElementById("edit-telefone").value =
-            usuario.telefone || "";
-          document.getElementById("edit-empresa").value =
-            usuario.Empresa_idEmpresa || "";
+      window.abrirModalEdicao = function (idEmpresa) {
+        fetch(`/admin/empresas/${idEmpresa}`)
+          .then((res) => res.json())
+          .then((empresa) => {
+            document.getElementById("edit-id-usuario").value = empresa.idEmpresa;
+            document.getElementById("edit-nome"). value = empresa.nomeFantasia;
+            document.getElementById("edit-email").value = empresa.emailCoorporativa;
+            document. getElementById("edit-telefone").value = empresa.cnpj || "";
+            
+            const selectEmpresa = document.getElementById("edit-empresa");
+            if (selectEmpresa) {
+              selectEmpresa.style.display = "none";
+            }
 
-          document.getElementById("modal-editar-usuario").style.display =
-            "flex";
-        })
-        .catch((err) => {
-          console.error("Erro ao buscar usuário:", err);
-          alert("Erro ao carregar dados do usuário");
-        });
-    };
+            document.getElementById("modal-editar-usuario").style.display = "flex";
+          })
+          .catch((err) => {
+            console.error("Erro ao buscar empresa:", err);
+            alert("Erro ao carregar dados da empresa");
+          });
+      };
 
-    window.fecharModalEdicao = function () {
-      document.getElementById("modal-editar-usuario").style.display = "none";
-    };
+      document.getElementById("form-editar-usuario").addEventListener("submit", function(e) {
+  e.preventDefault();
+  
+  const idEmpresa = document.getElementById("edit-id-usuario").value;
+  const nomeFantasia = document.getElementById("edit-nome"). value;
+  const emailCoorporativa = document.getElementById("edit-email").value;
+  const cnpj = document.getElementById("edit-telefone").value;
+
+  fetch(`/admin/empresas/${idEmpresa}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nomeServer: nomeFantasia,
+      emailServer: emailCoorporativa,
+      cnpjServer: cnpj
+    })
+  })
+  .then((res) => res.json())
+  .then((resultado) => {
+    alert(" Empresa atualizada com sucesso!");
+    fecharModalEdicao();
+    carregarEmpresas(paginaAtual);
+  })
+  .catch((err) => {
+    console.error("Erro ao atualizar empresa:", err);
+    alert(" Erro ao atualizar empresa");
+  });
+});
 
     async function cadastrarUsuarioAdmin(event) {
       event.preventDefault();
@@ -568,7 +594,7 @@
         const adminLogado = JSON.parse(sessionStorage.getItem("ADMIN_LOGADO"));
 
         if (!adminLogado || !adminLogado.idAdmin) {
-          alert("❌ Sessão expirada. Faça login novamente.");
+          alert(" Sessão expirada. Faça login novamente.");
           window.location.href = "/login";
           return;
         }
@@ -583,22 +609,22 @@
         ).value;
 
         if (!nome) {
-          alert("❌ Digite seu nome!");
+          alert(" Digite seu nome!");
           return;
         }
 
         if (!senhaAtual) {
-          alert("❌ Digite sua senha atual!");
+          alert(" Digite sua senha atual!");
           return;
         }
 
         if (novaSenha.length < 8) {
-          alert("❌ A nova senha deve ter no mínimo 8 caracteres!");
+          alert(" A nova senha deve ter no mínimo 8 caracteres!");
           return;
         }
 
         if (novaSenha !== confirmarSenha) {
-          alert("❌ As senhas não coincidem!");
+          alert(" As senhas não coincidem!");
           return;
         }
         fetch(`/admin/usuario/${adminLogado.idAdmin}`, {
@@ -625,7 +651,7 @@
           })
           .catch((erro) => {
             console.error("Erro ao atualizar perfil:", erro);
-            alert(`❌ ${erro.message}`);
+            alert(` ${erro.message}`);
           });
       });
     // ENCERRA AQUI

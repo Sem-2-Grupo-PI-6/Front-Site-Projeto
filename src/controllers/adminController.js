@@ -434,23 +434,23 @@ function atualizarEmpresa(req, res) {
   const dados = {
     nomeFantasia: req.body.nomeServer,
     emailCoorporativa: req.body.emailServer,
+    cnpj: req.body.cnpjServer,
     situacaoLicensa: req.body.licensaServer,
   };
 
   adminModel
-    . atualizarEmpresa(idEmpresa, dados)
+    .atualizarEmpresa(idEmpresa, dados)
     .then((resultado) => {
       if(resultado.affectedRows === 0){
         return res.status(404).json({erro: "Empresa não encontrada"});
       }
-      res. status(200).json({mensagem: "Empresa atualizada com sucesso"});
+      res.status(200).json({mensagem: "Empresa atualizada com sucesso"});
     })
     .catch((erro) => {
       console.error("Erro ao atualizar empresa:", erro);
-      res.status(500). json({erro: erro.sqlMessage || erro.message});
+      res.status(500).json({erro: erro.sqlMessage || erro.message});
     });
 }
-
 function excluirEmpresa(req, res){
   const idEmpresa = req.params.id;
 
