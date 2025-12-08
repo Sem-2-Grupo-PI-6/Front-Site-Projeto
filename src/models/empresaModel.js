@@ -97,7 +97,7 @@ function listarUsuariosPaginado(idEmpresa, pagina, limite) {
       e.nomefantasia
       from tblUsuario u
       inner join tblEmpresa e on u.Empresa_idEmpresa = e.idEmpresa
-      where u.Empresa_idEmpresa = ?
+      where u.Empresa_idEmpresa = ? AND statusUsuario = 'Ativo'
       order by u.dtCriacao desc limit ? offset ?;
       `;
 
