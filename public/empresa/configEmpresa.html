@@ -132,7 +132,13 @@
               </div>
 
               <div class="form-actions">
-                <button type="button" class="btn-secondary" onclick="limparFormulario()">Cancelar</button>
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  onclick="limparFormulario()"
+                >
+                  Cancelar
+                </button>
                 <button type="submit" class="btn-primary">
                   ✓ Criar Usuário
                 </button>
@@ -155,7 +161,7 @@
                 <div class="profile-avatar-large" id="avatar-empresa">EV</div>
                 <div class="profile-info">
                   <h3 id="nome-empresa-display">Carregando...</h3>
-                  <p id="email-empresa-display">... </p>
+                  <p id="email-empresa-display">...</p>
                   <span class="badge badge-admin">Administrador Empresa</span>
                 </div>
               </div>
@@ -163,11 +169,7 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="profile-email">Email</label>
-                  <input
-                    type="email"
-                    id="profile-email"
-                    disabled
-                  />
+                  <input type="email" id="profile-email" disabled />
                   <small class="form-hint">Email não pode ser alterado</small>
                 </div>
               </div>
@@ -197,7 +199,9 @@
                   />
                 </div>
                 <div class="form-group">
-                  <label for="profile-confirm-password">Confirmar Nova Senha *</label>
+                  <label for="profile-confirm-password"
+                    >Confirmar Nova Senha *</label
+                  >
                   <input
                     type="password"
                     id="profile-confirm-password"
@@ -207,7 +211,13 @@
               </div>
 
               <div class="form-actions">
-                <button type="button" class="btn-secondary" onclick="limparSenhas()">Cancelar</button>
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  onclick="limparSenhas()"
+                >
+                  Cancelar
+                </button>
                 <button type="submit" class="btn-primary">
                   💾 Salvar Alterações
                 </button>
@@ -244,13 +254,27 @@
           </div>
 
           <div class="form-group">
-            <label for="edit-senha">Nova Senha (deixe em branco para manter)</label>
-            <input type="password" id="edit-senha" placeholder="Mínimo 8 caracteres" />
+            <label for="edit-senha"
+              >Nova Senha (deixe em branco para manter)</label
+            >
+            <input
+              type="password"
+              id="edit-senha"
+              placeholder="Mínimo 8 caracteres"
+            />
           </div>
 
           <div class="form-actions">
-            <button type="button" class="btn-secondary" onclick="fecharModalEdicao()">Cancelar</button>
-            <button type="submit" class="btn-primary">💾 Salvar Alterações</button>
+            <button
+              type="button"
+              class="btn-secondary"
+              onclick="fecharModalEdicao()"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primary">
+              💾 Salvar Alterações
+            </button>
           </div>
         </form>
       </div>
@@ -264,78 +288,85 @@
     </footer>
 
     <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const tabContents = document.querySelectorAll(".tab-content");
+      document.addEventListener("DOMContentLoaded", function () {
+        const tabButtons = document.querySelectorAll(".tab-btn");
+        const tabContents = document.querySelectorAll(".tab-content");
 
-  let paginaAtual = 1;
-  let totalPaginas = 1;
-  let empresaLogada = null;
+        let paginaAtual = 1;
+        let totalPaginas = 1;
+        let empresaLogada = null;
 
-  const empresaLogadaStr = sessionStorage.getItem("EMPRESA_LOGADA");
-  
-  if (empresaLogadaStr) {
-    empresaLogada = JSON.parse(empresaLogadaStr);
-    console.log(" Empresa logada:", empresaLogada);
-    
-    if (empresaLogada.email) {
-      document.getElementById("profile-email").value = empresaLogada.email;
-      document.getElementById("email-empresa-display").textContent = empresaLogada.email;
-    }
-    
-    if (empresaLogada.nomeFantasia) {
-      document.getElementById("nome-empresa-display").textContent = empresaLogada.nomeFantasia;
-    } else {
-      document.getElementById("nome-empresa-display").textContent = "Empresa";
-    }
-    
-    const iniciais = empresaLogada.nomeFantasia 
-      ? empresaLogada.nomeFantasia.substring(0, 2).toUpperCase() 
-      : empresaLogada.email 
-        ? empresaLogada.email.substring(0, 2).toUpperCase() 
-        : "EM";
-    document.getElementById("avatar-empresa").textContent = iniciais;
-    
-  } else {
-    alert(" Sessão expirada. Faça login novamente.");
-    window.location.href = "./login.html";
-    return;
-  }
+        const empresaLogadaStr = sessionStorage.getItem("EMPRESA_LOGADA");
 
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const targetTab = button.getAttribute("data-tab");
-      tabButtons.forEach((btn) => btn.classList.remove("active"));
-      tabContents.forEach((content) => content.classList.remove("active"));
-      button.classList.add("active");
-      document.getElementById(`tab-${targetTab}`).classList.add("active");
-    });
-  });
+        if (empresaLogadaStr) {
+          empresaLogada = JSON.parse(empresaLogadaStr);
+          console.log(" Empresa logada:", empresaLogada);
 
-  carregarUsuarios(1);
+          if (empresaLogada.email) {
+            document.getElementById("profile-email").value =
+              empresaLogada.email;
+            document.getElementById("email-empresa-display").textContent =
+              empresaLogada.email;
+          }
 
-  function carregarUsuarios(pagina) {
-    if (! empresaLogada || ! empresaLogada.idEmpresa) {
-      alert(" Empresa não identificada!");
-      return;
-    }
+          if (empresaLogada.nomeFantasia) {
+            document.getElementById("nome-empresa-display").textContent =
+              empresaLogada.nomeFantasia;
+          } else {
+            document.getElementById("nome-empresa-display").textContent =
+              "Empresa";
+          }
 
-    fetch(`/empresa/usuarios/listar/paginado?idEmpresa=${empresaLogada.idEmpresa}&pagina=${pagina}&limite=20`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erro ao carregar usuários");
+          const iniciais = empresaLogada.nomeFantasia
+            ? empresaLogada.nomeFantasia.substring(0, 2).toUpperCase()
+            : empresaLogada.email
+            ? empresaLogada.email.substring(0, 2).toUpperCase()
+            : "EM";
+          document.getElementById("avatar-empresa").textContent = iniciais;
+        } else {
+          alert(" Sessão expirada. Faça login novamente.");
+          window.location.href = "./login.html";
+          return;
         }
-        return res.json();
-      })
-      .then((data) => {
-        const { usuarios, paginacao } = data;
 
-        let tabelaContainer = document.querySelector(".users-table");
-        if (!tabelaContainer) {
-          const cardContent = document.querySelector("#tab-users .card");
-          tabelaContainer = document.createElement("table");
-          tabelaContainer.className = "users-table";
-          tabelaContainer.innerHTML = `
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const targetTab = button.getAttribute("data-tab");
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            tabContents.forEach((content) =>
+              content.classList.remove("active")
+            );
+            button.classList.add("active");
+            document.getElementById(`tab-${targetTab}`).classList.add("active");
+          });
+        });
+
+        carregarUsuarios(1);
+
+        function carregarUsuarios(pagina) {
+          if (!empresaLogada || !empresaLogada.idEmpresa) {
+            alert(" Empresa não identificada!");
+            return;
+          }
+
+          fetch(
+            `/empresa/usuarios/listar/paginado?idEmpresa=${empresaLogada.idEmpresa}&pagina=${pagina}&limite=20`
+          )
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Erro ao carregar usuários");
+              }
+              return res.json();
+            })
+            .then((data) => {
+              const { usuarios, paginacao } = data;
+
+              let tabelaContainer = document.querySelector(".users-table");
+              if (!tabelaContainer) {
+                const cardContent = document.querySelector("#tab-users .card");
+                tabelaContainer = document.createElement("table");
+                tabelaContainer.className = "users-table";
+                tabelaContainer.innerHTML = `
             <thead>
               <tr>
                 <th>Usuário</th>
@@ -348,346 +379,394 @@ document.addEventListener("DOMContentLoaded", function () {
             </thead>
             <tbody id="usuarios-tbody"></tbody>
           `;
-          
-          const paginationDiv = cardContent.querySelector(".pagination");
-          cardContent.insertBefore(tabelaContainer, paginationDiv);
-        }
 
-        const tbody = document.getElementById("usuarios-tbody");
-        tbody.innerHTML = "";
+                const paginationDiv = cardContent.querySelector(".pagination");
+                cardContent.insertBefore(tabelaContainer, paginationDiv);
+              }
 
-        paginaAtual = paginacao.paginaAtual;
-        totalPaginas = paginacao.totalPaginas;
+              const tbody = document.getElementById("usuarios-tbody");
+              tbody.innerHTML = "";
 
-        if (usuarios.length === 0) {
-          tbody.innerHTML =
-            '<tr><td colspan="6" style="text-align:center;">Nenhum usuário encontrado</td></tr>';
-          return;
-        }
+              paginaAtual = paginacao.paginaAtual;
+              totalPaginas = paginacao.totalPaginas;
 
-        usuarios.forEach((usuario) => {
-          const statusClass = usuario.statusUsuario === "Ativo" ? "active" : "inactive";
-          tbody.innerHTML += `
+              if (usuarios.length === 0) {
+                tbody.innerHTML =
+                  '<tr><td colspan="6" style="text-align:center;">Nenhum usuário encontrado</td></tr>';
+                return;
+              }
+
+              usuarios.forEach((usuario) => {
+                const statusClass =
+                  usuario.statusUsuario === "Ativo" || "Descontinuado"
+                    ? "Ativo"
+                    : "Descontinuado";
+                tbody.innerHTML += `
             <tr>
               <td>
                 <div class="user-info">
-                  <div class="user-avatar">${getIniciais(usuario.nomeUsuario)}</div>
+                  <div class="user-avatar">${getIniciais(
+                    usuario.nomeUsuario
+                  )}</div>
                   <span>${usuario.nomeUsuario}</span>
                 </div>
               </td>
               <td>${usuario.emailUsuario}</td>
               <td>${usuario.telefoneUsuario || "-"}</td>
-              <td><span class="status-dot ${statusClass}"></span> ${usuario.statusUsuario}</td>
+              <td><span class="status-dot ${statusClass}"></span> ${
+                  usuario.statusUsuario
+                }</td>
               <td>${formatarData(usuario.dtCriacao)}</td>
               <td>
                 <div class="table-actions">
-                  <button class="btn-icon btn-edit" title="Editar" onclick="abrirModalEdicao(${usuario.idUsuario})">✏️</button>
-                  <button class="btn-icon btn-delete" title="Excluir" onclick="excluirUsuario(${usuario.idUsuario}, '${usuario.nomeUsuario}')">🗑️</button>
+                  <button class="btn-icon btn-edit" title="Editar" onclick="abrirModalEdicao(${
+                    usuario.idUsuario
+                  })">✏️</button>
+                  <button class="btn-icon btn-delete" title="Excluir" onclick="excluirUsuario(${
+                    usuario.idUsuario
+                  }, '${usuario.nomeUsuario}')">🗑️</button>
                 </div>
               </td>
             </tr>
           `;
-        });
-        
-        atualizarPaginacao(paginacao);
-      })
-      .catch((err) => {
-        console.error(" Erro ao carregar usuários:", err);
-        alert("Erro ao carregar usuários: " + err.message);
-      });
-  }
+              });
 
-  function atualizarPaginacao(paginacao) {
-    const paginationInfo = document.querySelector(".pagination-info");
-    const btnAnterior = document.querySelector(".btn-pagination:first-child");
-    const btnProximo = document.querySelector(".btn-pagination:last-child");
-
-    paginationInfo.textContent = `Página ${paginacao.paginaAtual} de ${paginacao.totalPaginas} • ${paginacao.totalUsuarios} usuários`;
-
-    btnAnterior.disabled = ! paginacao.temAnterior;
-    btnProximo.disabled = !paginacao.temProxima;
-
-    btnAnterior.style.opacity = paginacao.temAnterior ? "1" : "0.5";
-    btnProximo.style.opacity = paginacao.temProxima ? "1" : "0.5";
-    btnAnterior.style.cursor = paginacao.temAnterior ? "pointer" : "not-allowed";
-    btnProximo.style.cursor = paginacao.temProxima ? "pointer" : "not-allowed";
-
-    btnAnterior.onclick = () => {
-      if (paginacao.temAnterior) {
-        carregarUsuarios(paginacao.paginaAtual - 1);
-      }
-    };
-
-    btnProximo.onclick = () => {
-      if (paginacao.temProxima) {
-        carregarUsuarios(paginacao.paginaAtual + 1);
-      }
-    };
-  }
-
-  window.abrirModalEdicao = function (idUsuario) {
-    if (! empresaLogada || !empresaLogada.idEmpresa) {
-      alert(" Empresa não identificada!");
-      return;
-    }
-
-    fetch(`/empresa/usuarios/${idUsuario}?idEmpresa=${empresaLogada.idEmpresa}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erro ao buscar usuário");
+              atualizarPaginacao(paginacao);
+            })
+            .catch((err) => {
+              console.error(" Erro ao carregar usuários:", err);
+              alert("Erro ao carregar usuários: " + err.message);
+            });
         }
-        return res.json();
-      })
-      .then((usuario) => {
-        document.getElementById("edit-id-usuario").value = usuario.idUsuario;
-        document.getElementById("edit-nome").value = usuario.nome;
-        document.getElementById("edit-email").value = usuario.email;
-        document.getElementById("edit-telefone").value = usuario.telefone || "";
-        document.getElementById("edit-senha").value = "";
 
-        document.getElementById("modal-editar-usuario").style.display = "flex";
-      })
-      .catch((err) => {
-        console.error(" Erro ao buscar usuário:", err);
-        alert("Erro ao carregar dados do usuário");
-      });
-  };
+        function atualizarPaginacao(paginacao) {
+          const paginationInfo = document.querySelector(".pagination-info");
+          const btnAnterior = document.querySelector(
+            ".btn-pagination:first-child"
+          );
+          const btnProximo = document.querySelector(
+            ".btn-pagination:last-child"
+          );
 
-  window.fecharModalEdicao = function () {
-    document.getElementById("modal-editar-usuario").style.display = "none";
-  };
+          paginationInfo.textContent = `Página ${paginacao.paginaAtual} de ${paginacao.totalPaginas} • ${paginacao.totalUsuarios} usuários`;
 
-document.getElementById("form-editar-usuario").addEventListener("submit", function (e) {
-  e.preventDefault();
+          btnAnterior.disabled = !paginacao.temAnterior;
+          btnProximo.disabled = !paginacao.temProxima;
 
-  const idUsuario = document. getElementById("edit-id-usuario").value;
-  const nome = document.getElementById("edit-nome").value.trim();
-  const telefone = document.getElementById("edit-telefone").value.trim();
-  const senha = document.getElementById("edit-senha").value.trim();
+          btnAnterior.style.opacity = paginacao.temAnterior ? "1" : "0.5";
+          btnProximo.style.opacity = paginacao.temProxima ? "1" : "0.5";
+          btnAnterior.style.cursor = paginacao.temAnterior
+            ? "pointer"
+            : "not-allowed";
+          btnProximo.style.cursor = paginacao.temProxima
+            ? "pointer"
+            : "not-allowed";
 
-  if (!nome && !telefone && !senha) {
-    alert(" Preencha pelo menos um campo para atualizar!");
-    return;
-  }
+          btnAnterior.onclick = () => {
+            if (paginacao.temAnterior) {
+              carregarUsuarios(paginacao.paginaAtual - 1);
+            }
+          };
 
-  const dados = {
-    idEmpresaServer: empresaLogada.idEmpresa,
-  };
-
-  if (nome) {
-    dados.nomeServer = nome;
-  }
-
-  if (telefone) {
-    dados.telefoneServer = telefone;
-  }
-
-  if (senha) {
-    if (senha.length < 8) {
-      alert(" A senha deve ter no mínimo 8 caracteres!");
-      return;
-    }
-    dados.senhaServer = senha;
-  }
-
-  console.log("Enviando dados:", dados);
-
-  fetch(`/empresa/usuarios/${idUsuario}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(dados),
-  })
-    .then((res) => {
-      if (! res.ok) {
-        return res.json().then((data) => {
-          throw new Error(data.erro || "Erro ao atualizar usuário");
-        });
-      }
-      return res.json();
-    })
-    .then((resultado) => {
-      alert("Usuário atualizado com sucesso!");
-      fecharModalEdicao();
-      carregarUsuarios(paginaAtual);
-    })
-    .catch((err) => {
-      console.error(" Erro ao atualizar usuário:", err);
-      alert(` ${err.message}`);
-    });
-});
-
-  window.excluirUsuario = function (idUsuario, nomeUsuario) {
-    if (! confirm(`Tem certeza que deseja excluir o usuário "${nomeUsuario}"?\n\nEsta ação não pode ser desfeita! `)) {
-      return;
-    }
-
-    fetch(`/empresa/usuarios/${idUsuario}?idEmpresa=${empresaLogada.idEmpresa}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Erro ao excluir usuário");
+          btnProximo.onclick = () => {
+            if (paginacao.temProxima) {
+              carregarUsuarios(paginacao.paginaAtual + 1);
+            }
+          };
         }
-        return res.json();
-      })
-      .then(() => {
-        alert(" Usuário excluído com sucesso!");
-        carregarUsuarios(paginaAtual);
-      })
-      .catch((err) => {
-        console.error(" Erro ao excluir usuário:", err);
-        alert(" Erro ao excluir usuário");
-      });
-  };
 
-  document.getElementById("form-criar-usuario").addEventListener("submit", function (e) {
-    e.preventDefault();
+        window.abrirModalEdicao = function (idUsuario) {
+          if (!empresaLogada || !empresaLogada.idEmpresa) {
+            alert(" Empresa não identificada!");
+            return;
+          }
 
-    const nome = document.getElementById("create-name").value;
-    const email = document.getElementById("create-email").value;
-    const senha = document.getElementById("create-password").value;
-    const confirmarSenha = document.getElementById("create-confirm").value;
+          fetch(
+            `/empresa/usuarios/${idUsuario}?idEmpresa=${empresaLogada.idEmpresa}`
+          )
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Erro ao buscar usuário");
+              }
+              return res.json();
+            })
+            .then((usuario) => {
+              document.getElementById("edit-id-usuario").value =
+                usuario.idUsuario;
+              document.getElementById("edit-nome").value = usuario.nome;
+              document.getElementById("edit-email").value = usuario.email;
+              document.getElementById("edit-telefone").value =
+                usuario.telefone || "";
+              document.getElementById("edit-senha").value = "";
 
-    if (senha !== confirmarSenha) {
-      alert(" As senhas não coincidem!");
-      return;
-    }
+              document.getElementById("modal-editar-usuario").style.display =
+                "flex";
+            })
+            .catch((err) => {
+              console.error(" Erro ao buscar usuário:", err);
+              alert("Erro ao carregar dados do usuário");
+            });
+        };
 
-    if (senha.length < 8) {
-      alert(" A senha deve ter no mínimo 8 caracteres!");
-      return;
-    }
+        window.fecharModalEdicao = function () {
+          document.getElementById("modal-editar-usuario").style.display =
+            "none";
+        };
 
-    fetch("/empresa/cadastrarUsuario", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nomeServer: nome,
-        emailServer: email,
-        senhaServer: senha,
-        idEmpresaServer: empresaLogada.idEmpresa,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((data) => {
-            throw new Error(data.erro || "Erro ao cadastrar usuário");
+        document
+          .getElementById("form-editar-usuario")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const idUsuario = document.getElementById("edit-id-usuario").value;
+            const nome = document.getElementById("edit-nome").value.trim();
+            const telefone = document
+              .getElementById("edit-telefone")
+              .value.trim();
+            const senha = document.getElementById("edit-senha").value.trim();
+
+            if (!nome && !telefone && !senha) {
+              alert(" Preencha pelo menos um campo para atualizar!");
+              return;
+            }
+
+            const dados = {
+              idEmpresaServer: empresaLogada.idEmpresa,
+            };
+
+            if (nome) {
+              dados.nomeServer = nome;
+            }
+
+            if (telefone) {
+              dados.telefoneServer = telefone;
+            }
+
+            if (senha) {
+              if (senha.length < 8) {
+                alert(" A senha deve ter no mínimo 8 caracteres!");
+                return;
+              }
+              dados.senhaServer = senha;
+            }
+
+            console.log("Enviando dados:", dados);
+
+            fetch(`/empresa/usuarios/${idUsuario}`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(dados),
+            })
+              .then((res) => {
+                if (!res.ok) {
+                  return res.json().then((data) => {
+                    throw new Error(data.erro || "Erro ao atualizar usuário");
+                  });
+                }
+                return res.json();
+              })
+              .then((resultado) => {
+                alert("Usuário atualizado com sucesso!");
+                fecharModalEdicao();
+                carregarUsuarios(paginaAtual);
+              })
+              .catch((err) => {
+                console.error(" Erro ao atualizar usuário:", err);
+                alert(` ${err.message}`);
+              });
+          });
+
+        window.excluirUsuario = function (idUsuario, nomeUsuario) {
+          if (
+            !confirm(
+              `Tem certeza que deseja excluir o usuário "${nomeUsuario}"?\n\nEsta ação não pode ser desfeita! `
+            )
+          ) {
+            return;
+          }
+
+          fetch(
+            `/empresa/usuarios/${idUsuario}?idEmpresa=${empresaLogada.idEmpresa}`,
+            {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+            }
+          )
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error("Erro ao excluir usuário");
+              }
+              return res.json();
+            })
+            .then(() => {
+              alert(" Usuário excluído com sucesso!");
+              carregarUsuarios(paginaAtual);
+            })
+            .catch((err) => {
+              console.error(" Erro ao excluir usuário:", err);
+              alert(" Erro ao excluir usuário");
+            });
+        };
+
+        document
+          .getElementById("form-criar-usuario")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const nome = document.getElementById("create-name").value;
+            const email = document.getElementById("create-email").value;
+            const senha = document.getElementById("create-password").value;
+            const confirmarSenha =
+              document.getElementById("create-confirm").value;
+
+            if (senha !== confirmarSenha) {
+              alert(" As senhas não coincidem!");
+              return;
+            }
+
+            if (senha.length < 8) {
+              alert(" A senha deve ter no mínimo 8 caracteres!");
+              return;
+            }
+
+            fetch("/empresa/cadastrarUsuario", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                nomeServer: nome,
+                emailServer: email,
+                senhaServer: senha,
+                idEmpresaServer: empresaLogada.idEmpresa,
+              }),
+            })
+              .then((res) => {
+                if (!res.ok) {
+                  return res.json().then((data) => {
+                    throw new Error(data.erro || "Erro ao cadastrar usuário");
+                  });
+                }
+                return res.json();
+              })
+              .then(() => {
+                alert(" Usuário cadastrado com sucesso!");
+                document.getElementById("form-criar-usuario").reset();
+                document.querySelector('[data-tab="users"]').click();
+                carregarUsuarios(1);
+              })
+              .catch((err) => {
+                console.error(" Erro ao cadastrar usuário:", err);
+                alert(` ${err.message}`);
+              });
+          });
+
+        document
+          .getElementById("form-perfil-empresa")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const senhaAtual = document.getElementById(
+              "profile-current-password"
+            ).value;
+            const novaSenha = document.getElementById(
+              "profile-new-password"
+            ).value;
+            const confirmarSenha = document.getElementById(
+              "profile-confirm-password"
+            ).value;
+
+            if (!senhaAtual) {
+              alert(" Digite sua senha atual!");
+              return;
+            }
+
+            if (novaSenha.length < 8) {
+              alert(" A nova senha deve ter no mínimo 8 caracteres!");
+              return;
+            }
+
+            if (novaSenha !== confirmarSenha) {
+              alert(" As senhas não coincidem!");
+              return;
+            }
+
+            fetch(`/empresa/${empresaLogada.idEmpresa}/atualizarSenha`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                novaSenhaServer: novaSenha,
+              }),
+            })
+              .then((res) => {
+                if (!res.ok) {
+                  return res.json().then((data) => {
+                    throw new Error(data.erro || "Erro ao atualizar senha");
+                  });
+                }
+                return res.json();
+              })
+              .then(() => {
+                alert(" Senha atualizada com sucesso!");
+                limparSenhas();
+              })
+              .catch((err) => {
+                console.error(" Erro ao atualizar senha:", err);
+                alert(` ${err.message}`);
+              });
+          });
+
+        function getIniciais(nome) {
+          if (!nome) return "";
+          return nome
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
+        }
+
+        function formatarData(dataStr) {
+          if (!dataStr) return "-";
+          const date = new Date(dataStr);
+          return date.toLocaleDateString("pt-BR");
+        }
+
+        window.limparFormulario = function () {
+          document.getElementById("form-criar-usuario").reset();
+        };
+
+        window.limparSenhas = function () {
+          document.getElementById("profile-current-password").value = "";
+          document.getElementById("profile-new-password").value = "";
+          document.getElementById("profile-confirm-password").value = "";
+        };
+
+        const searchInput = document.querySelector(".search-input");
+        if (searchInput) {
+          searchInput.addEventListener("input", function () {
+            const termo = this.value.toLowerCase();
+            const linhas = document.querySelectorAll("#usuarios-tbody tr");
+
+            linhas.forEach((linha) => {
+              const texto = linha.textContent.toLowerCase();
+              linha.style.display = texto.includes(termo) ? "" : "none";
+            });
           });
         }
-        return res.json();
-      })
-      .then(() => {
-        alert(" Usuário cadastrado com sucesso!");
-        document.getElementById("form-criar-usuario").reset();
-        document.querySelector('[data-tab="users"]').click();
-        carregarUsuarios(1);
-      })
-      .catch((err) => {
-        console.error(" Erro ao cadastrar usuário:", err);
-        alert(` ${err.message}`);
+
+        window.addEventListener("click", function (e) {
+          const modal = document.getElementById("modal-editar-usuario");
+          if (e.target === modal) {
+            fecharModalEdicao();
+          }
+        });
       });
-  });
 
-  document.getElementById("form-perfil-empresa").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const senhaAtual = document.getElementById("profile-current-password").value;
-    const novaSenha = document.getElementById("profile-new-password").value;
-    const confirmarSenha = document.getElementById("profile-confirm-password").value;
-
-    if (! senhaAtual) {
-      alert(" Digite sua senha atual!");
-      return;
-    }
-
-    if (novaSenha.length < 8) {
-      alert(" A nova senha deve ter no mínimo 8 caracteres!");
-      return;
-    }
-
-    if (novaSenha !== confirmarSenha) {
-      alert(" As senhas não coincidem!");
-      return;
-    }
-
-    fetch(`/empresa/${empresaLogada.idEmpresa}/atualizarSenha`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        novaSenhaServer: novaSenha,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          return res.json().then((data) => {
-            throw new Error(data.erro || "Erro ao atualizar senha");
-          });
+      function logout() {
+        if (confirm("Tem certeza que deseja sair?")) {
+          sessionStorage.clear();
+          window.location.href = "./login.html";
         }
-        return res.json();
-      })
-      .then(() => {
-        alert(" Senha atualizada com sucesso!");
-        limparSenhas();
-      })
-      .catch((err) => {
-        console.error(" Erro ao atualizar senha:", err);
-        alert(` ${err.message}`);
-      });
-  });
-
-  function getIniciais(nome) {
-    if (! nome) return "";
-    return nome
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
-  }
-
-  function formatarData(dataStr) {
-    if (!dataStr) return "-";
-    const date = new Date(dataStr);
-    return date.toLocaleDateString("pt-BR");
-  }
-
-  window.limparFormulario = function() {
-    document.getElementById("form-criar-usuario").reset();
-  };
-
-  window.limparSenhas = function() {
-    document.getElementById("profile-current-password").value = "";
-    document.getElementById("profile-new-password").value = "";
-    document.getElementById("profile-confirm-password").value = "";
-  };
-
-  const searchInput = document.querySelector(".search-input");
-  if (searchInput) {
-    searchInput.addEventListener("input", function () {
-      const termo = this.value.toLowerCase();
-      const linhas = document.querySelectorAll("#usuarios-tbody tr");
-
-      linhas.forEach((linha) => {
-        const texto = linha.textContent.toLowerCase();
-        linha.style.display = texto.includes(termo) ? "" : "none";
-      });
-    });
-  }
-
-  window.addEventListener("click", function (e) {
-    const modal = document.getElementById("modal-editar-usuario");
-    if (e.target === modal) {
-      fecharModalEdicao();
-    }
-  });
-});
-
-function logout() {
-  if (confirm("Tem certeza que deseja sair?")) {
-    sessionStorage.clear();
-    window.location.href = "./login.html";
-  }
-}
+      }
     </script>
   </body>
 </html>

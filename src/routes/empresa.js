@@ -26,20 +26,20 @@ router.put("/atualizar/:id", function (req, res) {
   empresaController.atualizarEmpresa(req, res);
 });
 
-router.get("/usuarios/listar/paginado", function(req, res){
+router.get("/usuarios/listar/paginado", function (req, res) {
   empresaController.listarUsuariosPaginado(req, res);
-})
+});
 
-router.get("/usuarios/:idUsuario", function(req, res){
+router.get("/usuarios/:idUsuario", function (req, res) {
   empresaController.buscarUsuarioPorId(req, res);
-})
+});
 
-router.put("/usuarios/:idUsuario", function(req, res){
+router.put("/usuarios/:idUsuario", function (req, res) {
   empresaController.atualizarUsuario(req, res);
-})
+});
 
-router.delete("/usuarios/:idUsuario", function(req, res){
+router.patch("/usuarios/:idUsuario", function (req, res) {
   empresaController.excluirUsuario(req, res);
-})
+});
 
 module.exports = router;

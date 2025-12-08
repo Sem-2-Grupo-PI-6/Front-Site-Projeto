@@ -81,7 +81,7 @@ function atualizarEmpresa(id, dados) {
   return database.executar(instrucaoSql);
 }
 
-function listarUsuariosPaginado(idEmpresa, pagina, limite){
+function listarUsuariosPaginado(idEmpresa, pagina, limite) {
   console.log("ACESSEI O EMPRESA MODEL - function listarUsuarioPaginado()");
 
   const offset = (pagina - 1) * limite;
@@ -93,18 +93,18 @@ function listarUsuariosPaginado(idEmpresa, pagina, limite){
       u.email as emailUsuario,
       u.telefone as telefoneUsuario,
       u.dtCriacao,
-      e.nomefantasia,
-      'Ativo' AS statusUsuario
+      u.statusUsuario as statusUsuario,
+      e.nomefantasia
       from tblUsuario u
       inner join tblEmpresa e on u.Empresa_idEmpresa = e.idEmpresa
       where u.Empresa_idEmpresa = ?
       order by u.dtCriacao desc limit ? offset ?;
       `;
 
-    return database.executar(instrucaoSql, [idEmpresa, limite, offset]);
+  return database.executar(instrucaoSql, [idEmpresa, limite, offset]);
 }
 
-function contarUsuariosEmpresa(idEmpresa,){
+function contarUsuariosEmpresa(idEmpresa) {
   console.log("ACESSEI O EMPRESA MODEL - function contarUsuariosEmpresa()");
 
   var instrucaoSql = `
@@ -112,11 +112,10 @@ function contarUsuariosEmpresa(idEmpresa,){
   from tblUsuario where Empresa_idEmpresa = ?;
   `;
 
-  return database.executar(instrucaoSql,  [idEmpresa]);
-
+  return database.executar(instrucaoSql, [idEmpresa]);
 }
 
-function buscarUsuarioPorId(idUsuario, idEmpresa){
+function buscarUsuarioPorId(idUsuario, idEmpresa) {
   console.log("ACESSEI O EMPRESA MODEL - function buscarUsuarioPorId()");
 
   var instrucaoSql = `
@@ -130,17 +129,15 @@ function buscarUsuarioPorId(idUsuario, idEmpresa){
     from tblUsuario u where u.idUsuario = ? and u.Empresa_idEmpresa = ?;
     `;
 
-    return database.executar(instrucaoSql,[idUsuario,idEmpresa]);
+  return database.executar(instrucaoSql, [idUsuario, idEmpresa]);
 }
 
-function atualizarUsuario(idUsuario, idEmpresa, dados){
+function atualizarUsuario(idUsuario, idEmpresa, dados) {
   console.log("ACESSEI O EMPRESA MODEL - function atualizarUsuario()");
-  
 
-const campos = [];
+  const campos = [];
 
-const valores = [];
-
+  const valores = [];
 
   if (dados.nome && dados.nome.trim() !== "") {
     campos.push("nome = ?");
@@ -153,40 +150,34 @@ const valores = [];
   }
 
   if (dados.senha && dados.senha.trim() !== "") {
-    campos. push("senha = ?");
+    campos.push("senha = ?");
     valores.push(dados.senha);
   }
 
-  
   if (campos.length === 0) {
     return Promise.reject(new Error("Nenhum campo válido para atualizar"));
   }
 
+  valores.push(idUsuario, idEmpresa);
 
-valores.push(idUsuario, idEmpresa);
-
-
-var instrucaoSql = `
+  var instrucaoSql = `
   update tblUsuario
   set ${campos.join(", ")}
   where idUsuario = ? and Empresa_idEmpresa = ?;
   `;
 
-
-return database.executar(instrucaoSql, valores);
+  return database.executar(instrucaoSql, valores);
 }
 
-function excluirUsuario(idUsuario, idEmpresa){
+function excluirUsuario(idUsuario, idEmpresa) {
   console.log("ACESSEI O EMPRESA MODEL - function excluirUsuario()");
 
   var instrucaoSql = `
-    delete from tblUsuario
-    where idUsuario = ? and Empresa_idEmpresa = ? ; 
-    `; 
+    UPDATE tblUsuario set statusUsuario = 'DESCONTINUADO' WHERE Empresa_idEmpresa = ${idEmpresa} and idUsuario = ${idUsuario};
+    `;
 
-  return database.executar(instrucaoSql, [idUsuario, idEmpresa])
+  return database.executar(instrucaoSql, [idUsuario, idEmpresa]);
 }
-
 
 module.exports = {
   autenticarEmpresa,
