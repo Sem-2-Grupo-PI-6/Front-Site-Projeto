@@ -9,7 +9,7 @@
     <script src="./js/monitoramento.js"></script>
     <style>
       .badge-padrao {
-        background: rgba(100, 100, 100, 0. 2);
+        background: rgba(100, 100, 100, 0.2);
         color: #666;
         padding: 2px 8px;
         border-radius: 12px;
@@ -51,10 +51,10 @@
           <p>Inteligência Estratégica Imobiliária</p>
         </header>
         <section class="session">
-          <figure>SC</figure>
+          <figure id="avatarEmpresa">SC</figure>
           <figcaption>
-            <h2 id="nomeUsuario">Sierra Capital</h2>
-            <span>Fundo de Investimento</span>
+            <h2 id="nomeUsuario">Carregando...</h2>
+            <span id="nomeEmpresa">Carregando...</span>
           </figcaption>
         </section>
         <nav aria-label="Primary">
@@ -71,7 +71,7 @@
           <h2>💡 Insight do Dia</h2>
           <p>
             Regiões com crescimento de PIB acima de 4% e Selic estável
-            apresentam ambiente favorável para novos empreendimentos. 
+            apresentam ambiente favorável para novos empreendimentos.
           </p>
         </section>
       </aside>
@@ -96,7 +96,7 @@
                 <span class="kpi-label">PIB Estado de SP</span>
                 <span class="kpi-badge">Anual</span>
               </div>
-              <div class="kpi-value">+3. 8<span class="kpi-unit">%</span></div>
+              <div class="kpi-value">+3.8<span class="kpi-unit">%</span></div>
               <div class="kpi-meta">
                 <span class="kpi-trend positive">↑ 0.6pp vs 2023</span>
                 <span class="kpi-description">Crescimento acima da média nacional</span>
@@ -143,7 +143,7 @@
               </div>
               <div class="kpi-value">21~30<span class="kpi-unit">Anos</span></div>
               <div class="kpi-meta">
-                <span class="kpi-trend positive">49. 30%</span>
+                <span class="kpi-trend positive">49.30%</span>
                 <span class="kpi-description">SP Capital</span>
               </div>
             </div>
@@ -466,24 +466,68 @@
           ],
         };
 
+        async function carregarDadosUsuarioLogado() {
+          if (! usuarioLogado || !usuarioLogado.idUsuario) {
+            console.error(' Usuário não está logado!');
+            return;
+          }
+
+          try {
+            const response = await fetch(`/usuarios/obterDados/${usuarioLogado.idUsuario}`);
+            
+            if (!response.ok) {
+              throw new Error('Erro ao carregar dados do usuário');
+            }
+
+            const dados = await response.json();
+            console.log(' Dados do usuário carregados:', dados);
+
+            document.getElementById('nomeUsuario').textContent = dados.nome || 'Usuário';
+
+            document.getElementById('nomeEmpresa').textContent = dados.nomeFantasia || 'Empresa';
+
+            const iniciais = gerarIniciais(dados.nomeFantasia);
+            document.getElementById('avatarEmpresa').textContent = iniciais;
+
+          } catch (erro) {
+            console.error(' Erro ao carregar dados do usuário:', erro);
+            document.getElementById('nomeUsuario').textContent = 'Erro ao carregar';
+            document.getElementById('nomeEmpresa').textContent = 'Erro ao carregar';
+          }
+        }
+
+        function gerarIniciais(nomeEmpresa) {
+          if (!nomeEmpresa) return 'US';
+          
+          const palavras = nomeEmpresa.trim().split(' ');
+          
+          if (palavras.length === 1) {
+            return palavras[0].substring(0, 2).toUpperCase();
+          }
+          
+          return (palavras[0][0] + palavras[palavras.length - 1][0]).toUpperCase();
+        }
+
       document.addEventListener("DOMContentLoaded", function () {
         usuarioLogado = JSON.parse(sessionStorage.getItem("USUARIO_LOGADO") || "{}");
 
         if (! usuarioLogado || !usuarioLogado.idUsuario) {
-          alert("⚠️ Usuário não autenticado!  Redirecionando para login.. .");
-          window. location.href = "login.html";
+          alert("⚠️ Usuário não autenticado!  Redirecionando para login...");
+          window.location.href = "login.html";
           return;
         }
 
         if (usuarioLogado.nome) {
-          document. getElementById("nomeUsuario").textContent = usuarioLogado. nome;
+          document.getElementById("nomeUsuario").textContent = usuarioLogado.nome;
         }
+
+        carregarDadosUsuarioLogado();
 
         console.log("👤 Usuário logado:", usuarioLogado);
 
         inicializarGraficos();
 
-        carregarZonasDisponiveis(). then(() => {
+        carregarZonasDisponiveis().then(() => {
           aplicarFiltroAtivo();
         });
 
@@ -515,7 +559,7 @@
           const zonesParam = idsZonas.join(",");
           const response = await fetch(`/dados/dashboard?zonas=${zonesParam}`);
           if (! response.ok) throw new Error("Erro ao buscar dados da dashboard");
-          const dados = await response. json();
+          const dados = await response.json();
           console.log("📊 Dados recebidos:", dados);
           return dados;
         } catch (erro) {
@@ -571,7 +615,7 @@ function inicializarGraficos() {
     scales: {
       x: {
         grid: { 
-          display: false // Remove linhas verticais
+          display: false 
         },
         ticks: { 
           color: "#6b7280", 
@@ -583,7 +627,7 @@ function inicializarGraficos() {
       },
       y: {
         grid: { 
-          color: "rgba(5, 150, 105, 0. 1)", // Linhas horizontais suaves em verde
+          color: "rgba(5, 150, 105, 0.1)", 
           drawBorder: false,
           lineWidth: 1
         },
@@ -606,14 +650,14 @@ function inicializarGraficos() {
       datasets: [],
     },
     options: {
-      ... defaultOptions,
+      ...defaultOptions,
       interaction: { intersect: false, mode: "index" },
       scales: {
-        ... defaultOptions.scales,
+        ...defaultOptions.scales,
         y: {
-          ... defaultOptions.scales. y,
+          ...defaultOptions.scales.y,
           ticks: { 
-            ... defaultOptions.scales. y.ticks, 
+            ...defaultOptions.scales.y.ticks, 
             callback: (v) => `${v}%` 
           },
         },
@@ -630,13 +674,13 @@ function inicializarGraficos() {
     options: {
       ...defaultOptions,
       scales: {
-        ...defaultOptions. scales,
+        ...defaultOptions.scales,
         y: {
-          ... defaultOptions.scales. y,
+          ...defaultOptions.scales.y,
           beginAtZero: true,
           ticks: { 
             ...defaultOptions.scales.y.ticks, 
-            callback: (v) => v. toLocaleString() 
+            callback: (v) => v.toLocaleString() 
           },
         },
       },
@@ -663,12 +707,12 @@ function inicializarGraficos() {
           ...defaultOptions.scales.x, 
           max: 100,
           grid: {
-            color: "rgba(5, 150, 105, 0. 1)",
+            color: "rgba(5, 150, 105, 0.1)",
             drawBorder: false,
           }
         },
         y: { 
-          ...defaultOptions. scales.y, 
+          ...defaultOptions.scales.y, 
           grid: { display: false } 
         },
       },
@@ -683,34 +727,34 @@ function inicializarGraficos() {
           .map((r) => zonasMapeamento[r])
           .filter((id) => id);
 
-        const dadosBanco = await buscarDadosDashboard(idsZonas. length > 0 ? idsZonas : [1, 2, 3]);
+        const dadosBanco = await buscarDadosDashboard(idsZonas.length > 0 ? idsZonas : [1, 2, 3]);
 
         if (dadosBanco) {
           await atualizarKPIs(config, dadosBanco);
 
           if (config.graficos.pib.enabled && config.graficos.pib.regioes.length > 0) {
-            await atualizarGraficoPIB(config. graficos.pib. regioes, dadosBanco);
+            await atualizarGraficoPIB(config.graficos.pib.regioes, dadosBanco);
             document.querySelector(".chart-card:nth-child(1)").style.display = "flex";
           } else {
             document.querySelector(".chart-card:nth-child(1)").style.display = "none";
           }
 
-          if (config.graficos. setor.enabled && config.graficos.setor.setores.length > 0) {
-            await atualizarGraficoSetores(config.graficos. setor.setores, dadosBanco);
-            document. querySelector(".chart-card:nth-child(2)").style. display = "flex";
+          if (config.graficos.setor.enabled && config.graficos.setor.setores.length > 0) {
+            await atualizarGraficoSetores(config.graficos.setor.setores, dadosBanco);
+            document.querySelector(".chart-card:nth-child(2)").style.display = "flex";
           } else {
             document.querySelector(".chart-card:nth-child(2)").style.display = "none";
           }
 
           if (config.graficos.atratividade.enabled && config.graficos.atratividade.regioes.length > 0) {
-            await atualizarGraficoAtratividade(config.graficos. atratividade. regioes);
+            await atualizarGraficoAtratividade(config.graficos.atratividade.regioes);
             document.querySelector(".chart-card:nth-child(3)").style.display = "flex";
           } else {
             document.querySelector(".chart-card:nth-child(3)").style.display = "none";
           }
         }
 
-        console.log("✅ Dashboard atualizada!");
+        console.log(" Dashboard atualizada!");
       }
 
 
@@ -720,11 +764,11 @@ function inicializarGraficos() {
 
         if (config.kpis.economico.enabled) {
           kpiCards[0].style.display = "flex";
-          kpiCards[0].querySelector(".kpi-label").textContent = labelsKPIs[config.kpis. economico.value];
+          kpiCards[0].querySelector(".kpi-label").textContent = labelsKPIs[config.kpis.economico.value];
 
-          if (dadosBanco.pib && dadosBanco. pib. length > 0) {
-            const pibMedio = dadosBanco.pib.reduce((acc, item) => acc + parseFloat(item. valor || 0), 0) / dadosBanco.pib. length;
-            kpiCards[0]. querySelector(".kpi-value").innerHTML = `+${pibMedio. toFixed(1)}<span class="kpi-unit">%</span>`;
+          if (dadosBanco.pib && dadosBanco.pib.length > 0) {
+            const pibMedio = dadosBanco.pib.reduce((acc, item) => acc + parseFloat(item.valor || 0), 0) / dadosBanco.pib.length;
+            kpiCards[0].querySelector(".kpi-value").innerHTML = `+${pibMedio.toFixed(1)}<span class="kpi-unit">%</span>`;
           }
         } else {
           kpiCards[0].style.display = "none";
@@ -732,28 +776,28 @@ function inicializarGraficos() {
 
 
         if (config.kpis.setor.enabled) {
-          kpiCards[1]. style.display = "flex";
-          kpiCards[1]. querySelector(".kpi-label").textContent = labelsKPIs[config.kpis.setor. value];
+          kpiCards[1].style.display = "flex";
+          kpiCards[1].querySelector(".kpi-label").textContent = labelsKPIs[config.kpis.setor.value];
 
-          if (config.kpis. setor.value === "construcao" && dadosBanco.construcaoAtual) {
-            const valor = parseFloat(dadosBanco.construcaoAtual. valorPib || 0);
+          if (config.kpis.setor.value === "construcao" && dadosBanco.construcaoAtual) {
+            const valor = parseFloat(dadosBanco.construcaoAtual.valorPib || 0);
             kpiCards[1].querySelector(".kpi-value").innerHTML = `+${valor.toFixed(1)}<span class="kpi-unit">%</span>`;
           } else if (config.kpis.setor.value === "servicos" && dadosBanco.servicosAtual) {
             const valor = parseFloat(dadosBanco.servicosAtual.valorServico || 0);
             kpiCards[1].querySelector(".kpi-value").innerHTML = `+${valor.toFixed(1)}<span class="kpi-unit">%</span>`;
           }
         } else {
-          kpiCards[1].style. display = "none";
+          kpiCards[1].style.display = "none";
         }
 
 
         if (config.kpis.financeiro.enabled) {
-          kpiCards[2]. style.display = "flex";
-          kpiCards[2]. querySelector(".kpi-label").textContent = labelsKPIs[config.kpis.financeiro. value];
+          kpiCards[2].style.display = "flex";
+          kpiCards[2].querySelector(".kpi-label").textContent = labelsKPIs[config.kpis.financeiro.value];
 
-          if (config.kpis. financeiro.value === "selic" && dadosBanco. selic) {
-            const valor = parseFloat(dadosBanco.selic. valorTaxa || 0);
-            kpiCards[2].querySelector(".kpi-value"). innerHTML = `${valor.toFixed(2)}<span class="kpi-unit">%</span>`;
+          if (config.kpis.financeiro.value === "selic" && dadosBanco.selic) {
+            const valor = parseFloat(dadosBanco.selic.valorTaxa || 0);
+            kpiCards[2].querySelector(".kpi-value").innerHTML = `${valor.toFixed(2)}<span class="kpi-unit">%</span>`;
             kpiCards[2].querySelector(".kpi-description").textContent = "Taxa básica de juros";
           } else if (config.kpis.financeiro.value === "inflacao" && dadosBanco.inflacao) {
             const valor = parseFloat(dadosBanco.inflacao.valorTaxa || 0);
@@ -761,29 +805,29 @@ function inicializarGraficos() {
             kpiCards[2].querySelector(".kpi-description").textContent = "Índice IPCA";
           }
         } else {
-          kpiCards[2].style. display = "none";
+          kpiCards[2].style.display = "none";
         }
 
-        if (config.kpis. demo.enabled) {
+        if (config.kpis.demo.enabled) {
           kpiCards[3].style.display = "flex";
           kpiCards[3].querySelector(".kpi-label").textContent = labelsKPIs[config.kpis.demo.value];
 
-          const primeiraZona = config.graficos.pib. regioes[0];
+          const primeiraZona = config.graficos.pib.regioes[0];
           const idZona = zonasMapeamento[primeiraZona];
 
           if (idZona) {
             const demografia = await buscarDemografia(idZona);
             if (demografia) {
-              if (config.kpis. demo.value === "faixa-etaria") {
+              if (config.kpis.demo.value === "faixa-etaria") {
                 const idade = parseFloat(demografia.idadeMedia || 0);
-                kpiCards[3]. querySelector(".kpi-value").innerHTML = `${Math.round(idade)}<span class="kpi-unit">Anos</span>`;
+                kpiCards[3].querySelector(".kpi-value").innerHTML = `${Math.round(idade)}<span class="kpi-unit">Anos</span>`;
                 kpiCards[3].querySelector(".kpi-description").textContent = "Idade média";
-              } else if (config.kpis.demo. value === "densidade") {
+              } else if (config.kpis.demo.value === "densidade") {
                 const densidade = parseFloat(demografia.densidadeDemografico || 0);
-                kpiCards[3].querySelector(".kpi-value").innerHTML = `${densidade. toFixed(0)}<span class="kpi-unit">hab/km²</span>`;
-                kpiCards[3]. querySelector(".kpi-description").textContent = "Densidade demográfica";
+                kpiCards[3].querySelector(".kpi-value").innerHTML = `${densidade.toFixed(0)}<span class="kpi-unit">hab/km²</span>`;
+                kpiCards[3].querySelector(".kpi-description").textContent = "Densidade demográfica";
               } else if (config.kpis.demo.value === "renda-media") {
-                kpiCards[3]. querySelector(".kpi-value").innerHTML = `R$ 4,2<span class="kpi-unit">mil</span>`;
+                kpiCards[3].querySelector(".kpi-value").innerHTML = `R$ 4,2<span class="kpi-unit">mil</span>`;
                 kpiCards[3].querySelector(".kpi-description").textContent = "Renda média mensal";
               }
             }
@@ -797,9 +841,9 @@ function inicializarGraficos() {
       async function atualizarGraficoPIB(regioes, dadosBanco) {
         const dadosPorZona = {};
         if (dadosBanco.pib) {
-          dadosBanco.pib. forEach((item) => {
+          dadosBanco.pib.forEach((item) => {
             if (! dadosPorZona[item.zona_nome]) dadosPorZona[item.zona_nome] = [];
-            dadosPorZona[item. zona_nome].push(parseFloat(item.valor || 0));
+            dadosPorZona[item.zona_nome].push(parseFloat(item.valor || 0));
           });
         }
 
@@ -810,15 +854,15 @@ function inicializarGraficos() {
 
           return {
             label: nomeZona,
-            data: dados. slice(0, 8),
-            borderColor: CORES_GRAFICOS. primarias[index],
+            data: dados.slice(0, 8),
+            borderColor: CORES_GRAFICOS.primarias[index],
             backgroundColor: CORES_GRAFICOS.fundos[index],
             tension: 0.4,
             fill: true,
             borderWidth: 3,
             pointRadius: 5,
             pointHoverRadius: 8,
-            pointBackgroundColor: CORES_GRAFICOS. primarias[index],
+            pointBackgroundColor: CORES_GRAFICOS.primarias[index],
             pointBorderColor: "#fff",
             pointBorderWidth: 2,
           };
@@ -835,18 +879,18 @@ function inicializarGraficos() {
       }
 
       async function atualizarGraficoSetores(setores, dadosBanco) {
-        const setoresValidos = setores. filter((s) => s === "construcao" || s === "servicos");
+        const setoresValidos = setores.filter((s) => s === "construcao" || s === "servicos");
 
         const datasets = setoresValidos.map((setor) => {
           let dados = [];
           let labels = [];
 
-          if (setor === "construcao" && dadosBanco.pibConstrucao && dadosBanco. pibConstrucao.length > 0) {
+          if (setor === "construcao" && dadosBanco.pibConstrucao && dadosBanco.pibConstrucao.length > 0) {
             dados = dadosBanco.pibConstrucao.map((item) => parseFloat(item.valorPib || 0));
-            labels = dadosBanco. pibConstrucao.map((item) => `${item.trimestre} ${item.ano}`);
+            labels = dadosBanco.pibConstrucao.map((item) => `${item.trimestre} ${item.ano}`);
           } else if (setor === "servicos" && dadosBanco.pibServicos && dadosBanco.pibServicos.length > 0) {
             dados = dadosBanco.pibServicos.map((item) => parseFloat(item.valorServico || 0));
-            labels = dadosBanco. pibServicos. map((item) => `${item.trimestre} ${item. ano}`);
+            labels = dadosBanco.pibServicos.map((item) => `${item.trimestre} ${item.ano}`);
           }
 
           if (dados.length === 0) {
@@ -854,11 +898,11 @@ function inicializarGraficos() {
             labels = ["Q1 23", "Q2 23", "Q3 23", "Q4 23", "Q1 24", "Q2 24"];
           }
 
-          valorAdicionadoChartInstance.data. labels = labels. slice(0, 6);
+          valorAdicionadoChartInstance.data.labels = labels.slice(0, 6);
 
           return {
             label: labelsSetores[setor],
-            data: dados. slice(0, 6),
+            data: dados.slice(0, 6),
             backgroundColor: CORES_GRAFICOS.setores[setor],
             borderColor: CORES_GRAFICOS.setores[setor],
             borderWidth: 0,
@@ -867,7 +911,7 @@ function inicializarGraficos() {
           };
         });
 
-        valorAdicionadoChartInstance.data. datasets = datasets;
+        valorAdicionadoChartInstance.data.datasets = datasets;
 
 
         const legendContainer = document.querySelector(".chart-card:nth-child(2) .chart-legend");
@@ -879,18 +923,18 @@ function inicializarGraficos() {
       }
 
 async function atualizarGraficoAtratividade(regioes) {
-  const idsZonas = regioes.map((r) => zonasMapeamento[r]). filter((id) => id);
+  const idsZonas = regioes.map((r) => zonasMapeamento[r]).filter((id) => id);
   const dadosAtratividade = await buscarAtratividade(idsZonas);
 
   let labels = [];
   let data = [];
 
-  if (dadosAtratividade && dadosAtratividade. length > 0) {
+  if (dadosAtratividade && dadosAtratividade.length > 0) {
     labels = dadosAtratividade.map((item) => item.nome);
     data = dadosAtratividade.map((item) => Math.min(100, Math.round(parseFloat(item.score || 0))));
   } else {
-    labels = regioes. map((r) => labelsRegioes[r]);
-    data = [82, 75, 88, 79, 71, 76]. slice(0, regioes.length);
+    labels = regioes.map((r) => labelsRegioes[r]);
+    data = [82, 75, 88, 79, 71, 76].slice(0, regioes.length);
   }
 
 
@@ -904,14 +948,14 @@ async function atualizarGraficoAtratividade(regioes) {
   });
 
   atratividadeChartInstance.data.labels = labels;
-  atratividadeChartInstance.data. datasets[0].data = data;
-  atratividadeChartInstance.data. datasets[0].backgroundColor = backgroundColor;
+  atratividadeChartInstance.data.datasets[0].data = data;
+  atratividadeChartInstance.data.datasets[0].backgroundColor = backgroundColor;
   atratividadeChartInstance.update();
 }
 
       async function carregarFiltros() {
         try {
-          const response = await fetch(`/filtros/listar/${usuarioLogado. idUsuario}`);
+          const response = await fetch(`/filtros/listar/${usuarioLogado.idUsuario}`);
           if (response.status === 204) return await criarFiltroPadrao();
           if (! response.ok) throw new Error("Erro ao carregar filtros");
           return await response.json();
@@ -958,7 +1002,7 @@ async function atualizarGraficoAtratividade(regioes) {
       async function aplicarFiltroAtivo() {
         const filtroAtivo = await buscarFiltroAtivo();
         if (! filtroAtivo) {
-          console. log("⚠️ Nenhum filtro ativo, aplicando padrão");
+          console.log("⚠️ Nenhum filtro ativo, aplicando padrão");
           await atualizarDashboardComFiltro(getConfigPadrao());
           return;
         }
@@ -1008,22 +1052,22 @@ async function atualizarGraficoAtratividade(regioes) {
         container.innerHTML = filtros
           .map((filtro) => {
             let config = filtro.config;
-            if (typeof config === "string") config = JSON. parse(config);
+            if (typeof config === "string") config = JSON.parse(config);
 
-            const ehFiltroPadrao = filtro.nomeFiltro. includes("Filtro Padrão");
+            const ehFiltroPadrao = filtro.nomeFiltro.includes("Filtro Padrão");
 
             return `
               <div class="filtro-item ${filtro.ativo ?  "ativo" : ""}">
                 <div class="filtro-info">
                   <div class="filtro-header">
-                    <span class="filtro-nome">${filtro. nomeFiltro}</span>
+                    <span class="filtro-nome">${filtro.nomeFiltro}</span>
                     ${filtro.ativo ?  '<span class="badge-ativo">✓ Ativo</span>' : ""}
                     ${ehFiltroPadrao ? '<span class="badge-padrao">🔒 Sistema</span>' : ""}
                   </div>
                   <span class="filtro-detalhes">${getResumoFiltro(config)}</span>
                 </div>
                 <div class="filtro-actions">
-                  ${! filtro.ativo ?  `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro. idfiltroUsuario})" title="Ativar">✓</button>` : ""}
+                  ${! filtro.ativo ?  `<button class="btn-action btn-ativar" onclick="ativarFiltro(${filtro.idfiltroUsuario})" title="Ativar">✓</button>` : ""}
                   ${!ehFiltroPadrao ? `<button class="btn-action btn-editar" onclick="editarFiltro(${filtro.idfiltroUsuario})" title="Editar">✏️</button>` : ""}
                   ${!ehFiltroPadrao ?  `<button class="btn-action btn-deletar" onclick="deletarFiltro(${filtro.idfiltroUsuario})" title="Excluir">🗑️</button>` : ""}
                 </div>
@@ -1034,8 +1078,8 @@ async function atualizarGraficoAtratividade(regioes) {
       }
 
       function getResumoFiltro(config) {
-        const kpisAtivos = Object.values(config.kpis).filter((k) => k.enabled). length;
-        const graficosAtivos = Object.values(config. graficos).filter((g) => g. enabled).length;
+        const kpisAtivos = Object.values(config.kpis).filter((k) => k.enabled).length;
+        const graficosAtivos = Object.values(config.graficos).filter((g) => g.enabled).length;
         return `${kpisAtivos} KPIs • ${graficosAtivos} Gráficos`;
       }
 
@@ -1061,7 +1105,7 @@ async function atualizarGraficoAtratividade(regioes) {
         }
 
         filtroAtualId = id;
-        document. getElementById("filtroNome").value = filtro.nomeFiltro. replace(/[📌✏️➕]/g, ""). trim();
+        document.getElementById("filtroNome").value = filtro.nomeFiltro.replace(/[📌✏️➕]/g, "").trim();
         document.getElementById("modalTitle").textContent = "✏️ Editar Filtro";
 
         let config = filtro.config;
@@ -1069,7 +1113,7 @@ async function atualizarGraficoAtratividade(regioes) {
 
         carregarConfigNoModal(config);
         fecharGerenciarFiltros();
-        document.getElementById("editarFiltrosModal").classList. add("active");
+        document.getElementById("editarFiltrosModal").classList.add("active");
       }
 
       async function ativarFiltro(id) {
@@ -1087,16 +1131,16 @@ async function atualizarGraficoAtratividade(regioes) {
 
           const filtros = await carregarFiltros();
           const filtro = filtros.find((f) => f.idfiltroUsuario === id);
-          mostrarToast(`✓ Filtro "${filtro?. nomeFiltro}" ativado! `);
+          mostrarToast(`✓ Filtro "${filtro?.nomeFiltro}" ativado! `);
         } catch (erro) {
           console.error("Erro ao ativar filtro:", erro);
-          alert("❌ Erro ao ativar filtro.");
+          alert(" Erro ao ativar filtro.");
         }
       }
 
       async function deletarFiltro(id) {
         const filtros = await carregarFiltros();
-        const filtro = filtros. find((f) => f.idfiltroUsuario === id);
+        const filtro = filtros.find((f) => f.idfiltroUsuario === id);
 
         if (! filtro) return;
 
@@ -1116,15 +1160,15 @@ async function atualizarGraficoAtratividade(regioes) {
 
           await renderizarFiltrosSalvos();
           await aplicarFiltroAtivo();
-          mostrarToast("✅ Filtro excluído!");
+          mostrarToast(" Filtro excluído!");
         } catch (erro) {
           console.error("Erro ao deletar filtro:", erro);
-          alert("❌ Erro ao deletar filtro.");
+          alert(" Erro ao deletar filtro.");
         }
       }
 
       async function salvarFiltro() {
-        const nome = document.getElementById("filtroNome"). value. trim();
+        const nome = document.getElementById("filtroNome").value.trim();
 
         if (!nome) {
           alert("⚠️ Digite um nome para o filtro!");
@@ -1139,10 +1183,10 @@ async function atualizarGraficoAtratividade(regioes) {
             const response = await fetch(`/filtros/atualizar/${filtroAtualId}`, {
               method: "PUT",
               headers: { "Content-Type": "application/json" },
-              body: JSON. stringify({ idUserServer: usuarioLogado.idUsuario, nomeServer: nome, configServer: config }),
+              body: JSON.stringify({ idUserServer: usuarioLogado.idUsuario, nomeServer: nome, configServer: config }),
             });
             if (! response.ok) throw new Error("Erro ao atualizar filtro");
-            mostrarToast("✅ Filtro atualizado!");
+            mostrarToast(" Filtro atualizado!");
           } else {
             const response = await fetch("/filtros/criar", {
               method: "POST",
@@ -1150,24 +1194,24 @@ async function atualizarGraficoAtratividade(regioes) {
               body: JSON.stringify({ idUserServer: usuarioLogado.idUsuario, nomeServer: nome, configServer: config }),
             });
             if (! response.ok) throw new Error("Erro ao criar filtro");
-            mostrarToast("✅ Novo filtro criado!");
+            mostrarToast(" Novo filtro criado!");
           }
 
           fecharEditarFiltros();
           await abrirGerenciarFiltros();
         } catch (erro) {
-          console. error("Erro ao salvar filtro:", erro);
-          alert("❌ Erro ao salvar filtro.");
+          console.error("Erro ao salvar filtro:", erro);
+          alert(" Erro ao salvar filtro.");
         }
       }
 
       function carregarConfigNoModal(config) {
         document.getElementById("kpi-economico-enable").checked = config.kpis.economico.enabled;
-        document.getElementById("kpi-economico"). value = config.kpis.economico.value;
-        document.getElementById("kpi-setor-enable").checked = config.kpis. setor.enabled;
-        document.getElementById("kpi-setor").value = config.kpis. setor.value;
-        document.getElementById("kpi-financeiro-enable").checked = config.kpis.financeiro. enabled;
-        document.getElementById("kpi-financeiro").value = config.kpis.financeiro. value;
+        document.getElementById("kpi-economico").value = config.kpis.economico.value;
+        document.getElementById("kpi-setor-enable").checked = config.kpis.setor.enabled;
+        document.getElementById("kpi-setor").value = config.kpis.setor.value;
+        document.getElementById("kpi-financeiro-enable").checked = config.kpis.financeiro.enabled;
+        document.getElementById("kpi-financeiro").value = config.kpis.financeiro.value;
         document.getElementById("kpi-demo-enable").checked = config.kpis.demo.enabled;
         document.getElementById("kpi-demo").value = config.kpis.demo.value;
 
@@ -1177,13 +1221,13 @@ async function atualizarGraficoAtratividade(regioes) {
         });
 
         document.getElementById("grafico-setor-enable").checked = config.graficos.setor.enabled;
-        document. querySelectorAll('input[name="setor"]').forEach((cb) => {
-          cb.checked = config. graficos.setor.setores.includes(cb.value);
+        document.querySelectorAll('input[name="setor"]').forEach((cb) => {
+          cb.checked = config.graficos.setor.setores.includes(cb.value);
         });
 
-        document. getElementById("grafico-atratividade-enable").checked = config.graficos.atratividade.enabled;
-        document. querySelectorAll('input[name="atratividade-region"]').forEach((cb) => {
-          cb.checked = config.graficos. atratividade. regioes.includes(cb.value);
+        document.getElementById("grafico-atratividade-enable").checked = config.graficos.atratividade.enabled;
+        document.querySelectorAll('input[name="atratividade-region"]').forEach((cb) => {
+          cb.checked = config.graficos.atratividade.regioes.includes(cb.value);
         });
       }
 
@@ -1192,13 +1236,13 @@ async function atualizarGraficoAtratividade(regioes) {
           kpis: {
             economico: { enabled: document.getElementById("kpi-economico-enable").checked, value: document.getElementById("kpi-economico").value },
             setor: { enabled: document.getElementById("kpi-setor-enable").checked, value: document.getElementById("kpi-setor").value },
-            financeiro: { enabled: document.getElementById("kpi-financeiro-enable").checked, value: document. getElementById("kpi-financeiro").value },
+            financeiro: { enabled: document.getElementById("kpi-financeiro-enable").checked, value: document.getElementById("kpi-financeiro").value },
             demo: { enabled: document.getElementById("kpi-demo-enable").checked, value: document.getElementById("kpi-demo").value },
           },
           graficos: {
             pib: {
               enabled: document.getElementById("grafico-pib-enable").checked,
-              regioes: Array.from(document. querySelectorAll('input[name="pib-region"]:checked')).map((cb) => cb.value),
+              regioes: Array.from(document.querySelectorAll('input[name="pib-region"]:checked')).map((cb) => cb.value),
             },
             setor: {
               enabled: document.getElementById("grafico-setor-enable").checked,
@@ -1206,7 +1250,7 @@ async function atualizarGraficoAtratividade(regioes) {
             },
             atratividade: {
               enabled: document.getElementById("grafico-atratividade-enable").checked,
-              regioes: Array. from(document.querySelectorAll('input[name="atratividade-region"]:checked')).map((cb) => cb.value),
+              regioes: Array.from(document.querySelectorAll('input[name="atratividade-region"]:checked')).map((cb) => cb.value),
             },
           },
         };
@@ -1215,7 +1259,7 @@ async function atualizarGraficoAtratividade(regioes) {
       function restaurarPadroes() {
         if (confirm("🔄 Restaurar configurações padrão?")) {
           carregarConfigNoModal(getConfigPadrao());
-          mostrarToast("✅ Configurações restauradas!");
+          mostrarToast(" Configurações restauradas!");
         }
       }
 
@@ -1248,15 +1292,15 @@ async function atualizarGraficoAtratividade(regioes) {
       }
 
       function configurarEventosModais() {
-        document.getElementById("gerenciarFiltrosModal")?. addEventListener("click", function (e) {
-          if (e. target === this) fecharGerenciarFiltros();
+        document.getElementById("gerenciarFiltrosModal")?.addEventListener("click", function (e) {
+          if (e.target === this) fecharGerenciarFiltros();
         });
 
         document.getElementById("editarFiltrosModal")?.addEventListener("click", function (e) {
           if (e.target === this) fecharEditarFiltros();
         });
 
-        document. addEventListener("keydown", function (e) {
+        document.addEventListener("keydown", function (e) {
           if (e.key === "Escape") {
             if (document.getElementById("editarFiltrosModal")?.classList.contains("active")) {
               fecharEditarFiltros();

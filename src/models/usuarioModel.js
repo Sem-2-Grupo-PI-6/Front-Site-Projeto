@@ -73,14 +73,16 @@ function obterDadosUsuario(idUsuario) {
   );
 
   var instrucaoSql = `
-      SELECT
+    SELECT
       u.idUsuario,
       u.nome,
       u.email,
       u.telefone,
       u.dtCriacao,
+      u.Empresa_idEmpresa,
       e.nomeFantasia,
-      e.emailCoorporativa
+      e.emailCoorporativa,
+      e.cnpj
     FROM tblUsuario u
     INNER JOIN tblEmpresa e ON u.Empresa_idEmpresa = e.idEmpresa
     WHERE u.idUsuario = ${idUsuario};
@@ -89,6 +91,7 @@ function obterDadosUsuario(idUsuario) {
   console.log("Executando SQL:\n", instrucaoSql);
   return database.executar(instrucaoSql);
 }
+
 function obterSlack(idUsuario) {
   var instrucaoSql = `
     SELECT 
