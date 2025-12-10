@@ -173,60 +173,60 @@
                 </div>
               </div>
 
-<div class="form-group">
-  <label for="security-current-password">Senha Atual *</label>
-  <div class="password-input-wrapper">
-    <input 
-      type="password" 
-      id="security-current-password" 
-      placeholder="Digite sua senha atual" 
-      autocomplete="current-password"
-      required 
-    />
-    <button type="button" class="btn-toggle-password" onclick="togglePassword('security-current-password')">
-      <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
-      <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
-    </button>
-  </div>
-</div>
+              <!-- SENHA ATUAL -->
+              <div class="form-group">
+                <label for="security-current-password">Senha Atual *</label>
+                <div class="password-input-wrapper">
+                  <input 
+                    type="password" 
+                    id="security-current-password" 
+                    placeholder="Digite sua senha atual" 
+                    autocomplete="current-password"
+                    required 
+                  />
+                  <button type="button" class="btn-toggle-password" onclick="togglePassword('security-current-password')">
+                    <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
+                    <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display:  none;" />
+                  </button>
+                </div>
+              </div>
 
-<!-- NOVA SENHA -->
-<div class="form-group">
-  <label for="security-new-password">Nova Senha *</label>
-  <div class="password-input-wrapper">
-    <input 
-      type="password" 
-      id="security-new-password" 
-      placeholder="Mínimo 8 caracteres" 
-      autocomplete="new-password"
-      required 
-    />
-    <button type="button" class="btn-toggle-password" onclick="togglePassword('security-new-password')">
-      <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
-      <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
-    </button>
-  </div>
-  <small class="form-hint">Use letras, números e símbolos</small>
-</div>
+              <!-- NOVA SENHA -->
+              <div class="form-group">
+                <label for="security-new-password">Nova Senha *</label>
+                <div class="password-input-wrapper">
+                  <input 
+                    type="password" 
+                    id="security-new-password" 
+                    placeholder="Mínimo 8 caracteres" 
+                    autocomplete="new-password"
+                    required 
+                  />
+                  <button type="button" class="btn-toggle-password" onclick="togglePassword('security-new-password')">
+                    <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
+                    <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display:  none;" />
+                  </button>
+                </div>
+                <small class="form-hint">Use letras, números e símbolos</small>
+              </div>
 
-<!-- CONFIRMAR NOVA SENHA -->
-<div class="form-group">
-  <label for="security-confirm-password">Confirmar Nova Senha *</label>
-  <div class="password-input-wrapper">
-    <input 
-      type="password" 
-      id="security-confirm-password" 
-      placeholder="Repita a nova senha" 
-      autocomplete="new-password"
-      required 
-    />
-    <button type="button" class="btn-toggle-password" onclick="togglePassword('security-confirm-password')">
-      <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
-      <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
-    </button>
-  </div>
-</div>
-</div>
+              <!-- CONFIRMAR NOVA SENHA -->
+              <div class="form-group">
+                <label for="security-confirm-password">Confirmar Nova Senha *</label>
+                <div class="password-input-wrapper">
+                  <input 
+                    type="password" 
+                    id="security-confirm-password" 
+                    placeholder="Repita a nova senha" 
+                    autocomplete="new-password"
+                    required 
+                  />
+                  <button type="button" class="btn-toggle-password" onclick="togglePassword('security-confirm-password')">
+                    <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
+                    <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display:  none;" /> 
+                  </button>
+                </div>
+              </div>
 
               <div class="password-requirements">
                 <h4>📋 Requisitos de Senha:</h4>
@@ -725,7 +725,7 @@ function logout() {
 
 async function carregarDadosUsuario() {
   try {
-    const response = await fetch(`http://localhost:3333/usuarios/obterDados/${usuarioLogado.idUsuario}`);
+    const response = await fetch(`/usuarios/obterDados/${usuarioLogado.idUsuario}`);
     
     if (!response.ok) {
       console.error('Erro ao carregar dados do usuário');
@@ -733,7 +733,7 @@ async function carregarDadosUsuario() {
     }
 
     const dados = await response.json();
-    console.log('✅ Dados carregados:', dados);
+    console.log(' Dados carregados:', dados);
 
     document.getElementById('profile-name').value = dados.nome || '';
     document.getElementById('profile-email').value = dados.email || '';
@@ -749,7 +749,7 @@ async function carregarDadosUsuario() {
     document.querySelector('.profile-email').textContent = dados.emailCoorporativa || '';
 
   } catch (erro) {
-    console.error('❌ Erro ao carregar dados:', erro);
+    console.error(' Erro ao carregar dados:', erro);
   }
 }
 document.addEventListener("DOMContentLoaded", carregarDadosUsuario);
@@ -765,7 +765,7 @@ async function atualizarPerfil() {
   }
 
   try {
-    const response = await fetch('http://localhost:3333/usuarios/atualizarPerfil', {
+    const response = await fetch('/usuarios/atualizarPerfil', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -780,12 +780,12 @@ async function atualizarPerfil() {
     }
 
     const data = await response.json();
-    alert('✅ ' + data.mensagem);
+    alert(' ' + data.mensagem);
     carregarDadosUsuario();
 
   } catch (erro) {
-    console.error('❌ Erro:', erro);
-    alert('❌ Erro ao atualizar perfil');
+    console.error(' Erro:', erro);
+    alert(' Erro ao atualizar perfil');
   }
 }
 
@@ -793,7 +793,7 @@ async function salvarPreferencias() {
   const receberNotificacao = document.querySelector('#tab-preferences .toggle-item:nth-child(1) input[type="checkbox"]').checked;
 
   try {
-    const response = await fetch('http://localhost:3333/usuarios/atualizarPreferencias', {
+    const response = await fetch('/usuarios/atualizarPreferencias', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -807,11 +807,11 @@ async function salvarPreferencias() {
     }
 
     const data = await response.json();
-    alert('✅ ' + data.mensagem);
+    alert(' ' + data.mensagem);
 
   } catch (erro) {
-    console.error('❌ Erro:', erro);
-    alert('❌ Erro ao salvar preferências');
+    console.error(' Erro:', erro);
+    alert(' Erro ao salvar preferências');
   }
 }
 
@@ -841,7 +841,7 @@ async function alterarSenha() {
   }
 
   try {
-    const response = await fetch('http://localhost:3333/usuarios/alterarSenha', {
+    const response = await fetch('/usuarios/alterarSenha', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -854,18 +854,18 @@ async function alterarSenha() {
     const data = await response.json();
 
     if (!response.ok) {
-      alert('❌ ' + (data.erro || 'Erro ao alterar senha'));
+      alert(' ' + (data.erro || 'Erro ao alterar senha'));
       return;
     }
 
-    if (confirm('✅ Senha alterada com sucesso!\n\nVocê será desconectado. Faça login novamente.')) {
+    if (confirm(' Senha alterada com sucesso!\n\nVocê será desconectado. Faça login novamente.')) {
       sessionStorage.clear();
       window.location.href = 'login.html';
     }
 
   } catch (erro) {
-    console.error('❌ Erro:', erro);
-    alert('❌ Erro ao alterar senha');
+    console.error(' Erro:', erro);
+    alert(' Erro ao alterar senha');
   }
 }
 
@@ -873,7 +873,7 @@ async function salvarPreferencias() {
   const notificacoes = document.querySelector('#tab-preferences input[type="checkbox"]').checked;
 
   try {
-    const response = await fetch('http://localhost:3333/usuarios/atualizarPreferencias', {
+    const response = await fetch('/usuarios/atualizarPreferencias', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -887,11 +887,11 @@ async function salvarPreferencias() {
     }
 
     const data = await response.json();
-    alert('✅ ' + data.mensagem);
+    alert(' ' + data.mensagem);
 
   } catch (erro) {
-    console.error('❌ Erro:', erro);
-    alert('❌ Erro ao salvar preferências');
+    console.error(' Erro:', erro);
+    alert(' Erro ao salvar preferências');
   }
 }
 
@@ -933,9 +933,27 @@ function isPasswordValid(password) {
 
 function togglePassword(inputId) {
   const input = document.getElementById(inputId);
-  const button = input.nextElementSibling;
+  
+  if (! input) {
+    console.error('Input não encontrado:', inputId);
+    return;
+  }
+  
+  const wrapper = input.parentElement;
+  const button = wrapper.querySelector('.btn-toggle-password');
+  
+  if (!button) {
+    console.error('Botão não encontrado para:', inputId);
+    return;
+  }
+  
   const iconEye = button.querySelector('.icon-eye');
   const iconEyeOff = button.querySelector('.icon-eye-off');
+  
+  if (! iconEye || !iconEyeOff) {
+    console.error('Ícones não encontrados');
+    return;
+  }
 
   if (input.type === 'password') {
     input.type = 'text';
@@ -947,7 +965,6 @@ function togglePassword(inputId) {
     iconEyeOff.style.display = 'none';
   }
 }
-
 function formatarCNPJ(cnpj) {
   if (!cnpj) return '';
   cnpj = cnpj.replace(/\D/g, '');
@@ -969,7 +986,7 @@ function fecharModalSlack() {
 
 async function carregarConfiguracaoSlack() {
   try {
-    const response = await fetch(`http://localhost:3333/usuarios/slack/${usuarioLogado.idUsuario}`);
+    const response = await fetch(`/usuarios/slack/${usuarioLogado.idUsuario}`);
     
     if (response.status === 204 || !response.ok) {
       configSlackAtual = null;
@@ -980,7 +997,7 @@ async function carregarConfiguracaoSlack() {
     const config = await response.json();
     configSlackAtual = config;
     
-    console.log('✅ Configuração Slack carregada:', config);
+    console.log(' Configuração Slack carregada:', config);
 
 
     const slackAtivo = config.fkSlack !== null;
@@ -999,7 +1016,7 @@ async function carregarConfiguracaoSlack() {
     toggleSlackMaster();
     
   } catch (erro) {
-    console.error('❌ Erro ao carregar configuração Slack:', erro);
+    console.error(' Erro ao carregar configuração Slack:', erro);
     resetarFormSlack();
   }
 }
@@ -1022,7 +1039,7 @@ function toggleSlackMaster() {
   const gatilhosSection = document.getElementById('slackGatilhosSection');
 
   if (isActive) {
-    statusText.textContent = '✅ Notificações Slack ATIVADAS - Configure os canais e gatilhos abaixo';
+    statusText.textContent = ' Notificações Slack ATIVADAS - Configure os canais e gatilhos abaixo';
     statusText.style.color = 'var(--accent)';
     statusText.style.fontWeight = '600';
     canaisSection.classList.remove('disabled');
@@ -1068,10 +1085,10 @@ function validarCanais() {
 async function salvarConfiguracaoSlack() {
   const slackAtivo = document.getElementById('slackMasterToggle').checked;
 
-  console.log('🔍 Slack Ativo?', slackAtivo);
+  console.log('🔍 Slack Ativo? ', slackAtivo);
 
-  if (!slackAtivo) {
-    if (confirm('⚠️ Tem certeza que deseja DESATIVAR as notificações do Slack?')) {
+  if (! slackAtivo) {
+    if (confirm('⚠️ Tem certeza que deseja DESATIVAR as notificações do Slack para TODA a empresa?')) {
       await desativarSlack();
     }
     return;
@@ -1081,10 +1098,8 @@ async function salvarConfiguracaoSlack() {
   const selic = document.getElementById('canalSelic').checked;
   const pib = document.getElementById('canalPib').checked;
 
-  console.log('📢 Canais selecionados:', { populacao, selic, pib });
-
   if (!populacao && !selic && !pib) {
-    alert('⚠️ Selecione pelo menos um canal para receber notificações!');
+    alert('⚠️ Selecione pelo menos um canal para receber notificações! ');
     return;
   }
 
@@ -1092,63 +1107,51 @@ async function salvarConfiguracaoSlack() {
   const warning = document.getElementById('gatilhoWarning').checked;
   const info = document.getElementById('gatilhoInfo').checked;
 
-  console.log('🔔 Gatilhos selecionados:', { error, warning, info });
-
-  if (!error && !warning && !info) {
+  if (! error && !warning && !info) {
     alert('⚠️ Selecione pelo menos um tipo de gatilho!');
     return;
   }
 
   const configuracao = {
-    idUsuarioServer: usuarioLogado.idUsuario,
+    idUsuarioServer: usuarioLogado.idUsuario, //  ENVIANDO idUsuario
     maiorPopulacaoServer: populacao ? 1 : 0,
     aumentoSelicServer: selic ? 1 : 0,
-    crescimentoPibServer: pib ? 1 : 0,
-    alertaErrorServer: error ? 1 : 0,
+    crescimentoPibServer: pib ?  1 : 0,
+    alertaErrorServer: error ? 1 :  0,
     alertaWarningServer: warning ? 1 : 0,
     alertaInfoServer: info ? 1 : 0
   };
 
-  console.log('📤 Configuração a ser enviada:', configuracao);
-  console.log('📤 JSON.stringify:', JSON.stringify(configuracao));
-
   try {
-    const url = configSlackAtual && configSlackAtual.fkSlack
-      ? `http://localhost:3333/usuarios/slack/atualizar/${configSlackAtual.fkSlack}`
-      : 'http://localhost:3333/usuarios/slack/criar';
-
-    console.log('🌐 URL da requisição:', url);
-    console.log('🔧 Método:', configSlackAtual && configSlackAtual.fkSlack ? 'PUT' : 'POST');
+    const url = configSlackAtual && configSlackAtual.fkEquipeSlack
+      ?  `/usuarios/slack/atualizar/${configSlackAtual.fkEquipeSlack}`
+      : '/usuarios/slack/criar';
 
     const response = await fetch(url, {
-      method: configSlackAtual && configSlackAtual.fkSlack ? 'PUT' : 'POST',
+      method: configSlackAtual && configSlackAtual.fkEquipeSlack ?  'PUT' : 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(configuracao)
     });
 
-    console.log('📥 Response status:', response.status);
-    console.log('📥 Response ok?', response.ok);
-
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Erro na resposta:', errorText);
-      throw new Error('Erro ao salvar configuração');
+      const errorData = await response.json();
+      throw new Error(errorData.erro || 'Erro ao salvar configuração');
     }
 
     const data = await response.json();
-    console.log('✅ Resposta do servidor:', data);
+    console.log(' Resposta do servidor:', data);
 
-    alert('✅ Configurações do Slack salvas com sucesso!');
+    alert(' Configurações do Slack salvas com sucesso para toda a empresa!');
     fecharModalSlack();
     
   } catch (erro) {
-    console.error('❌ Erro ao salvar:', erro);
-    alert('❌ Erro ao salvar configurações. Verifique o console.');
+    console.error(' Erro ao salvar:', erro);
+    alert(` ${erro.message}`);
   }
 }
 async function desativarSlack() {
   try {
-    const response = await fetch(`http://localhost:3333/usuarios/slack/desativar/${usuarioLogado.idUsuario}`, {
+    const response = await fetch(`/usuarios/slack/desativar/${usuarioLogado.idUsuario}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' }
     });
@@ -1157,13 +1160,13 @@ async function desativarSlack() {
       throw new Error('Erro ao desativar Slack');
     }
 
-    console.log('✅ Slack desativado');
-    alert('✅ Notificações do Slack desativadas!');
+    console.log(' Slack desativado');
+    alert(' Notificações do Slack desativadas!');
     fecharModalSlack();
     
   } catch (erro) {
-    console.error('❌ Erro ao desativar:', erro);
-    alert('❌ Erro ao desativar. Tente novamente.');
+    console.error(' Erro ao desativar:', erro);
+    alert(' Erro ao desativar. Tente novamente.');
   }
 }
 

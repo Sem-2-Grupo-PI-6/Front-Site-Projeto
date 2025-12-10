@@ -73,14 +73,16 @@ function obterDadosUsuario(idUsuario) {
   );
 
   var instrucaoSql = `
-      SELECT
+    SELECT
       u.idUsuario,
       u.nome,
       u.email,
       u.telefone,
       u.dtCriacao,
+      u.Empresa_idEmpresa,
       e.nomeFantasia,
-      e.emailCoorporativa
+      e.emailCoorporativa,
+      e.cnpj
     FROM tblUsuario u
     INNER JOIN tblEmpresa e ON u.Empresa_idEmpresa = e.idEmpresa
     WHERE u.idUsuario = ${idUsuario};
@@ -89,21 +91,38 @@ function obterDadosUsuario(idUsuario) {
   console.log("Executando SQL:\n", instrucaoSql);
   return database.executar(instrucaoSql);
 }
-function obterSlack(idUsuario) {
+
+function obterSlack(idEmpresa) {
+  console.log("ACESSEI O USUARIO MODEL - function obterSlack():", idEmpresa);
+
   var instrucaoSql = `
     SELECT 
-      u.fkSlack,
+      e.fkEquipeSlack,
       s.*
-    FROM tblUsuario u
-    LEFT JOIN tblSlack s ON u.fkSlack = s.idSlack
-    WHERE u.idUsuario = ${idUsuario};
+    FROM tblEmpresa e
+    LEFT JOIN tblEquipeSlack s ON e.fkEquipeSlack = s. idEquipeSlack
+    WHERE e.idEmpresa = ? ;
   `;
 
-  return database.executar(instrucaoSql);
+  return database.executar(instrucaoSql, [idEmpresa]);
+}
+
+function verificarUsuarioMaster(idUsuario, idEmpresa) {
+  console.log("ACESSEI O USUARIO MODEL - function verificarUsuarioMaster()");
+
+  var instrucaoSql = `
+    SELECT idUsuario 
+    FROM tblUsuario 
+    WHERE Empresa_idEmpresa = ? 
+    ORDER BY idUsuario ASC 
+    LIMIT 1;
+  `;
+
+  return database.executar(instrucaoSql, [idEmpresa]);
 }
 
 function criarSlack(
-  idUsuario,
+  idEmpresa,
   maiorPopulacao,
   aumentoSelic,
   crescimentoPib,
@@ -112,7 +131,7 @@ function criarSlack(
   alertaInfo
 ) {
   console.log("📝 criarSlack() chamado com:", {
-    idUsuario,
+    idEmpresa,
     maiorPopulacao,
     aumentoSelic,
     crescimentoPib,
@@ -122,61 +141,72 @@ function criarSlack(
   });
 
   var instrucaoSql = `
-    INSERT INTO tblSlack (maiorPopulacao, aumentoSelic, crescimentoPib, 
-                          alertaError, alertaWarning, alertaInfo)
-    VALUES (${maiorPopulacao || 0}, ${aumentoSelic || 0}, ${
-    crescimentoPib || 0
-  },
-            ${alertaError || 0}, ${alertaWarning || 0}, ${alertaInfo || 0});
+    INSERT INTO tblEquipeSlack (
+      receberNotificacao,
+      maiorPopulacao, 
+      aumentoSelic, 
+      crescimentoPib, 
+      alertaError, 
+      alertaWarning, 
+      alertaInfo
+    )
+    VALUES (1, ?, ?, ?, ?, ?, ? );
   `;
 
-  console.log("📤 SQL INSERT tblSlack:", instrucaoSql);
+  console.log("📤 SQL INSERT tblEquipeSlack:", instrucaoSql);
 
   return database
-    .executar(instrucaoSql)
+    .executar(instrucaoSql, [
+      maiorPopulacao || 0,
+      aumentoSelic || 0,
+      crescimentoPib || 0,
+      alertaError || 0,
+      alertaWarning || 0,
+      alertaInfo || 0,
+    ])
     .then((resultado) => {
-      console.log("✅ INSERT tblSlack executado!");
-      console.log("📊 Resultado INSERT:", resultado);
+      console.log("✅ INSERT tblEquipeSlack executado!");
       console.log("🆔 insertId:", resultado.insertId);
 
-      const idSlack = resultado.insertId;
+      const idEquipeSlack = resultado.insertId;
 
-      if (!idSlack) {
+      if (!idEquipeSlack) {
         throw new Error("insertId não foi retornado!");
       }
 
       const updateSql = `
-      UPDATE tblUsuario 
-      SET fkSlack = ${idSlack}
-      WHERE idUsuario = ${idUsuario};
-    `;
+        UPDATE tblEmpresa 
+        SET fkEquipeSlack = ? 
+        WHERE idEmpresa = ?;
+      `;
 
-      console.log("📤 SQL UPDATE tblUsuario:", updateSql);
+      console.log("📤 SQL UPDATE tblEmpresa:", updateSql);
 
-      return database.executar(updateSql).then((resultadoUpdate) => {
-        console.log("✅ UPDATE tblUsuario executado!");
-        console.log("📊 Resultado UPDATE:", resultadoUpdate);
-        console.log("📊 Linhas afetadas:", resultadoUpdate.affectedRows);
+      return database
+        .executar(updateSql, [idEquipeSlack, idEmpresa])
+        .then((resultadoUpdate) => {
+          console.log("UPDATE tblEmpresa executado!");
+          console.log("Linhas afetadas:", resultadoUpdate.affectedRows);
 
-        if (resultadoUpdate.affectedRows === 0) {
-          console.warn("⚠️ Nenhuma linha foi atualizada no UPDATE!");
-        }
+          if (resultadoUpdate.affectedRows === 0) {
+            console.warn("Nenhuma linha foi atualizada no UPDATE!");
+          }
 
-        return {
-          insertId: idSlack,
-          affectedRows: resultado.affectedRows,
-          updateAffectedRows: resultadoUpdate.affectedRows,
-        };
-      });
+          return {
+            insertId: idEquipeSlack,
+            affectedRows: resultado.affectedRows,
+            updateAffectedRows: resultadoUpdate.affectedRows,
+          };
+        });
     })
     .catch((erro) => {
-      console.error("❌ Erro em criarSlack:", erro);
+      console.error(" Erro em criarSlack:", erro);
       throw erro;
     });
 }
 
 function atualizarSlack(
-  idSlack,
+  idEquipeSlack,
   maiorPopulacao,
   aumentoSelic,
   crescimentoPib,
@@ -184,28 +214,89 @@ function atualizarSlack(
   alertaWarning,
   alertaInfo
 ) {
+  console.log("atualizarSlack() chamado com:", {
+    idEquipeSlack,
+    maiorPopulacao,
+    aumentoSelic,
+    crescimentoPib,
+    alertaError,
+    alertaWarning,
+    alertaInfo,
+  });
+
   var instrucaoSql = `
-    UPDATE tblSlack
-    SET maiorPopulacao = ${maiorPopulacao},
-        aumentoSelic = ${aumentoSelic},
-        crescimentoPib = ${crescimentoPib},
-        alertaError = ${alertaError},
-        alertaWarning = ${alertaWarning},
-        alertaInfo = ${alertaInfo}
-    WHERE idSlack = ${idSlack};
+    UPDATE tblEquipeSlack
+    SET maiorPopulacao = ?,
+        aumentoSelic = ?,
+        crescimentoPib = ?,
+        alertaError = ?,
+        alertaWarning = ?,
+        alertaInfo = ?
+    WHERE idEquipeSlack = ?;
   `;
 
-  return database.executar(instrucaoSql);
+  return database.executar(instrucaoSql, [
+    maiorPopulacao || 0,
+    aumentoSelic || 0,
+    crescimentoPib || 0,
+    alertaError || 0,
+    alertaWarning || 0,
+    alertaInfo || 0,
+    idEquipeSlack,
+  ]);
 }
 
-function desativarSlack(idUsuario) {
-  var instrucaoSql = `
-    UPDATE tblUsuario
-    SET fkSlack = NULL
-    WHERE idUsuario = ${idUsuario};
+function desativarSlack(idEmpresa) {
+  console.log("desativarSlack() chamado para empresa:", idEmpresa);
+
+  var buscarSql = `
+    SELECT fkEquipeSlack 
+    FROM tblEmpresa 
+    WHERE idEmpresa = ?;
   `;
 
-  return database.executar(instrucaoSql);
+  return database.executar(buscarSql, [idEmpresa]).then((resultado) => {
+    if (resultado.length === 0 || !resultado[0].fkEquipeSlack) {
+      console.log("Empresa sem equipe Slack vinculada");
+      return { affectedRows: 0 };
+    }
+
+    const idEquipeSlack = resultado[0].fkEquipeSlack;
+
+    var updateSql = `
+      UPDATE tblEquipeSlack
+      SET receberNotificacao = 0
+      WHERE idEquipeSlack = ?;
+    `;
+
+    return database.executar(updateSql, [idEquipeSlack]);
+  });
+}
+
+function ativarSlack(idEmpresa) {
+  console.log("ativarSlack() chamado para empresa:", idEmpresa);
+
+  var buscarSql = `
+    SELECT fkEquipeSlack 
+    FROM tblEmpresa 
+    WHERE idEmpresa = ?;
+  `;
+
+  return database.executar(buscarSql, [idEmpresa]).then((resultado) => {
+    if (resultado.length === 0 || !resultado[0].fkEquipeSlack) {
+      throw new Error("Empresa sem equipe Slack vinculada");
+    }
+
+    const idEquipeSlack = resultado[0].fkEquipeSlack;
+
+    var updateSql = `
+      UPDATE tblEquipeSlack
+      SET receberNotificacao = 1
+      WHERE idEquipeSlack = ?;
+    `;
+
+    return database.executar(updateSql, [idEquipeSlack]);
+  });
 }
 
 module.exports = {
@@ -216,7 +307,9 @@ module.exports = {
   atualizarPreferencias,
   obterDadosUsuario,
   obterSlack,
+  verificarUsuarioMaster,
   criarSlack,
   atualizarSlack,
   desativarSlack,
+  ativarSlack,
 };

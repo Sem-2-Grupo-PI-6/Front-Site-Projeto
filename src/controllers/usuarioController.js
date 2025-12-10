@@ -80,7 +80,7 @@ function obterDados(req, res) {
         return;
       }
 
-      console.log("✅ Dados do usuário obtidos com sucesso!");
+      console.log(" Dados do usuário obtidos com sucesso!");
       res.json(resultado[0]);
     })
     .catch(function (erro) {
@@ -104,7 +104,7 @@ function atualizarPerfil(req, res) {
   usuarioModel
     .atualizarPerfil(idUsuario, nome, telefone)
     .then(function (resultado) {
-      console.log("✅ Perfil atualizado com sucesso!");
+      console.log(" Perfil atualizado com sucesso!");
       res.json({ mensagem: "Perfil atualizado com sucesso!", resultado });
     })
     .catch(function (erro) {
@@ -139,7 +139,7 @@ function alterarSenha(req, res) {
         return;
       }
 
-      console.log("✅ Senha alterada com sucesso!");
+      console.log(" Senha alterada com sucesso!");
       res.json({ mensagem: "Senha alterada com sucesso!" });
     })
     .catch(function (erro) {
@@ -172,19 +172,46 @@ function atualizarPreferencias(req, res) {
 }
 
 function obterConfiguracaoSlack(req, res) {
-  const idUsuario = req.params.idUsuario;
+  const idUsuario = parseInt(req.params.idUsuario);
+
+  if (!idUsuario) {
+    res.status(400).json({ erro: "ID do usuário não informado" });
+    return;
+  }
 
   usuarioModel
-    .obterSlack(idUsuario)
+    .obterDadosUsuario(idUsuario)
+    .then((dadosUsuario) => {
+      if (dadosUsuario.length === 0) {
+        res.status(404).json({ erro: "Usuário não encontrado" });
+        return;
+      }
+
+      const idEmpresa = dadosUsuario[0].Empresa_idEmpresa;
+
+      return usuarioModel.obterSlack(idEmpresa);
+    })
     .then((resultado) => {
-      if (resultado.length === 0) {
+      if (resultado.length === 0 || !resultado[0].fkEquipeSlack) {
         res.status(204).send();
         return;
       }
-      res.json(resultado[0]);
+
+      res.json({
+        fkEquipeSlack: resultado[0].fkEquipeSlack,
+        slack: {
+          receberNotificacao: resultado[0].receberNotificacao,
+          maiorPopulacao: resultado[0].maiorPopulacao,
+          aumentoSelic: resultado[0].aumentoSelic,
+          crescimentoPib: resultado[0].crescimentoPib,
+          alertaError: resultado[0].alertaError,
+          alertaWarning: resultado[0].alertaWarning,
+          alertaInfo: resultado[0].alertaInfo,
+        },
+      });
     })
     .catch((erro) => {
-      console.error("Erro ao obter Slack:", erro);
+      console.error(" Erro ao obter Slack:", erro);
       res.status(500).json({ erro: "Erro ao buscar configuração Slack" });
     });
 }
@@ -202,53 +229,63 @@ function criarConfiguracaoSlack(req, res) {
     alertaInfoServer,
   } = req.body;
 
-  console.log("📊 Dados extraídos:", {
-    idUsuarioServer,
-    maiorPopulacaoServer,
-    aumentoSelicServer,
-    crescimentoPibServer,
-    alertaErrorServer,
-    alertaWarningServer,
-    alertaInfoServer,
-  });
-
   if (!idUsuarioServer) {
-    console.error("❌ idUsuarioServer está undefined!");
+    console.error(" idUsuarioServer está undefined!");
     res.status(400).json({ erro: "ID do usuário não informado" });
     return;
   }
 
   usuarioModel
-    .criarSlack(
-      idUsuarioServer,
-      maiorPopulacaoServer,
-      aumentoSelicServer,
-      crescimentoPibServer,
-      alertaErrorServer,
-      alertaWarningServer,
-      alertaInfoServer
-    )
+    .obterDadosUsuario(idUsuarioServer)
+    .then((dadosUsuario) => {
+      if (dadosUsuario.length === 0) {
+        throw new Error("Usuário não encontrado");
+      }
+
+      const idEmpresa = dadosUsuario[0].Empresa_idEmpresa;
+
+      console.log("idEmpresa:", idEmpresa);
+
+      return usuarioModel
+        .verificarUsuarioMaster(idUsuarioServer, idEmpresa)
+        .then((master) => {
+          if (master.length === 0 || master[0].idUsuario !== idUsuarioServer) {
+            throw new Error("Apenas o usuário master pode configurar o Slack");
+          }
+
+          console.log(" Usuário é master da empresa");
+
+          return usuarioModel.criarSlack(
+            idEmpresa,
+            maiorPopulacaoServer,
+            aumentoSelicServer,
+            crescimentoPibServer,
+            alertaErrorServer,
+            alertaWarningServer,
+            alertaInfoServer
+          );
+        });
+    })
     .then((resultado) => {
-      console.log("✅ Slack criado com sucesso!");
-      console.log("📊 Resultado final:", resultado);
+      console.log(" Slack criado com sucesso!");
       res.json({
         mensagem: "Configuração Slack criada com sucesso!",
-        idSlack: resultado.insertId,
+        idEquipeSlack: resultado.insertId,
         resultado,
       });
     })
     .catch((erro) => {
-      console.error("❌ Erro ao criar Slack:", erro);
-      res
-        .status(500)
-        .json({
-          erro: "Erro ao criar configuração Slack",
-          detalhes: erro.message,
-        });
+      console.error(" Erro ao criar Slack:", erro);
+      res.status(500).json({
+        erro: erro.message || "Erro ao criar configuração Slack",
+      });
     });
 }
+
 function atualizarConfiguracaoSlack(req, res) {
-  const idSlack = req.params.idSlack;
+  const idEquipeSlack = parseInt(req.params.idSlack);
+  const idUsuario = parseInt(req.body.idUsuarioServer);
+
   const {
     maiorPopulacaoServer,
     aumentoSelicServer,
@@ -258,38 +295,88 @@ function atualizarConfiguracaoSlack(req, res) {
     alertaInfoServer,
   } = req.body;
 
+  if (!idUsuario) {
+    res.status(400).json({ erro: "ID do usuário não informado" });
+    return;
+  }
+
   usuarioModel
-    .atualizarSlack(
-      idSlack,
-      maiorPopulacaoServer,
-      aumentoSelicServer,
-      crescimentoPibServer,
-      alertaErrorServer,
-      alertaWarningServer,
-      alertaInfoServer
-    )
+    .obterDadosUsuario(idUsuario)
+    .then((dadosUsuario) => {
+      if (dadosUsuario.length === 0) {
+        throw new Error("Usuário não encontrado");
+      }
+
+      const idEmpresa = dadosUsuario[0].Empresa_idEmpresa;
+
+      return usuarioModel
+        .verificarUsuarioMaster(idUsuario, idEmpresa)
+        .then((master) => {
+          if (master.length === 0 || master[0].idUsuario !== idUsuario) {
+            throw new Error(
+              "Apenas o usuário master pode alterar as configurações do Slack"
+            );
+          }
+
+          return usuarioModel.atualizarSlack(
+            idEquipeSlack,
+            maiorPopulacaoServer,
+            aumentoSelicServer,
+            crescimentoPibServer,
+            alertaErrorServer,
+            alertaWarningServer,
+            alertaInfoServer
+          );
+        });
+    })
     .then((resultado) => {
-      console.log("Slack atualizado!");
+      console.log(" Slack atualizado!");
       res.json({ mensagem: "Configuração atualizada com sucesso!" });
     })
     .catch((erro) => {
-      console.error("Erro ao atualizar Slack:", erro);
-      res.status(500).json({ erro: "Erro ao atualizar configuração Slack" });
+      console.error(" Erro ao atualizar Slack:", erro);
+      res
+        .status(500)
+        .json({ erro: erro.message || "Erro ao atualizar configuração Slack" });
     });
 }
 
 function desativarSlack(req, res) {
-  const idUsuario = req.params.idUsuario;
+  const idUsuario = parseInt(req.params.idUsuario);
+
+  if (!idUsuario) {
+    res.status(400).json({ erro: "ID do usuário não informado" });
+    return;
+  }
 
   usuarioModel
-    .desativarSlack(idUsuario)
+    .obterDadosUsuario(idUsuario)
+    .then((dadosUsuario) => {
+      if (dadosUsuario.length === 0) {
+        throw new Error("Usuário não encontrado");
+      }
+
+      const idEmpresa = dadosUsuario[0].Empresa_idEmpresa;
+
+      return usuarioModel
+        .verificarUsuarioMaster(idUsuario, idEmpresa)
+        .then((master) => {
+          if (master.length === 0 || master[0].idUsuario !== idUsuario) {
+            throw new Error(
+              "Apenas o usuário master pode desativar as notificações do Slack"
+            );
+          }
+
+          return usuarioModel.desativarSlack(idEmpresa);
+        });
+    })
     .then((resultado) => {
-      console.log("Slack desativado!");
-      res.json({ mensagem: "Slack desativado com sucesso!" });
+      console.log(" Slack desativado!");
+      res.json({ mensagem: "Notificações do Slack desativadas com sucesso!" });
     })
     .catch((erro) => {
-      console.error("Erro ao desativar Slack:", erro);
-      res.status(500).json({ erro: "Erro ao desativar Slack" });
+      console.error(" Erro ao desativar Slack:", erro);
+      res.status(500).json({ erro: erro.message || "Erro ao desativar Slack" });
     });
 }
 
