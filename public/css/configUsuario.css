@@ -28,7 +28,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 2.5rem;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+background: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    var(--accent-dark) 100%
+  );
   border-radius: 20px;
   margin-bottom: 2rem;
   box-shadow: 0 12px 40px rgba(14, 105, 48, 0.2);
@@ -38,13 +42,17 @@
 }
 
 .profile-hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   right: -10%;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
   border-radius: 50%;
 }
 
@@ -60,7 +68,11 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+    background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.85)
+  );
   color: var(--accent);
   display: grid;
   place-items: center;
@@ -416,7 +428,7 @@
 }
 
 .strength-bar::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
