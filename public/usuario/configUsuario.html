@@ -173,60 +173,60 @@
                 </div>
               </div>
 
-<div class="form-group">
-  <label for="security-current-password">Senha Atual *</label>
-  <div class="password-input-wrapper">
-    <input 
-      type="password" 
-      id="security-current-password" 
-      placeholder="Digite sua senha atual" 
-      autocomplete="current-password"
-      required 
-    />
-    <button type="button" class="btn-toggle-password" onclick="togglePassword('security-current-password')">
-      <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
-      <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
-    </button>
-  </div>
-</div>
+              <!-- SENHA ATUAL -->
+              <div class="form-group">
+                <label for="security-current-password">Senha Atual *</label>
+                <div class="password-input-wrapper">
+                  <input 
+                    type="password" 
+                    id="security-current-password" 
+                    placeholder="Digite sua senha atual" 
+                    autocomplete="current-password"
+                    required 
+                  />
+                  <button type="button" class="btn-toggle-password" onclick="togglePassword('security-current-password')">
+                    <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
+                    <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display:  none;" />
+                  </button>
+                </div>
+              </div>
 
-<!-- NOVA SENHA -->
-<div class="form-group">
-  <label for="security-new-password">Nova Senha *</label>
-  <div class="password-input-wrapper">
-    <input 
-      type="password" 
-      id="security-new-password" 
-      placeholder="Mínimo 8 caracteres" 
-      autocomplete="new-password"
-      required 
-    />
-    <button type="button" class="btn-toggle-password" onclick="togglePassword('security-new-password')">
-      <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
-      <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
-    </button>
-  </div>
-  <small class="form-hint">Use letras, números e símbolos</small>
-</div>
+              <!-- NOVA SENHA -->
+              <div class="form-group">
+                <label for="security-new-password">Nova Senha *</label>
+                <div class="password-input-wrapper">
+                  <input 
+                    type="password" 
+                    id="security-new-password" 
+                    placeholder="Mínimo 8 caracteres" 
+                    autocomplete="new-password"
+                    required 
+                  />
+                  <button type="button" class="btn-toggle-password" onclick="togglePassword('security-new-password')">
+                    <img src="../imgs/mostrar.png" alt="Mostrar senha" class="icon-eye" />
+                    <img src="../imgs/olho.png" alt="Ocultar senha" class="icon-eye-off" style="display:  none;" />
+                  </button>
+                </div>
+                <small class="form-hint">Use letras, números e símbolos</small>
+              </div>
 
-<!-- CONFIRMAR NOVA SENHA -->
-<div class="form-group">
-  <label for="security-confirm-password">Confirmar Nova Senha *</label>
-  <div class="password-input-wrapper">
-    <input 
-      type="password" 
-      id="security-confirm-password" 
-      placeholder="Repita a nova senha" 
-      autocomplete="new-password"
-      required 
-    />
-    <button type="button" class="btn-toggle-password" onclick="togglePassword('security-confirm-password')">
-      <img src="../imgs/olho.png" alt="Mostrar senha" class="icon-eye" />
-      <img src="../imgs/mostrar.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
-    </button>
-  </div>
-</div>
-</div>
+              <!-- CONFIRMAR NOVA SENHA -->
+              <div class="form-group">
+                <label for="security-confirm-password">Confirmar Nova Senha *</label>
+                <div class="password-input-wrapper">
+                  <input 
+                    type="password" 
+                    id="security-confirm-password" 
+                    placeholder="Repita a nova senha" 
+                    autocomplete="new-password"
+                    required 
+                  />
+                  <button type="button" class="btn-toggle-password" onclick="togglePassword('security-confirm-password')">
+                    <img src="../imgs/mostrar.png" alt="Mostrar senha" class="icon-eye" />
+                    <img src="../imgs/olho.png" alt="Ocultar senha" class="icon-eye-off" style="display: none;" />
+                  </button>
+                </div>
+              </div>
 
               <div class="password-requirements">
                 <h4>📋 Requisitos de Senha:</h4>
@@ -933,9 +933,27 @@ function isPasswordValid(password) {
 
 function togglePassword(inputId) {
   const input = document.getElementById(inputId);
-  const button = input.nextElementSibling;
+  
+  if (! input) {
+    console.error('Input não encontrado:', inputId);
+    return;
+  }
+  
+  const wrapper = input.parentElement;
+  const button = wrapper.querySelector('.btn-toggle-password');
+  
+  if (!button) {
+    console.error('Botão não encontrado para:', inputId);
+    return;
+  }
+  
   const iconEye = button.querySelector('.icon-eye');
   const iconEyeOff = button.querySelector('.icon-eye-off');
+  
+  if (! iconEye || !iconEyeOff) {
+    console.error('Ícones não encontrados');
+    return;
+  }
 
   if (input.type === 'password') {
     input.type = 'text';
@@ -947,7 +965,6 @@ function togglePassword(inputId) {
     iconEyeOff.style.display = 'none';
   }
 }
-
 function formatarCNPJ(cnpj) {
   if (!cnpj) return '';
   cnpj = cnpj.replace(/\D/g, '');

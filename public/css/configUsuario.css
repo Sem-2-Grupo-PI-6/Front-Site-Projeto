@@ -462,6 +462,66 @@ background: linear-gradient(
   position: relative;
   display: flex;
   align-items: center;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 3.5rem ! important;
+  width: 100%;
+}
+
+.btn-toggle-password {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+}
+
+.btn-toggle-password:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.btn-toggle-password:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.btn-toggle-password img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display: block;
+  filter: grayscale(50%) brightness(0.7);
+  transition: filter 0.2s ease;
+  position: absolute;
+  top: 50%;
+  left:  50%;
+  transform: translate(-50%, -50%);
+}
+
+.btn-toggle-password:hover img {
+  filter: grayscale(0%) brightness(1);
+}
+
+.icon-eye,
+.icon-eye-off {
+  pointer-events: none;
+}
+
+.icon-eye {
+  display: block;
+}
+
+.icon-eye-off {
+  display: none;
 }
 
 .password-input-wrapper input {
