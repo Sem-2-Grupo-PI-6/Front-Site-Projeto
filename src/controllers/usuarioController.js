@@ -199,15 +199,13 @@ function obterConfiguracaoSlack(req, res) {
 
       res.json({
         fkEquipeSlack: resultado[0].fkEquipeSlack,
-        slack: {
-          receberNotificacao: resultado[0].receberNotificacao,
-          maiorPopulacao: resultado[0].maiorPopulacao,
-          aumentoSelic: resultado[0].aumentoSelic,
-          crescimentoPib: resultado[0].crescimentoPib,
-          alertaError: resultado[0].alertaError,
-          alertaWarning: resultado[0].alertaWarning,
-          alertaInfo: resultado[0].alertaInfo,
-        },
+        receberNotificacao: resultado[0].receberNotificacao,
+        maiorPopulacao: resultado[0].maiorPopulacao,
+        aumentoSelic: resultado[0].aumentoSelic,
+        crescimentoPib: resultado[0].crescimentoPib,
+        alertaError: resultado[0].alertaError,
+        alertaWarning: resultado[0].alertaWarning,
+        alertaInfo: resultado[0].alertaInfo,
       });
     })
     .catch((erro) => {
