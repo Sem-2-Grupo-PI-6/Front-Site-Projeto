@@ -152,7 +152,7 @@ function verificarUsuarioMaster(idUsuario, idEmpresa) {
 
 function criarSlack(
   idEmpresa,
-  nomeEmpresa, // ✅ NOVO PARÂMETRO
+  nomeEmpresa, 
   maiorPopulacao,
   aumentoSelic,
   crescimentoPib,
@@ -185,11 +185,11 @@ function criarSlack(
     VALUES (?, 1, ?, ?, ?, ?, ?, ? );
   `;
 
-  console.log("📤 SQL INSERT tblEquipeSlack:", instrucaoSql);
+  console.log(" SQL INSERT tblEquipeSlack:", instrucaoSql);
 
   return database
     .executar(instrucaoSql, [
-      nomeEmpresa || 'Equipe Slack', // ✅ ADICIONAR NOME
+      nomeEmpresa || 'Equipe Slack',
       maiorPopulacao || 0,
       aumentoSelic || 0,
       crescimentoPib || 0,
@@ -198,7 +198,7 @@ function criarSlack(
       alertaInfo || 0,
     ])
     .then((resultado) => {
-      console.log("✅ INSERT tblEquipeSlack executado!");
+      console.log("INSERT tblEquipeSlack executado!");
       console.log("🆔 insertId:", resultado.insertId);
 
       const idEquipeSlack = resultado.insertId;
@@ -213,14 +213,14 @@ function criarSlack(
         WHERE idEmpresa = ?;
       `;
 
-      console.log("📤 SQL UPDATE tblEmpresa:", updateSql);
+      console.log(" SQL UPDATE tblEmpresa:", updateSql);
 
       return database.executar(updateSql, [idEquipeSlack, idEmpresa]).then((resultadoUpdate) => {
-        console.log("✅ UPDATE tblEmpresa executado!");
-        console.log("📊 Linhas afetadas:", resultadoUpdate.affectedRows);
+        console.log("UPDATE tblEmpresa executado!");
+        console.log(" Linhas afetadas:", resultadoUpdate.affectedRows);
 
         if (resultadoUpdate.affectedRows === 0) {
-          console.warn("⚠️ Nenhuma linha foi atualizada no UPDATE!");
+          console.warn(" Nenhuma linha foi atualizada no UPDATE!");
         }
 
         return {
@@ -231,7 +231,7 @@ function criarSlack(
       });
     })
     .catch((erro) => {
-      console.error("❌ Erro em criarSlack:", erro);
+      console.error(" Erro em criarSlack:", erro);
       throw erro;
     });
 }
@@ -245,7 +245,7 @@ function atualizarSlack(
   alertaWarning,
   alertaInfo
 ) {
-  console.log("✅ atualizarSlack() chamado com:", {
+  console.log("atualizarSlack() chamado com:", {
     idEquipeSlack,
     maiorPopulacao,
     aumentoSelic,

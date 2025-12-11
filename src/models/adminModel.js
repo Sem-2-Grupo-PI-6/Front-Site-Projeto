@@ -43,15 +43,16 @@ function buscarTotalUsuariosAtivos() {
 function buscarCrescimentoUsuarios() {
   console.log("ACESSEI O ADMIN MODEL - function buscarCrescimentoUsuarios()");
 
-  var instrucaoSql = `
+    var instrucaoSql = `
     SELECT 
       DATE_FORMAT(dtCriacao, '%Y-%m') as mes,
       DATE_FORMAT(dtCriacao, '%b') as mesAbrev,
+      MONTH(dtCriacao) as mesNumero,
       YEAR(dtCriacao) as ano,
       COUNT(*) as novosUsuarios
     FROM tblUsuario
     WHERE dtCriacao >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
-    GROUP BY DATE_FORMAT(dtCriacao, '%Y-%m'), DATE_FORMAT(dtCriacao, '%b'), YEAR(dtCriacao)
+    GROUP BY DATE_FORMAT(dtCriacao, '%Y-%m'), DATE_FORMAT(dtCriacao, '%b'), MONTH(dtCriacao), YEAR(dtCriacao)
     ORDER BY mes ASC;
   `;
 

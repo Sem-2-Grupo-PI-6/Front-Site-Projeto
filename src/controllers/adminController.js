@@ -144,26 +144,37 @@ function buscarMetricasDashboard(req, res) {
 }
 
 function buscarCrescimentoUsuarios(req, res) {
-  Promise.all([
-    adminModel.buscarCrescimentoUsuarios(),
-    adminModel.buscarComparativoUsuarios(),
-  ])
-    .then(function ([crescimento, comparativo]) {
+  adminModel
+    .buscarCrescimentoUsuarios()
+    .then(function (crescimento) {
       let acumulado = 0;
-      const dadosComAcumulado = crescimento.map((item) => {
+      const dadosComAcumulado = crescimento.map((item, index) => {
         acumulado += item.novosUsuarios;
+        let variacaoPercentual = 0;
+        if (index > 0) {
+          const mesAnterior = crescimento[index - 1].novosUsuarios;
+          if (mesAnterior > 0) {
+            variacaoPercentual = ((item.novosUsuarios - mesAnterior) / mesAnterior) * 100;
+          }
+        }
         return {
           ...item,
-          acumulado: acumulado,
+          acumulado:  acumulado,
+          variacaoPercentual: variacaoPercentual.toFixed(1)
         };
       });
+      const ultimoMes = dadosComAcumulado[dadosComAcumulado.length - 1];
+      const penultimoMes = dadosComAcumulado[dadosComAcumulado.length - 2];
+      const comparativo = {
+        usuariosMesAtual: ultimoMes?.novosUsuarios || 0,
+        usuariosMesAnterior: penultimoMes?.novosUsuarios || 0,
+        variacao: ultimoMes?.variacaoPercentual || 0,
+        cresceu: ultimoMes && penultimoMes ? ultimoMes.novosUsuarios > penultimoMes.novosUsuarios :  false
+      };
 
       res.status(200).json({
         crescimento: dadosComAcumulado,
-        comparativo: comparativo[0] || {
-          usuariosMesAtual: 0,
-          usuariosMesAnterior: 0,
-        },
+        comparativo: comparativo,
       });
     })
     .catch(function (erro) {
@@ -221,7 +232,7 @@ function buscarAtividadesRecentes(req, res) {
 }
 
 function buscarTotalUsuarios(req, res) {
-  adminModel
+  adminModel  
     .buscarTotalUsuariosAtivos()
     .then(function (resultado) {
       if (resultado.length > 0) {

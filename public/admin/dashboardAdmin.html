@@ -158,19 +158,20 @@
           <div class="content-left">
             <article class="chart-card full-height">
               <header class="chart-header">
-                <div>
-                  <h3>📈 Crescimento de Usuários</h3>
-                  <span>Novos cadastros vs Total acumulado</span>
-                </div>
-                <div class="chart-legend">
-                  <span class="legend-item"
-                    ><span class="dot primary"></span> 2025</span
-                  >
-                  <span class="legend-item"
-                    ><span class="dot secondary"></span> 2024</span
-                  >
-                </div>
-              </header>
+              <div>
+                <h3>📈 Crescimento de Usuários</h3>
+                <span>Últimos 12 meses • Cadastros mensais vs Total acumulado</span>
+              </div>
+              <div class="chart-legend">
+                <span class="legend-item">
+                  <span class="dot primary"></span> Novos Cadastros
+                </span>
+                <span class="legend-item">
+                  <span class="dot secondary"></span> Total Acumulado
+                </span>
+              </div>
+            </header>
+
               <figure>
                 <canvas
                   id="usuariosChart"
@@ -566,116 +567,191 @@
         }
       }
 
-      function inicializarGraficoUsuarios(dados) {
-        const canvas = document.getElementById("usuariosChart");
-        if (!canvas) return;
+function inicializarGraficoUsuarios(dados) {
+  const canvas = document.getElementById("usuariosChart");
+  if (!canvas) return;
 
-        if (chartUsuarios) {
-          chartUsuarios.destroy();
-        }
+  if (chartUsuarios) {
+    chartUsuarios.destroy();
+  }
 
-        const meses = [
-          "Jan",
-          "Fev",
-          "Mar",
-          "Abr",
-          "Mai",
-          "Jun",
-          "Jul",
-          "Ago",
-          "Set",
-          "Out",
-          "Nov",
-          "Dez",
-        ];
-        let labels = [];
-        let novosUsuarios = [];
-        let acumulado = [];
+  const meses = [
+    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez",
+  ];
+  
+  let labels = [];
+  let novosUsuarios = [];
+  let acumulado = [];
 
-        if (dados.crescimento && dados.crescimento.length > 0) {
-          labels = dados.crescimento.map(
-            (item) =>
-              item.mesAbrev || meses[new Date(item.mes + "-01").getMonth()]
-          );
-          novosUsuarios = dados.crescimento.map((item) => item.novosUsuarios);
-          acumulado = dados.crescimento.map((item) => item.acumulado);
-        } else {
-          labels = meses;
-          novosUsuarios = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-          acumulado = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        }
+  if (dados.crescimento && dados.crescimento.length > 0) {
+    labels = dados.crescimento.map((item) => {
+      const mesAbrev = item.mesAbrev || meses[new Date(item.mes + "-01").getMonth()];
+      const ano = item.ano.toString().slice(-2); 
+      return `${mesAbrev}/${ano}`;
+    });
+    novosUsuarios = dados.crescimento.map((item) => item.novosUsuarios);
+    acumulado = dados.crescimento.map((item) => item.acumulado);
+  } else {
+    const hoje = new Date();
+    labels = Array.from({ length: 12 }, (_, i) => {
+      const data = new Date(hoje.getFullYear(), hoje.getMonth() - 11 + i, 1);
+      return `${meses[data.getMonth()]}/${data.getFullYear().toString().slice(-2)}`;
+    });
+    novosUsuarios = new Array(12).fill(0);
+    acumulado = new Array(12).fill(0);
+  }
 
-        const defaultOptions = getDefaultChartOptions();
+  const defaultOptions = getDefaultChartOptions();
 
-        chartUsuarios = new Chart(canvas, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "Novos Usuários",
-                data: novosUsuarios,
-                borderColor: CORES_GRAFICOS.primarias[0],
-                backgroundColor: CORES_GRAFICOS.fundos[0],
-                tension: 0.4,
-                fill: true,
-                borderWidth: 3,
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                pointBackgroundColor: CORES_GRAFICOS.primarias[0],
-                pointBorderColor: "#fff",
-                pointBorderWidth: 2,
-              },
-              {
-                label: "Total Acumulado",
-                data: acumulado,
-                borderColor: CORES_GRAFICOS.primarias[1],
-                backgroundColor: CORES_GRAFICOS.fundos[1],
-                tension: 0.4,
-                fill: true,
-                borderWidth: 2.5,
-                pointRadius: 3,
-                pointHoverRadius: 5,
-                pointBackgroundColor: CORES_GRAFICOS.primarias[1],
-                yAxisID: "y1",
-              },
-            ],
+  chartUsuarios = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets:  [
+        {
+          label:  "Novos Usuários",
+          data: novosUsuarios,
+          borderColor:  CORES_GRAFICOS.primarias[0],
+          backgroundColor: CORES_GRAFICOS.fundos[0],
+          tension: 0.4,
+          fill: true,
+          borderWidth: 3,
+          pointRadius: 5,
+          pointHoverRadius:  8,
+          pointBackgroundColor: CORES_GRAFICOS.primarias[0],
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          pointHoverBorderWidth: 3,
+        },
+        {
+          label:  "Total Acumulado",
+          data: acumulado,
+          borderColor: CORES_GRAFICOS.primarias[1],
+          backgroundColor:  CORES_GRAFICOS.fundos[1],
+          tension:  0.4,
+          fill: true,
+          borderWidth:  2.5,
+          pointRadius: 4,
+          pointHoverRadius:  6,
+          pointBackgroundColor: CORES_GRAFICOS.primarias[1],
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          yAxisID: "y1",
+        },
+      ],
+    },
+    options: {
+      ...defaultOptions,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            color: "#6b7280",
+            font: { size: 11, weight: "500" },
+            maxRotation: 45,
+            minRotation: 45,
           },
-          options: {
-            ...defaultOptions,
-            scales: {
-              x: {
-                grid: { display: false },
-                ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
-                border: { display: false },
-              },
-              y: {
-                grid: { color: "rgba(5, 150, 105, 0.1)", drawBorder: false },
-                ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
-                border: { display: false },
-                title: {
-                  display: true,
-                  text: "Novos",
-                  color: "#6b7280",
-                  font: { size: 10, weight: "600" },
-                },
-              },
-              y1: {
-                grid: { drawOnChartArea: false },
-                ticks: { color: "#6b7280", font: { size: 10, weight: "500" } },
-                border: { display: false },
-                position: "right",
-                title: {
-                  display: true,
-                  text: "Total",
-                  color: "#6b7280",
-                  font: { size: 10, weight: "600" },
-                },
-              },
+          border: { display: false },
+        },
+        y: {
+          grid: { color: "rgba(5, 150, 105, 0.1)", drawBorder: false },
+          ticks: {
+            color: "#6b7280",
+            font: { size: 11, weight: "500" },
+            callback: function(value) {
+              return value.toLocaleString('pt-BR'); 
+            }
+          },
+          border: { display: false },
+          title: {
+            display: true,
+            text: "Novos Cadastros",
+            color: "#6b7280",
+            font:  { size: 11, weight: "600" },
+          },
+          beginAtZero: true,
+        },
+        y1: {
+          grid: { drawOnChartArea: false },
+          ticks: {
+            color:  "#6b7280",
+            font: { size: 11, weight: "500" },
+            callback: function(value) {
+              return value.toLocaleString('pt-BR');
+            }
+          },
+          border: { display: false },
+          position: "right",
+          title: {
+            display: true,
+            text: "Total Acumulado",
+            color: "#6b7280",
+            font: { size: 11, weight: "600" },
+          },
+          beginAtZero: true,
+        },
+      },
+      plugins: {
+        ...defaultOptions.plugins,
+        tooltip: {
+          ...defaultOptions.plugins.tooltip,
+          callbacks: {
+            title: function(context) {
+              return context[0].label;
             },
-          },
-        });
-      }
+            label: function(context) {
+              let label = context.dataset.label || '';
+              if (label) {
+                label += ': ';
+              }
+              label += context.parsed.y.toLocaleString('pt-BR');
+              if (context.datasetIndex === 0 && context.dataIndex > 0) {
+                const atual = context.parsed.y;
+                const anterior = context.dataset.data[context.dataIndex - 1];
+                if (anterior > 0) {
+                  const variacao = ((atual - anterior) / anterior * 100).toFixed(1);
+                  const sinal = variacao > 0 ? '+' : '';
+                  label += ` (${sinal}${variacao}%)`;
+                }
+              }
+              
+              return label;
+            }
+          }
+        },
+        legend: {
+          display: true,
+          position: 'top',
+          align: 'end',
+          labels: {
+            color: '#6b7280',
+            font: { size: 11, weight: '500' },
+            usePointStyle: true,
+            pointStyle: 'circle',
+            padding: 15,
+          }
+        }
+      },
+    },
+  });
+  if (dados.comparativo) {
+    const trendElement = document.querySelector('.metric-primary .trend');
+    const trendText = document.querySelector('.metric-primary .trend-text');
+    
+    if (trendElement && trendText && dados.comparativo.variacao) {
+      const variacao = parseFloat(dados.comparativo.variacao);
+      const cresceu = dados.comparativo.cresceu;
+      
+      trendElement.className = `trend ${cresceu ? 'positive' : variacao < 0 ? 'negative' : 'neutral'}`;
+      trendText.textContent = `${cresceu ? '+' : ''}${variacao}%`;
+    }
+  }
+}
 
       function inicializarGraficoUsuariosPadrao() {
         inicializarGraficoUsuarios({ crescimento: [], comparativo: {} });
