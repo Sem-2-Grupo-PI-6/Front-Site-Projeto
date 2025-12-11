@@ -371,6 +371,44 @@
   });
 
   carregarEmpresas(1);
+
+  carregarKPIs();
+
+  async function carregarKPIs() {
+  try {
+    const response = await fetch('/admin/dashboard/usuarios');
+    
+    if (!response.ok) {
+      console.error('Erro ao carregar KPIs');
+      return;
+    }
+
+    const dados = await response.json();
+    
+    console.log('📊 KPIs carregadas:', dados);
+
+    const cardUsuarios = document.querySelector('.card-users .overview-value');
+    if (cardUsuarios) {
+      cardUsuarios.textContent = dados.totalUsuarios || 0;
+    }
+ 
+    const cardEmpresas = document.querySelector('.card-companies .overview-value');
+    if (cardEmpresas) {
+      cardEmpresas. textContent = dados.totalEmpresas || 0;
+    }
+
+    const trendEmpresas = document.querySelector('.card-companies .overview-trend');
+    if (trendEmpresas) {
+      trendEmpresas.textContent = `${dados.empresasAtivas || 0} ativas`;
+      trendEmpresas.classList.add('positive');
+    }
+
+  } catch (erro) {
+    console.error(' Erro ao carregar KPIs:', erro);
+  }
+}
+
+
   
   function carregarEmpresas(pagina) {
     fetch(`/admin/empresas/listar/paginado? pagina=${pagina}&limite=20`)
