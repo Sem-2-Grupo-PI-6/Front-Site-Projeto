@@ -25,7 +25,7 @@
 
         <nav>
           <ul class="nav-list">
-            <li><a href="dashboardCliente.html">📊 Dashboard</a></li>
+            <li><a href="dashboardCliente.html"> Dashboard</a></li>
             <li>
               <a href="configUsuario.html" class="active">👤 Minha Conta</a>
             </li>
@@ -97,7 +97,7 @@
                     disabled
                   />
                   <small class="form-hint"
-                    >📧 Email não pode ser alterado.Entre em contato com o
+                    >📧 Email não pode ser alterado. Entre em contato com o
                     suporte.</small
                   >
                 </div>
@@ -250,7 +250,7 @@
               </div>
 
               <div class="alert alert-warning">
-                <strong>⚠️ Atenção:</strong> Após alterar sua senha, você será
+                <strong>Atenção:</strong> Após alterar sua senha, você será
                 desconectado e precisará fazer login novamente.
               </div>
 
@@ -266,7 +266,6 @@
           </div>
         </div>
 
-        <!-- TAB 3: PREFERÊNCIAS -->
         <div class="tab-content" id="tab-preferences">
           <div class="card">
             <div class="card-header">
@@ -329,7 +328,7 @@
               </div>
 
               <div class="activity-item">
-                <div class="activity-icon info">📊</div>
+                <div class="activity-icon info"></div>
                 <div class="activity-content">
                   <strong>Consulta realizada</strong>
                   <p>Análise de PIB Regional - Grande SP</p>
@@ -338,7 +337,7 @@
               </div>
 
               <div class="activity-item">
-                <div class="activity-icon info">📊</div>
+                <div class="activity-icon info"></div>
                 <div class="activity-content">
                   <strong>Relatório exportado</strong>
                   <p>Valor Adicionado - Construção Civil Q3 2024</p>
@@ -365,7 +364,7 @@
               </div>
 
               <div class="activity-item">
-                <div class="activity-icon info">📊</div>
+                <div class="activity-icon info"></div>
                 <div class="activity-content">
                   <strong>Dashboard visualizado</strong>
                   <p>Cenário Macroeconômico - São Paulo</p>
@@ -374,7 +373,7 @@
               </div>
 
               <div class="activity-item">
-                <div class="activity-icon info">📊</div>
+                <div class="activity-icon info"></div>
                 <div class="activity-content">
                   <strong>Consulta realizada</strong>
                   <p>Taxa Selic e Impactos no Crédito</p>
@@ -400,7 +399,7 @@
 
             <div class="stats-grid">
               <div class="stat-card">
-                <div class="stat-icon">🔍</div>
+                <div class="stat-icon"></div>
                 <div class="stat-value">342</div>
                 <div class="stat-label">Consultas Realizadas</div>
                 <div class="stat-trend positive">↑ 24% vs mês anterior</div>
@@ -431,7 +430,6 @@
         </div>
       </section>
 
-      <!-- SUPORTE E AJUDA -->
       <section class="help-section">
         <div class="help-card">
           <div class="help-icon">❓</div>
@@ -466,7 +464,6 @@
           </div>
 
           <div class="modal-body">
-            <!-- SEÇÃO 1: ATIVAR/DESATIVAR SLACK -->
             <section class="modal-section">
               <div class="slack-master-toggle">
                 <div class="slack-toggle-content">
@@ -532,7 +529,7 @@
 
                 <div class="slack-canal-card">
                   <div class="canal-header">
-                    <div class="canal-icon">📊</div>
+                    <div class="canal-icon"></div>
                     <label class="canal-checkbox">
                       <input 
                         type="checkbox" 
@@ -663,7 +660,7 @@
 let usuarioLogado = JSON.parse(sessionStorage.getItem('USUARIO_LOGADO')); 
 
 if (!usuarioLogado || !usuarioLogado.idUsuario) {
-  alert('⚠️ Sessão expirada! Faça login novamente.');
+  alert(' Sessão expirada! Faça login novamente.');
   window.location.href = 'login.html';
 }
 
@@ -717,7 +714,7 @@ document.addEventListener('DOMContentLoaded', function() {
 })
 
 function logout() {
-        if (confirm("⚠️ Tem certeza que deseja sair?")) {
+        if (confirm(" Tem certeza que deseja sair?")) {
           sessionStorage.removeItem("USUARIO_LOGADO");
           window.location.href = "../index.html";
         }
@@ -760,7 +757,7 @@ async function atualizarPerfil() {
   const telefone = document.getElementById('profile-phone').value.replace(/\D/g, '');
 
   if (!nome) {
-    alert('⚠️ Preencha o nome!');
+    alert(' Preencha o nome!');
     return;
   }
 
@@ -821,22 +818,22 @@ async function alterarSenha() {
   const confirmarSenha = document.getElementById('security-confirm-password').value;
 
   if (!senhaAtual || !novaSenha || !confirmarSenha) {
-    alert('⚠️ Preencha todos os campos!');
+    alert(' Preencha todos os campos!');
     return;
   }
 
   if (novaSenha.length < 8) {
-    alert('⚠️ A nova senha deve ter no mínimo 8 caracteres!');
+    alert(' A nova senha deve ter no mínimo 8 caracteres!');
     return;
   }
 
   if (novaSenha !== confirmarSenha) {
-    alert('⚠️ As senhas não coincidem!');
+    alert(' As senhas não coincidem!');
     return;
   }
 
   if (!isPasswordValid(novaSenha)) {
-    alert('⚠️ A senha não atende todos os requisitos de segurança!');
+    alert(' A senha não atende todos os requisitos de segurança!');
     return;
   }
 
@@ -858,7 +855,7 @@ async function alterarSenha() {
       return;
     }
 
-    if (confirm(' Senha alterada com sucesso!\n\nVocê será desconectado.Faça login novamente.')) {
+    if (confirm(' Senha alterada com sucesso!\n\nVocê será desconectado. Faça login novamente.')) {
       sessionStorage.clear();
       window.location.href = 'login.html';
     }
@@ -997,28 +994,25 @@ async function carregarConfiguracaoSlack() {
     const config = await response.json();
     configSlackAtual = config;
     
-    console.log('📊 Configuração Slack carregada:', config);
+    console.log(' Configuração Slack carregada:', config);
 
-    // ✅ VERIFICAR SE É MASTER
     if (! config.ehUsuarioMaster) {
-      console.log('⚠️ Usuário não é master - modo visualização');
+      console.log(' Usuário não é master - modo visualização');
       desabilitarEdicaoSlack();
       return;
     }
 
-    // ✅ CORRIGIDO: Verificar se existe slack E se receberNotificacao está ativo
-    const slackAtivo = config.fkEquipeSlack && config.slack && config.slack.receberNotificacao === 1;
+    const slackAtivo = config.fkEquipeSlack && config. slack && config.slack.receberNotificacao === 1;
     
-    console.log('🔍 Slack Ativo:', slackAtivo);
-    console.log('🔍 fkEquipeSlack:', config.fkEquipeSlack);
-    console.log('🔍 receberNotificacao:', config.slack?.receberNotificacao);
+    console.log(' Slack Ativo:', slackAtivo);
+    console.log(' fkEquipeSlack:', config. fkEquipeSlack);
+    console.log(' receberNotificacao:', config.slack?. receberNotificacao);
     
     document.getElementById('slackMasterToggle').checked = slackAtivo;
-    
-    // ✅ Carregar configurações dos canais e gatilhos se existirem
-    if (config.slack) {
+
+    if (config. slack) {
       document.getElementById('canalPopulacao').checked = config.slack.maiorPopulacao === 1;
-      document.getElementById('canalSelic').checked = config.slack.aumentoSelic === 1;
+      document. getElementById('canalSelic').checked = config.slack.aumentoSelic === 1;
       document.getElementById('canalPib').checked = config.slack.crescimentoPib === 1;
       
       document.getElementById('gatilhoError').checked = config.slack.alertaError === 1;
@@ -1029,46 +1023,41 @@ async function carregarConfiguracaoSlack() {
     toggleSlackMaster();
     
   } catch (erro) {
-    console.error('❌ Erro ao carregar configuração Slack:', erro);
+    console.error(' Erro ao carregar configuração Slack:', erro);
     resetarFormSlack();
   }
 }
 function desabilitarEdicaoSlack() {
   const modal = document.getElementById('modalSlack');
-  
-  // Desabilitar todos os controles
+
   document.getElementById('slackMasterToggle').disabled = true;
-  document.querySelectorAll('.canal-toggle').forEach(cb => cb.disabled = true);
+  document. querySelectorAll('.canal-toggle').forEach(cb => cb.disabled = true);
   document.querySelectorAll('.gatilho-toggle').forEach(cb => cb.disabled = true);
-  
-  // Esconder botão de salvar
+
   const btnSalvar = modal.querySelector('.btn-primary');
   if (btnSalvar) btnSalvar.style.display = 'none';
-  
-  // Adicionar mensagem informativa
+
   const modalBody = modal.querySelector('.modal-body');
   if (modalBody && ! modalBody.querySelector('.alert-master')) {
     const alerta = document.createElement('div');
     alerta.className = 'alert alert-warning alert-master';
     alerta.style.marginBottom = '20px';
     alerta.innerHTML = `
-      <strong>⚠️ Acesso Restrito</strong><br>
-      Apenas o usuário master (administrador) da empresa pode alterar as configurações do Slack.<br>
+      <strong> Acesso Restrito</strong><br>
+      Apenas o usuário master (administrador) da empresa pode alterar as configurações do Slack. <br>
       Entre em contato com o administrador para fazer alterações.
     `;
     modalBody.insertBefore(alerta, modalBody.firstChild);
   }
-  
-  // ✅ Mostrar configurações atuais em modo visualização
+
   if (configSlackAtual && configSlackAtual.slack) {
-    const slackAtivo = configSlackAtual.fkEquipeSlack && configSlackAtual.slack.receberNotificacao === 1;
+    const slackAtivo = configSlackAtual. fkEquipeSlack && configSlackAtual.slack. receberNotificacao === 1;
     document.getElementById('slackMasterToggle').checked = slackAtivo;
     
-    // Carregar TODAS as configurações
     document.getElementById('canalPopulacao').checked = configSlackAtual.slack.maiorPopulacao === 1;
     document.getElementById('canalSelic').checked = configSlackAtual.slack.aumentoSelic === 1;
     document.getElementById('canalPib').checked = configSlackAtual.slack.crescimentoPib === 1;
-    document.getElementById('gatilhoError').checked = configSlackAtual.slack.alertaError === 1;
+    document.getElementById('gatilhoError').checked = configSlackAtual. slack.alertaError === 1;
     document.getElementById('gatilhoWarning').checked = configSlackAtual.slack.alertaWarning === 1;
     document.getElementById('gatilhoInfo').checked = configSlackAtual.slack.alertaInfo === 1;
   }
@@ -1087,15 +1076,12 @@ function resetarFormSlack() {
   document.getElementById('gatilhoWarning').checked = true;
   document.getElementById('gatilhoInfo').checked = false;
   
-  // Habilitar controles
   document.querySelectorAll('.canal-toggle').forEach(cb => cb.disabled = false);
   document.querySelectorAll('.gatilho-toggle').forEach(cb => cb.disabled = false);
   
-  // Remover alerta de restrição se existir
   const alertaMaster = document.querySelector('.alert-master');
   if (alertaMaster) alertaMaster.remove();
-  
-  // Mostrar botão salvar
+
   const modal = document.getElementById('modalSlack');
   const btnSalvar = modal.querySelector('.btn-primary');
   if (btnSalvar) btnSalvar.style.display = '';
@@ -1107,30 +1093,28 @@ function toggleSlackMaster() {
   const isActive = document.getElementById('slackMasterToggle').checked;
   const statusText = document.getElementById('slackStatusText');
   const canaisSection = document.getElementById('slackCanaisSection');
-  const gatilhosSection = document.getElementById('slackGatilhosSection');
-  
-  // ✅ Verificar se o usuário é master
+  const gatilhosSection = document. getElementById('slackGatilhosSection');
+ 
   const ehMaster = configSlackAtual?.ehUsuarioMaster !== false;
 
   if (isActive) {
-    statusText.textContent = '✅ Notificações Slack ATIVADAS - Configure os canais e gatilhos abaixo';
-    statusText.style.color = 'var(--accent)';
+    statusText.textContent = ' Notificações Slack ATIVADAS - Configure os canais e gatilhos abaixo';
+    statusText. style.color = 'var(--accent)';
     statusText.style.fontWeight = '600';
     canaisSection.classList.remove('disabled');
     gatilhosSection.classList.remove('disabled');
-    
-    // ✅ Só habilitar se for master
+
     if (ehMaster) {
       document.querySelectorAll('.canal-toggle').forEach(cb => cb.disabled = false);
       document.querySelectorAll('.gatilho-toggle').forEach(cb => cb.disabled = false);
     }
     
   } else {
-    statusText.textContent = 'Ative para receber notificações automatizadas sobre mudanças nos indicadores econômicos';
-    statusText.style.color = 'var(--text-secondary)';
+    statusText. textContent = 'Ative para receber notificações automatizadas sobre mudanças nos indicadores econômicos';
+    statusText. style.color = 'var(--text-secondary)';
     statusText.style.fontWeight = 'normal';
     canaisSection.classList.add('disabled');
-    gatilhosSection.classList.add('disabled');
+    gatilhosSection. classList.add('disabled');
     
     document.querySelectorAll('.canal-toggle').forEach(cb => cb.disabled = true);
     document.querySelectorAll('.gatilho-toggle').forEach(cb => cb.disabled = true);
@@ -1147,7 +1131,7 @@ function validarCanais() {
   if (!algumCanalAtivo && slackToggle.checked) {
     slackToggle.checked = false;
     toggleSlackMaster();
-    alert('⚠️ Nenhum canal selecionado.O Slack foi desativado automaticamente.');
+    alert(' Nenhum canal selecionado. O Slack foi desativado automaticamente.');
   }
 
   if (algumCanalAtivo && !slackToggle.checked) {
@@ -1159,51 +1143,58 @@ function validarCanais() {
 async function salvarConfiguracaoSlack() {
   const slackAtivo = document.getElementById('slackMasterToggle').checked;
 
-  console.log('🔍 Slack Ativo? ', slackAtivo);
+  console.log(' Slack Ativo? ', slackAtivo);
+  console.log(' configSlackAtual:', configSlackAtual);
 
-  if (! slackAtivo) {
-    if (confirm('⚠️ Tem certeza que deseja DESATIVAR as notificações do Slack para TODA a empresa?')) {
+  if (!slackAtivo) {
+    if (confirm(' Tem certeza que deseja DESATIVAR as notificações do Slack para TODA a empresa?')) {
       await desativarSlack();
     }
     return;
   }
 
   const populacao = document.getElementById('canalPopulacao').checked;
-  const selic = document.getElementById('canalSelic').checked;
+  const selic = document. getElementById('canalSelic').checked;
   const pib = document.getElementById('canalPib').checked;
 
   if (!populacao && !selic && !pib) {
-    alert('⚠️ Selecione pelo menos um canal para receber notificações! ');
+    alert(' Selecione pelo menos um canal para receber notificações! ');
     return;
   }
 
   const error = document.getElementById('gatilhoError').checked;
   const warning = document.getElementById('gatilhoWarning').checked;
-  const info = document.getElementById('gatilhoInfo').checked;
+  const info = document. getElementById('gatilhoInfo').checked;
 
   if (! error && !warning && !info) {
-    alert('⚠️ Selecione pelo menos um tipo de gatilho!');
+    alert(' Selecione pelo menos um tipo de gatilho!');
     return;
   }
 
   const configuracao = {
-    idUsuarioServer: usuarioLogado.idUsuario, //  ENVIANDO idUsuario
+    idUsuarioServer: usuarioLogado.idUsuario,
     maiorPopulacaoServer: populacao ? 1 : 0,
     aumentoSelicServer: selic ? 1 : 0,
     crescimentoPibServer: pib ?  1 : 0,
-    alertaErrorServer: error ? 1 :  0,
+    alertaErrorServer: error ?  1 : 0,
     alertaWarningServer: warning ? 1 : 0,
     alertaInfoServer: info ? 1 : 0
   };
 
   try {
-    const url = configSlackAtual && configSlackAtual.fkEquipeSlack
-      ?  `/usuarios/slack/atualizar/${configSlackAtual.fkEquipeSlack}`
+    const temSlackCriado = configSlackAtual && configSlackAtual.fkEquipeSlack;
+    
+    const url = temSlackCriado
+      ? `/usuarios/slack/atualizar/${configSlackAtual.fkEquipeSlack}`
       : '/usuarios/slack/criar';
 
+    console.log('URL:', url);
+    console.log('Método:', temSlackCriado ? 'PUT' : 'POST');
+    console.log('Configuração:', configuracao);
+
     const response = await fetch(url, {
-      method: configSlackAtual && configSlackAtual.fkEquipeSlack ?  'PUT' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: temSlackCriado ? 'PUT' :  'POST',
+      headers:  { 'Content-Type': 'application/json' },
       body: JSON.stringify(configuracao)
     });
 
@@ -1212,10 +1203,12 @@ async function salvarConfiguracaoSlack() {
       throw new Error(errorData.erro || 'Erro ao salvar configuração');
     }
 
-    const data = await response.json();
+    const data = await response. json();
     console.log(' Resposta do servidor:', data);
 
     alert(' Configurações do Slack salvas com sucesso para toda a empresa!');
+
+    await carregarConfiguracaoSlack();
     fecharModalSlack();
     
   } catch (erro) {
@@ -1240,7 +1233,7 @@ async function desativarSlack() {
     
   } catch (erro) {
     console.error(' Erro ao desativar:', erro);
-    alert(' Erro ao desativar.Tente novamente.');
+    alert(' Erro ao desativar. Tente novamente.');
   }
 }
 
