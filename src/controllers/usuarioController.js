@@ -4,7 +4,7 @@ function autenticar(req, res) {
   const email = req.body.emailServer;
   const senha = req.body.senhaServer;
 
-  console.log("📧 Tentativa de login:", email);
+  console.log(" Tentativa de login:", email);
 
   if (!email) {
     res.status(400).send("Email está undefined!");
@@ -17,7 +17,7 @@ function autenticar(req, res) {
   usuarioModel
     .autenticar(email, senha)
     .then(function (resultadoAutenticar) {
-      console.log(`📊 Resultados encontrados: ${resultadoAutenticar.length}`);
+      console.log(`Resultados encontrados: ${resultadoAutenticar.length}`);
 
       if (resultadoAutenticar.length === 0) {
         console.log("Credenciais inválidas");
@@ -53,7 +53,7 @@ function autenticar(req, res) {
         cnpj: usuario.cnpj,
         descricaoAcesso: usuario.descricaoAcesso,
         usuario_pertence_a_empresa_ativa:
-          usuario.usuario_pertence_a_empresa_ativa,
+        usuario.usuario_pertence_a_empresa_ativa,
       });
     })
     .catch(function (erro) {
@@ -94,7 +94,7 @@ function atualizarPerfil(req, res) {
   const nome = req.body.nomeServer;
   const telefone = req.body.telefoneServer;
 
-  console.log("📝 Atualizando perfil do usuário:", idUsuario);
+  console.log(" Atualizando perfil do usuário:", idUsuario);
 
   if (!idUsuario || !nome) {
     res.status(400).send("Campos obrigatórios faltando!");
@@ -179,43 +179,65 @@ function obterConfiguracaoSlack(req, res) {
     return;
   }
 
+  let dadosEmpresa;
+
   usuarioModel
     .obterDadosUsuario(idUsuario)
     .then((dadosUsuario) => {
       if (dadosUsuario.length === 0) {
         res.status(404).json({ erro: "Usuário não encontrado" });
-        return;
+        return Promise.reject("Usuário não encontrado");
       }
 
       const idEmpresa = dadosUsuario[0].Empresa_idEmpresa;
+      dadosEmpresa = dadosUsuario[0];
 
-      return usuarioModel.obterSlack(idEmpresa);
+
+      return usuarioModel.verificarSeEhMaster(idUsuario, idEmpresa);
     })
-    .then((resultado) => {
-      if (resultado.length === 0 || !resultado[0].fkEquipeSlack) {
-        res.status(204).send();
-        return;
-      }
+    .then((resultadoMaster) => {
+      const ehMaster = resultadoMaster.length > 0 && resultadoMaster[0].ehMaster === 1;
+      const idEmpresa = dadosEmpresa.Empresa_idEmpresa;
 
-      res.json({
-        fkEquipeSlack: resultado[0].fkEquipeSlack,
-        receberNotificacao: resultado[0].receberNotificacao,
-        maiorPopulacao: resultado[0].maiorPopulacao,
-        aumentoSelic: resultado[0].aumentoSelic,
-        crescimentoPib: resultado[0].crescimentoPib,
-        alertaError: resultado[0].alertaError,
-        alertaWarning: resultado[0].alertaWarning,
-        alertaInfo: resultado[0].alertaInfo,
+      return usuarioModel.obterSlack(idEmpresa).then((resultado) => {
+        if (resultado.length === 0 || ! resultado[0].fkEquipeSlack || resultado[0].idEquipeSlack === null) {
+          res.json({
+            fkEquipeSlack: null,
+            ehUsuarioMaster: ehMaster,
+            slack: null,
+          });
+          return Promise.reject("Sem config");
+        }
+
+        const slackConfig = resultado[0];
+        
+        res.json({
+          fkEquipeSlack: slackConfig.fkEquipeSlack,
+          ehUsuarioMaster: ehMaster,
+          slack: {
+            receberNotificacao:  slackConfig.receberNotificacao,
+            maiorPopulacao: slackConfig.maiorPopulacao,
+            aumentoSelic: slackConfig.aumentoSelic,
+            crescimentoPib: slackConfig.crescimentoPib,
+            alertaError: slackConfig.alertaError,
+            alertaWarning: slackConfig.alertaWarning,
+            alertaInfo:  slackConfig.alertaInfo,
+          },
+        });
+        
+        return Promise.reject("Finalizado");
       });
     })
     .catch((erro) => {
+      if (erro === "Usuário não encontrado" || erro === "Sem config" || erro === "Finalizado") {
+        return;
+      }
       console.error(" Erro ao obter Slack:", erro);
       res.status(500).json({ erro: "Erro ao buscar configuração Slack" });
     });
 }
-
 function criarConfiguracaoSlack(req, res) {
-  console.log("📥 BODY RECEBIDO:", req.body);
+  console.log(" BODY RECEBIDO:", req.body);
 
   const {
     idUsuarioServer,
@@ -233,6 +255,8 @@ function criarConfiguracaoSlack(req, res) {
     return;
   }
 
+  let nomeEmpresa;
+
   usuarioModel
     .obterDadosUsuario(idUsuarioServer)
     .then((dadosUsuario) => {
@@ -241,33 +265,33 @@ function criarConfiguracaoSlack(req, res) {
       }
 
       const idEmpresa = dadosUsuario[0].Empresa_idEmpresa;
+      nomeEmpresa = dadosUsuario[0].nomeFantasia; 
 
-      console.log("idEmpresa:", idEmpresa);
+      console.log("🏢 idEmpresa:", idEmpresa, "Nome:", nomeEmpresa);
 
-      return usuarioModel
-        .verificarUsuarioMaster(idUsuarioServer, idEmpresa)
-        .then((master) => {
-          if (master.length === 0 || master[0].idUsuario !== idUsuarioServer) {
-            throw new Error("Apenas o usuário master pode configurar o Slack");
-          }
+      return usuarioModel.verificarUsuarioMaster(idUsuarioServer, idEmpresa).then((master) => {
+        if (master.length === 0 || master[0].idUsuario !== idUsuarioServer) {
+          throw new Error("Apenas o usuário master pode configurar o Slack");
+        }
 
-          console.log(" Usuário é master da empresa");
+        console.log(" Usuário é master da empresa");
 
-          return usuarioModel.criarSlack(
-            idEmpresa,
-            maiorPopulacaoServer,
-            aumentoSelicServer,
-            crescimentoPibServer,
-            alertaErrorServer,
-            alertaWarningServer,
-            alertaInfoServer
-          );
-        });
+        return usuarioModel.criarSlack(
+          idEmpresa,
+          nomeEmpresa,
+          maiorPopulacaoServer,
+          aumentoSelicServer,
+          crescimentoPibServer,
+          alertaErrorServer,
+          alertaWarningServer,
+          alertaInfoServer
+        );
+      });
     })
     .then((resultado) => {
       console.log(" Slack criado com sucesso!");
       res.json({
-        mensagem: "Configuração Slack criada com sucesso!",
+        mensagem: "Configuração Slack criada com sucesso! ",
         idEquipeSlack: resultado.insertId,
         resultado,
       });
@@ -307,25 +331,21 @@ function atualizarConfiguracaoSlack(req, res) {
 
       const idEmpresa = dadosUsuario[0].Empresa_idEmpresa;
 
-      return usuarioModel
-        .verificarUsuarioMaster(idUsuario, idEmpresa)
-        .then((master) => {
-          if (master.length === 0 || master[0].idUsuario !== idUsuario) {
-            throw new Error(
-              "Apenas o usuário master pode alterar as configurações do Slack"
-            );
-          }
+      return usuarioModel.verificarUsuarioMaster(idUsuario, idEmpresa).then((master) => {
+        if (master.length === 0 || master[0].idUsuario !== idUsuario) {
+          throw new Error("Apenas o usuário master pode alterar as configurações do Slack");
+        }
 
-          return usuarioModel.atualizarSlack(
-            idEquipeSlack,
-            maiorPopulacaoServer,
-            aumentoSelicServer,
-            crescimentoPibServer,
-            alertaErrorServer,
-            alertaWarningServer,
-            alertaInfoServer
-          );
-        });
+        return usuarioModel.atualizarSlack(
+          idEquipeSlack,
+          maiorPopulacaoServer,
+          aumentoSelicServer,
+          crescimentoPibServer,
+          alertaErrorServer,
+          alertaWarningServer,
+          alertaInfoServer
+        );
+      });
     })
     .then((resultado) => {
       console.log(" Slack atualizado!");
@@ -333,9 +353,7 @@ function atualizarConfiguracaoSlack(req, res) {
     })
     .catch((erro) => {
       console.error(" Erro ao atualizar Slack:", erro);
-      res
-        .status(500)
-        .json({ erro: erro.message || "Erro ao atualizar configuração Slack" });
+      res.status(500).json({ erro: erro.message || "Erro ao atualizar configuração Slack" });
     });
 }
 
@@ -356,17 +374,13 @@ function desativarSlack(req, res) {
 
       const idEmpresa = dadosUsuario[0].Empresa_idEmpresa;
 
-      return usuarioModel
-        .verificarUsuarioMaster(idUsuario, idEmpresa)
-        .then((master) => {
-          if (master.length === 0 || master[0].idUsuario !== idUsuario) {
-            throw new Error(
-              "Apenas o usuário master pode desativar as notificações do Slack"
-            );
-          }
+      return usuarioModel.verificarUsuarioMaster(idUsuario, idEmpresa).then((master) => {
+        if (master.length === 0 || master[0].idUsuario !== idUsuario) {
+          throw new Error("Apenas o usuário master pode desativar as notificações do Slack");
+        }
 
-          return usuarioModel.desativarSlack(idEmpresa);
-        });
+        return usuarioModel.desativarSlack(idEmpresa);
+      });
     })
     .then((resultado) => {
       console.log(" Slack desativado!");
