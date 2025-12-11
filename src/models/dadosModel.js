@@ -161,7 +161,7 @@ function buscarSelicAtual() {
   var instrucaoSql = `
     SELECT valorTaxa, dtApuracao
     FROM tblSelic
-    ORDER BY dtApuracao DESC
+    ORDER BY idtblSelic DESC
     LIMIT 1;
   `;
   
